@@ -13,7 +13,7 @@ import xyz.snadwichbot.core.AutoHelpCommand;
 
 @Category(desc="Comandos dedicados a videojuegos en general.")
 public class VideoJuegos {
-	@Command(name="pokedex",desc="Busca y devuelve informacion relativa a un pokémon.",alias= {"pkmn","pkm","dex","pd","poke"})
+	@Command(name="pokedex",desc="Busca y devuelve informacion relativa a un pokémon.",alias= {"pkmn","pkm","dex","pd","poke"},enabled=false)
 	public static void pokedex(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		boolean autodes = false;
 		int autodesTime = 15;
