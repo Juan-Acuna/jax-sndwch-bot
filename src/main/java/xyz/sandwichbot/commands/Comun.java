@@ -13,13 +13,13 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 import xyz.sandwichbot.annotations.*;
+import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
-import xyz.snadwichbot.core.AutoHelpCommand;
 
 @Category(desc="Comandos frecuentes con propósitos variados.")
 public class Comun {

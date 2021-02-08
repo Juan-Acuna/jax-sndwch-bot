@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import xyz.snadwichbot.core.BotRunner;
+import xyz.sandwichbot.core.BotRunner;
 
 public class SandwichBot extends ListenerAdapter{
 	

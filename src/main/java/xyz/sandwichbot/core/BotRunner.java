@@ -1,4 +1,4 @@
-package xyz.snadwichbot.core;
+package xyz.sandwichbot.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

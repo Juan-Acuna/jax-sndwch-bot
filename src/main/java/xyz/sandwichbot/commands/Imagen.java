@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import xyz.sandwichbot.annotations.*;
+import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.util.MultiImagen;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
-import xyz.snadwichbot.core.AutoHelpCommand;
 
 @Category()
 public class Imagen {
