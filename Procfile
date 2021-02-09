@@ -1,1 +1,1 @@
-Worker: java xyz/sandwichbot/main/main.class
+Worker: java xyz/sandwichbot/main/main.java
