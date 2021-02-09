@@ -4,7 +4,7 @@
   <artifactId>the-sandwich-bot</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>The Sandwich Bot</name>
-  <packaging>jar</packaging>
+  <!-- <packaging>jar</packaging> -->
   <properties>
   	<project.build.sopurceEncoding>UTF-8</project.build.sopurceEncoding>
   	<maven.compiler.source>1.8</maven.compiler.source>
