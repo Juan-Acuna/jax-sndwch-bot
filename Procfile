@@ -1,1 +1,1 @@
-Worker: java src/main/java/xyz/sandwichbot/main/main.java
+Worker: java bot_sndwch.jar
