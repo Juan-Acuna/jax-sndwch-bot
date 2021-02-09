@@ -1,1 +1,1 @@
-Worker: java src/main/java/xyz/sandwichbot/main/main.java
+Worker: java $JAVA_OPTS -jar bot_sndwch.jar
