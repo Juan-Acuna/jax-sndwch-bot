@@ -1,1 +1,1 @@
-Worker: java $JAVA_OPTS -jar target/dependency/webapp-runner.jar
+Worker: java $JAVA_OPTS -jar the-sandwich-bot-0.0.1-SNAPSHOT.jar
