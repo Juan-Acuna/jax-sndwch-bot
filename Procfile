@@ -1,1 +1,1 @@
-Worker: java bot_sndwch.jar
+Worker: java $JAVA_OPTS -jar bot_sndwch.jar
