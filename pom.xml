@@ -52,7 +52,7 @@
             <index>true</index>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>main</mainClass>
+              <mainClass>xyz.sandwichbot.main.main</mainClass>
             </manifest>
             <manifestEntries>
               <mode>development</mode>
