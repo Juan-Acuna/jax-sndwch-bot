@@ -136,7 +136,7 @@ public class BotRunner {
 					 * */
 					if(!cmd.isEnabled()) {
 						EmbedBuilder eb = new EmbedBuilder();
-						eb.setTitle("Este comando no se encuentra habilitado.");
+						eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
 						e.getChannel().sendMessage(eb.build()).queue();
 						return;
 					}
@@ -159,7 +159,7 @@ public class BotRunner {
 							 * */
 							if(!cmd.isEnabled()) {
 								EmbedBuilder eb = new EmbedBuilder();
-								eb.setTitle("Este comando no se encuentra habilitado.");
+								eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
 								e.getChannel().sendMessage(eb.build()).queue();
 								return;
 							}

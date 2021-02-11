@@ -135,12 +135,12 @@ public class MultiFuck implements Runnable{
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
 		if(lnk==null) {
-			eb.setFooter("No se encontr� contenido (#PichulaTriste), intentalo nuevamente","https://turismoreal-2020.000webhostapp.com/enchufenopor.gif");
+			eb.setFooter("No se encontró contenido (#PichulaTriste), intentalo nuevamente","https://turismoreal-2020.000webhostapp.com/enchufenopor.gif");
 			channel.sendMessage(eb.build()).queue();
 			return;
 		}
 		//System.out.println(lnk);
-		eb.setFooter("Tranquil@ cochin@, no dir� quien eres :zipper_mouth: :smirk:",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter("Tranquil@ cochin@, no diré quien eres 🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
 		eb.setImage(lnk);
 		if(autodes) {
 			//System.out.println("conautodes");
@@ -159,8 +159,8 @@ public class MultiFuck implements Runnable{
 	public void enviarRestriccion() {
 		String lnk = "https://turismoreal-2020.000webhostapp.com/enchufenopor.gif";
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.addField("�Deja esa cosa horrorosa o ver�s!....", "Este canal no permite este tipo de contenido :smirk:", true);
-		eb.setFooter("Busca un canal con la etiqueta \"NSFW\" y yo mismo te desabrocho el patalon :point_right: :ok_hand:",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.addField("¡Deja esa cosa horrorosa o verás!....", "Este canal no permite este tipo de contenido :smirk:", true);
+		eb.setFooter("Busca un canal con la etiqueta \"NSFW\" y yo mismo te desabrocho el patalon 😈👉👌😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
 		eb.setThumbnail(lnk);
 		eb.setColor(Color.red);
 		channel.sendMessage(eb.build()).queue();

@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import xyz.sandwichbot.annotations.*;
 import xyz.sandwichbot.core.AutoHelpCommand;
+import xyz.sandwichbot.main.Constantes;
+import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.models.InputParameter;
@@ -13,85 +15,128 @@ import xyz.sandwichbot.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos dedicados a videojuegos en general.")
 public class VideoJuegos {
-	@Command(name="pokedex",desc="Busca y devuelve informacion relativa a un pokémon.",alias= {"pkmn","pkm","dex","pd","poke"},enabled=false)
+	@Command(name="pokedex",desc="Busca y devuelve informacion relativa a un pokémon.",alias= {"pkmn","pkm","dex","pd","poke"},enabled=true)
+	@Parameter(name="Pokémon objetivo",desc="Nombre del pokémon que se desea buscar. El nombre debe estar bien escrito y se permiten espacios. Todo texto después de un '-' no formará parte del nombre.")
+	@Option(name="numero",desc="Permite buscar al pokémon por su número identificador en la pokédex nacional. En caso de ser ingresado el nombre este parametro se ignora. DEBE SER UN NÚMERO POSITIVO NO MAYOR A LA CANTIDAD DE POKÉMON EXISTENTES EN LA POKÉDEX.",alias={"id","nac","identificador","n","num","nacional"})
+	@Option(name="variocolor",desc="Retorna pokémon, cuya imagen es reemplazada por su versión variocolor. La imagen devuelta es un render 3D animado. Si se usa la opción '-3D', esta última es ignorada.",alias={"shiny","s","sny","shaini","chino","vc","vario"})
+	@Option(name="3D",desc="Retorna pokémon, cuya imagen es reemplazada por un render 3D animado de la criatura.",alias={"3d","3","render","real","rl"})
+	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	public static void pokedex(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		boolean autodes = false;
 		int autodesTime = 15;
 		String pkmn = null;
-		int pkmnId = 0;
+		int pkmnId = -1;
+		boolean shiny = false;
+		boolean _3d = false;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "saludar");
+					AutoHelpCommand.sendHelp(e.getChannel(), "pokedex");
 					return;
 				}else if(p.getKey().equals("autodestruir")){
 					autodes=true;
 					if(!p.getValueAsString().equals("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}if(p.getKey().equals("id")){
+				}else if(p.getKey().equals("numero")){
 					pkmnId = p.getValueAsInt();
+				}else if(p.getKey().equals("3D")){
+					_3d=true;
+				}else if(p.getKey().equals("variocolor")){
+					shiny = true;
 				}
 			}else if(p.getType() == InputParamType.Custom){
 				pkmn = p.getValueAsString();
 			}
 		}
-		if(pkmn!=null) {
-			//busca ese pokemon
-			pkmn = pkmn.replace(" ","_");
-			System.out.println("https://www.wikidex.net/wiki/"+pkmn);
-			String hc = ClienteHttp.peticionHttp("https://www.wikidex.net/wiki/"+pkmn);
-			System.out.println("HC:"+hc);
-			if(Comparador.Coincidir("Has seguido un enlace a una página que aún no existe.", hc)) {
-				//pkmn no existe
-			}
-			String nombre ="";
-			String tipo ="";
-			String id = "";
-			String imagen ="";
-			String habilidad="";
-			nombre = Comparador.Encontrar(Comparador.Patrones.Pokemon_Nombre, hc);
-			System.out.println("nombre: "+nombre);
-			id = Comparador.Encontrar(Comparador.Patrones.Pokemon_Id, hc);
-			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_Imagen, hc);
-			System.out.println("imagen:" + imagen);
-			habilidad = Comparador.Encontrar(Comparador.Patrones.Pokemon_Habilidad, hc);
-			System.out.println(habilidad);
-			ArrayList<String> tipos = Comparador.EncontrarTodos(Comparador.Patrones.Pokemon_Tipo,hc);
-			if(tipos.size()>0) {
-				tipo = "`" + tipos.get(0).replace("href=\"/wiki/Tipo_","").replace("_"," ") + "`";
-				tipo = ": " + tipo;
-				if(tipos.size()==2) {
-					tipo += "|`" + tipos.get(1).replace("href=\"/wiki/Tipo_","").replace("_"," ") + "`";
-					tipo = "s" + tipo;
-				}
-			}
-			//limpiando los residuos de los datos
-			nombre = nombre.replace("nombrepokemon\" class=\"titulo\">","").replace("<"," ").replace("_"," ");
-			id = id.replaceAll("numeronacional\">","").replace("_"," ");
-			//imagen = imagen.replace("","");
-			if(habilidad!=null) {
-				habilidad = habilidad.replace("Habilidad</a></th><td><a href=\"/wiki/","").replace("_"," ");
-			}else {
-				String hab = Comparador.Encontrar(Comparador.Patrones.Pokemon_Habilidades, hc);
-				System.out.println("hab:"+hab);
-				String[] habs = hab.split("<br>");
-				System.out.println("habs:"+habs.length);
-				habilidad = habs[0].replace("Habilidades</a></th><td><a href=\"/wiki/[a-zA-Z0-9ñÑ_ .:áÁéÉíÍóÓúÚü%]{2,25}\" title=\"[a-zA-Z0-9ñÑ_ .:áÁéÉíÍóÓúÚü%]{2,25}\">","").replace("</a>","").replace("_"," ");
-				habilidad += " | " + habs[1].replace("<a href=\"/wiki/","").replace("_"," ");
-			}
+		if(pkmn==null && pkmnId<0) {
 			EmbedBuilder eb = new EmbedBuilder();
-			eb.setTitle(nombre + "   |  NAC# "+ id);
-			eb.addField("Tipo" + tipo,"Habilidad(es): " + habilidad, false);
-			eb.setImage(imagen);
+			eb.setTitle("Debe ingresar el nombre de un pokémon o su número en la pokédex nacional con la opcion '-numero' (para mas info use '-ayuda') para usar este comando.");
 			e.getChannel().sendMessage(eb.build()).queue();
-		}else {
-			if(pkmnId>0) {
-				//if() reservado para las regiones
-				//busca pkmn por id
-				
+			return;
+		}else if(pkmn==null && (pkmnId>898 || pkmnId==0)){
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setTitle("Número identificador de pokémon fuera de rango. El mínimo permitido es 1 (Bulbasaur) y mayor permitido es 898 (Calyrex)");
+			e.getChannel().sendMessage(eb.build()).queue();
+			return;
+		}else if(pkmn==null && pkmnId>0){
+			pkmn = Constantes.Pkm.getPokemonFromId(pkmnId);
+			if(pkmn==null) {
+				EmbedBuilder eb = new EmbedBuilder();
+				eb.setTitle("Error de servidor");
+				e.getChannel().sendMessage(eb.build()).queue();
+				return;
 			}
-			//lista las regiones
+		}
+		//busca ese pokemon
+		pkmn = pkmn.replace(" ","-");
+		String hc = "";
+		try {
+			hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.LINK_POKEMON_QUERY+pkmn);
+		}catch(Exception ex) {
+			//pokemon no existe
+			EmbedBuilder eb = new EmbedBuilder();
+			eb.setTitle("El pokémon '" + pkmn.replace("-", " ") + "' no existe. Asegurate de escribirlo bien.");
+			e.getChannel().sendMessage(eb.build()).queue();
+		}
+		String[] fuente = hc.split("Peso");
+		boolean isGigamax = fuente.length>2;
+		String nombre ="";
+		String id = "";
+		String imagen ="";
+		String tipo ="";
+		String habilidad="";
+		nombre = Comparador.Encontrar(Comparador.Patrones.Pokemon_Nombre, hc).replace("<title>","").replace(" | Pokédex</title>"," ");
+		id = Comparador.Encontrar(Comparador.Patrones.Pokemon_Imagen, hc);
+		System.out.println(id);
+		id = id.substring(56,59);
+		System.out.println(id);
+		if(shiny) {
+			String img = ClienteHttp.peticionHttp(Constantes.RecursoExterno.LINK_WIKIDEX_QUERY+pkmn.replace("-", "_"));
+			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_8s, img);
+			if(imagen==null) {
+				imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_7s, img);
+			}
+		}else if(_3d) {
+			String img = ClienteHttp.peticionHttp(Constantes.RecursoExterno.LINK_WIKIDEX_QUERY+pkmn.replace("-", "_"));
+			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_8, img);
+			if(imagen == null) {
+				imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_7, img);
+			}
+		}else {
+			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_Imagen, hc);
+		}
+		ArrayList<String> tipos = Comparador.EncontrarTodos(Comparador.Patrones.Pokemon_Tipo, hc);
+		if(tipos.size()==2) {
+			String t = tipos.get(0).substring(tipos.get(0).indexOf(">")+1);
+			t += " " + Constantes.Pkm.getTipo(t);
+			tipo += "s: " + t;
+			t = tipos.get(1).substring(tipos.get(1).indexOf(">")+1);
+			t += " " + Constantes.Pkm.getTipo(t);
+			tipo += " | " + t;
+		}else {
+			String t = tipos.get(0).substring(tipos.get(0).indexOf(">")+1);
+			t += " " + Constantes.Pkm.getTipo(t);
+			tipo += ": " + t;
+		}
+		ArrayList<String> habs = Comparador.EncontrarTodos(Comparador.Patrones.Pokemon_Habilidad, fuente[1]);
+		if(habs.size()==2) {
+			habilidad += "es:\n" + habs.get(0).replace("<a href=\"\" class=\"moreInfo\">                      <span class=\"attribute-value\">", "");
+			habilidad += " | " + habs.get(1).replace("<a href=\"\" class=\"moreInfo\">                      <span class=\"attribute-value\">", "");
+		}else {
+			habilidad += ": " + habs.get(0).replace("<a href=\"\" class=\"moreInfo\">                      <span class=\"attribute-value\">", "");
+		}
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle(nombre + "   |  NAC# "+ id);
+		eb.addField("Tipo" + tipo,"Habilidad" + habilidad, false);
+		eb.setImage(imagen);
+		/*if(isGigamax) {
+			eb.setThumbnail(imagen.substring(0, imagen.length()-4)+"_f"+(fuente.length-1)+".png");
+		}*/
+		if(autodes) {
+			SandwichBot.SendAndDestroy(e.getChannel(), eb.build(), autodesTime);
+		}else {
+			e.getChannel().sendMessage(eb.build()).queue();
 		}
 	}
 }

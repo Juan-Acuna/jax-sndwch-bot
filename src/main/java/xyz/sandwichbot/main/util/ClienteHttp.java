@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class ClienteHttp {
@@ -23,11 +24,13 @@ public class ClienteHttp {
 		  // Abrir la conexión e indicar que será de tipo GET
 		  HttpURLConnection conexion = (HttpURLConnection) uri.openConnection();
 		  conexion.addRequestProperty("user-agent", "Mozilla/5.0");
-		  conexion.addRequestProperty("Accept-Charset", "utf-8");
+		  conexion.addRequestProperty("Accept-Charset","text/html; charset=utf-8");
 		  conexion.setRequestMethod("GET");
+		  //System.out.println("mensaje: " + conexion.getHeaderField("Content-type"));
 		  conexion.connect();
 		  // Búferes para leer
-		  BufferedReader rd = new BufferedReader(new InputStreamReader(conexion.getInputStream()));
+		  InputStreamReader isr = new InputStreamReader(conexion.getInputStream(),"utf-8");
+		  BufferedReader rd = new BufferedReader(isr);
 		  String linea;
 		  // Mientras el BufferedReader se pueda leer, agregar contenido a resultado
 		  while ((linea = rd.readLine()) != null) {
@@ -36,8 +39,8 @@ public class ClienteHttp {
 		  // Cerrar el BufferedReader
 		  rd.close();
 		  // Regresar resultado, pero como cadena, no como StringBuilder
-		  ByteBuffer buffer = StandardCharsets.UTF_16BE.encode(resultado); 
+		  ByteBuffer buffer = StandardCharsets.UTF_8.encode(resultado); 
 
-		  return StandardCharsets.UTF_16BE.decode(buffer).toString();
+		  return StandardCharsets.UTF_8.decode(buffer).toString();
 		}
 }
