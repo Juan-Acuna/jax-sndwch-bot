@@ -12,8 +12,8 @@ import xyz.sandwichbot.models.InputParameter.InputParamType;
 
 @Category()
 public class Imagen {
-	@Command(name="Gatos",desc="Devuelve la imagen(una o m·s) de un gato al azar. Utiliza la API de [random.cat](http://random.cat).",alias={"mew","mw","miau","gato"})
-	@Option(name="cantidad",desc="Indica la cantidad de mininos requeridos.\\nDEBE SER UN VALOR NUMERICO ENTRE 1 Y 100. Si ingresas mal este parametro no habr·n gatos para ti.",alias={"c","cant","num"})
+	@Command(name="Gatos",desc="Devuelve la imagen(una o m√°s) de un gato al azar. Utiliza la API de [random.cat](http://random.cat).",alias={"mew","mw","miau","gato"})
+	@Option(name="cantidad",desc="Indica la cantidad de mininos requeridos.\\nDEBE SER UN VALOR NUMERICO ENTRE 1 Y 100. Si ingresas mal este parametro no habr√°n gatos para ti.",alias={"c","cant","num"})
 	public static void meow(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		MultiImagen mi;
 		int cantidad =1;

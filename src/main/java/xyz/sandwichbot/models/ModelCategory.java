@@ -1,10 +1,13 @@
 package xyz.sandwichbot.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class ModelCategory {
+public class ModelCategory implements Comparable<ModelCategory>{
 	private String name;
 	private String desc;
+	private boolean nsfw;
+	private boolean visible;
 	private ArrayList<ModelCommand> commands;
 	public ModelCategory(){}
 	public ModelCategory(String name, String desc) {
@@ -24,6 +27,18 @@ public class ModelCategory {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
+	public boolean isNsfw() {
+		return nsfw;
+	}
+	public void setNsfw(boolean nsfw) {
+		this.nsfw = nsfw;
+	}
+	public boolean isVisible() {
+		return visible;
+	}
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 	public ArrayList<ModelCommand> getCommands() {
 		return commands;
 	}
@@ -32,5 +47,12 @@ public class ModelCategory {
 	}
 	public void addCommand(ModelCommand command) {
 		this.commands.add(command);
+	}
+	@Override
+	public int compareTo(ModelCategory arg0) {
+		return name.compareTo(arg0.name);
+	}
+	public void sortCommands() {
+		Collections.sort(commands);
 	}
 }

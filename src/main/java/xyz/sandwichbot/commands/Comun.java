@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -21,11 +22,11 @@ import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
 
-@Category(desc="Comandos frecuentes con prop�sitos variados.")
+@Category(desc="Comandos frecuentes con propósitos variados.")
 public class Comun {
-	@Command(name="saludar",desc="Da un c�lido saludo a un amigo(a�n no funciona con menciones:pensive:)",alias={"s","saluda","putea","putear"})
-	@Parameter(name="Nombre del objetivo",desc="Nombre del objetivo(ejemplo: Tulencio).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte del nombre.")
-	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminar� despu�s de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Command(name="Saludar",desc="Da un cálido saludo a un amigo(aún no funciona con menciones:pensive:)",alias={"s","saluda","putea","putear"})
+	@Parameter(name="Nombre del objetivo",desc="Nombre del objetivo(ejemplo: Tulencio).\nSe permiten espacios. Todo texto que comience con un '-' no formará parte del nombre.")
+	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	public static void saludar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		String nombre = null;
 		boolean autodes = false;
@@ -38,7 +39,7 @@ public class Comun {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "saludar");
+					AutoHelpCommand.sendHelp(e.getChannel(), "Saludar");
 					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
@@ -63,9 +64,9 @@ public class Comun {
 		e.getChannel().sendMessage(eb.build()).queue();
 		e.getChannel().sendMessage("Debe especificar un nombre.").queue();
 	}
-	@Command(name="YouTube",desc="Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(A�n no soy capaz de reproducirlos, denme tiempo:pensive:).",alias={"yt","y","yutu","video","videos","llutu"})
-	@Parameter(name="Nombre del objetivo",desc="Texto con el cual se realizar� la busqueda en Youtube (ejemplo: '[creampie](https://preppykitchen.com/cream-pie/)'... chucha, creo me equivoqu� de p�gina xD).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
-	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminar� despu�s de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Command(name="YouTube",desc="Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(Aún no soy capaz de reproducirlos, denme tiempo:pensive:).",alias={"yt","y","yutu","video","videos","llutu"})
+	@Parameter(name="Nombre del objetivo",desc="Texto con el cual se realizará la busqueda en Youtube (ejemplo: s.youtube '[creampie](https://preppykitchen.com/cream-pie/)'... chucha, creo me equivoqué de página xD).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
+	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	public static void youtube(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		String busqueda = null;
 		boolean autodes = false;
@@ -120,7 +121,7 @@ public class Comun {
 		}
 		
 	}
-	@Command(name="invocar",desc="Comano extra�o pero �til. Hace que me conecte a los canales de texto y voz del invocador",alias= {"invoke","llamar","ven"})
+	@Command(name="Invocar",desc="Comano extraño pero útil. Hace que me conecte a los canales de texto y voz del invocador",alias= {"invoke","llamar","ven"})
 	public static void invocar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		Guild guild = e.getGuild();
 		Member m = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
@@ -146,5 +147,32 @@ public class Comun {
 		AudioManager audioManager = guild.getAudioManager();
 		e.getChannel().sendMessage("voy").queue();
 		audioManager.openAudioConnection(vchannel);
+	}
+	@Command(name="Presentacion",desc="Comando para saber más de mi (no es lo mismo que el de ayuda).",alias= {"informacion","info","inf"})//,enabled=false,visible=false)
+	public static void info(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+		
+		
+		
+		
+		e.getChannel().sendMessage(getInfo()).queue();
+	}
+	public static MessageEmbed getInfo() {
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setTitle("Wena l@s cabr@s del server!");
+		eb.setDescription("Me presento: me llamo :sandwich:Jax Sandwich y como podrás observar, soy un sandwich "
+		+"(lleno de mayonesa igual que tú :smirk::peach:).\nSoy bastante joven, apenas tengo unas dos semanas de vida "
+		+"(soy más ilegal que tu loli preferida) y esta es apenas mi primera vez siendo hostead@\nSi, lo se, use una @, "
+		+"pos resulta que soy un bot de discord, así que basicamente no tengo sexo(a menos que tu quieras bb:kissing_heart:)."
+		+"\nHora de ir directo al grano: no hago mucho, pero estoy segur@ que disfrutarás mi contenido:wink::smirk:.");
+		eb.addField("¡Ah, lo olvidaba!", "Para saber que verga puedo hacer, escribe '"+SandwichBot.ActualBot().getPrefijo()+"ayuda'🍑", false);
+		eb.addBlankField(false);
+		eb.addBlankField(false);
+		eb.addField(">>> VERSION: 0.0.1_SNAPSHOT, primera versión online estable.\nPara más información acerca de este bot, "
+				+"visita:~~me el ano~~ sitio web aún no disponible.", "", false);
+		eb.setFooter("DISCLAIMER: No soy dueño de ninguno de los recursos gráficos ni el contenido relativo a pokémon "
+		+"provistos por este bot. Todo ese contenido le pertenece a las fuentes originales donde fueron obtenidas. "
+		+"Este bot es solo para entretenimiento y no lucra con su contenido.");
+		eb.setColor(Color.yellow);
+		return eb.build();
 	}
 }

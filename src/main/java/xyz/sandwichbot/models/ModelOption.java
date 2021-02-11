@@ -1,15 +1,17 @@
 package xyz.sandwichbot.models;
 
-public class ModelOption {
+public class ModelOption implements Comparable<ModelOption>{
 	private String name;
 	private String desc;
 	private String[] alias;
 	private boolean enabled = true;
-	public ModelOption(String name, String desc, String[] alias, boolean enabled) {
+	private boolean visible;
+	public ModelOption(String name, String desc, String[] alias, boolean enabled, boolean visible) {
 		this.name = name;
 		this.desc = desc;
 		this.alias=alias;
 		this.enabled = enabled;
+		this.visible=visible;
 	}
 	public String getName() {
 		return name;
@@ -34,5 +36,15 @@ public class ModelOption {
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	public boolean isVisible() {
+		return visible;
+	}
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+	@Override
+	public int compareTo(ModelOption o) {
+		return name.compareTo(o.name);
 	}
 }

@@ -13,4 +13,5 @@ import java.lang.annotation.Target;
 public @interface Parameter {
 	String name() default "Parameter";
 	String desc();
+	boolean visible() default true;
 }

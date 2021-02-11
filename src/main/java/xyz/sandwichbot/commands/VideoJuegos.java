@@ -15,12 +15,12 @@ import xyz.sandwichbot.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos dedicados a videojuegos en general.")
 public class VideoJuegos {
-	@Command(name="pokedex",desc="Busca y devuelve informacion relativa a un pokémon.",alias= {"pkmn","pkm","dex","pd","poke"},enabled=true)
-	@Parameter(name="Pokémon objetivo",desc="Nombre del pokémon que se desea buscar. El nombre debe estar bien escrito y se permiten espacios. Todo texto después de un '-' no formará parte del nombre.")
-	@Option(name="numero",desc="Permite buscar al pokémon por su número identificador en la pokédex nacional. En caso de ser ingresado el nombre este parametro se ignora. DEBE SER UN NÚMERO POSITIVO NO MAYOR A LA CANTIDAD DE POKÉMON EXISTENTES EN LA POKÉDEX.",alias={"id","nac","identificador","n","num","nacional"})
-	@Option(name="variocolor",desc="Retorna pokémon, cuya imagen es reemplazada por su versión variocolor. La imagen devuelta es un render 3D animado. Si se usa la opción '-3D', esta última es ignorada.",alias={"shiny","s","sny","shaini","chino","vc","vario"})
-	@Option(name="3D",desc="Retorna pokémon, cuya imagen es reemplazada por un render 3D animado de la criatura.",alias={"3d","3","render","real","rl"})
-	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Command(name="Pokedex",desc="Busca y devuelve informacion relativa a un pokÃ©mon.",alias= {"pkmn","pkm","dex","pd","poke"})
+	@Parameter(name="PokÃ©mon objetivo",desc="Nombre del pokÃ©mon que se desea buscar. El nombre debe estar bien escrito y se permiten espacios. Todo texto despuÃ©s de un '-' no formarÃ¡ parte del nombre.")
+	@Option(name="numero",desc="Permite buscar al pokÃ©mon por su nÃºmero identificador en la pokÃ©dex nacional. En caso de ser ingresado el nombre, este parametro se ignora. DEBE SER UN NÃšMERO POSITIVO NO MAYOR A LA CANTIDAD DE POKÃ‰MON EXISTENTES EN LA POKÃ‰DEX.",alias={"id","nac","identificador","n","num","nacional"})
+	@Option(name="variocolor",desc="Retorna pokÃ©mon, cuya imagen es reemplazada por su versiÃ³n variocolor. La imagen devuelta es un render 3D animado. Si se usa la opciÃ³n '-3D', esta Ãºltima es ignorada.",alias={"shiny","s","sny","shaini","chino","vc","vario"})
+	@Option(name="3D",desc="Retorna pokÃ©mon, cuya imagen es reemplazada por un render 3D animado de la criatura.",alias={"3","render","real","rl"})
+	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminarÃ¡ despuÃ©s de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	public static void pokedex(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		boolean autodes = false;
 		int autodesTime = 15;
@@ -31,7 +31,7 @@ public class VideoJuegos {
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "pokedex");
+					AutoHelpCommand.sendHelp(e.getChannel(), "Pokedex");
 					return;
 				}else if(p.getKey().equals("autodestruir")){
 					autodes=true;
@@ -40,7 +40,7 @@ public class VideoJuegos {
 					}
 				}else if(p.getKey().equals("numero")){
 					pkmnId = p.getValueAsInt();
-				}else if(p.getKey().equals("3D")){
+				}else if(p.getKey().equalsIgnoreCase("3D")){
 					_3d=true;
 				}else if(p.getKey().equals("variocolor")){
 					shiny = true;
@@ -51,12 +51,12 @@ public class VideoJuegos {
 		}
 		if(pkmn==null && pkmnId<0) {
 			EmbedBuilder eb = new EmbedBuilder();
-			eb.setTitle("Debe ingresar el nombre de un pokémon o su número en la pokédex nacional con la opcion '-numero' (para mas info use '-ayuda') para usar este comando.");
+			eb.setTitle("Debe ingresar el nombre de un pokÃ©mon o su nÃºmero en la pokÃ©dex nacional con la opcion '-numero' (para mas info use '-ayuda') para usar este comando.");
 			e.getChannel().sendMessage(eb.build()).queue();
 			return;
 		}else if(pkmn==null && (pkmnId>898 || pkmnId==0)){
 			EmbedBuilder eb = new EmbedBuilder();
-			eb.setTitle("Número identificador de pokémon fuera de rango. El mínimo permitido es 1 (Bulbasaur) y mayor permitido es 898 (Calyrex)");
+			eb.setTitle("NÃºmero identificador de pokÃ©mon fuera de rango. El mÃ­nimo permitido es 1 (Bulbasaur) y mayor permitido es 898 (Calyrex)");
 			e.getChannel().sendMessage(eb.build()).queue();
 			return;
 		}else if(pkmn==null && pkmnId>0){
@@ -76,7 +76,7 @@ public class VideoJuegos {
 		}catch(Exception ex) {
 			//pokemon no existe
 			EmbedBuilder eb = new EmbedBuilder();
-			eb.setTitle("El pokémon '" + pkmn.replace("-", " ") + "' no existe. Asegurate de escribirlo bien.");
+			eb.setTitle("El pokÃ©mon '" + pkmn.replace("-", " ") + "' no existe. Asegurate de escribirlo bien.");
 			e.getChannel().sendMessage(eb.build()).queue();
 		}
 		String[] fuente = hc.split("Peso");
@@ -86,7 +86,7 @@ public class VideoJuegos {
 		String imagen ="";
 		String tipo ="";
 		String habilidad="";
-		nombre = Comparador.Encontrar(Comparador.Patrones.Pokemon_Nombre, hc).replace("<title>","").replace(" | Pokédex</title>"," ");
+		nombre = Comparador.Encontrar(Comparador.Patrones.Pokemon_Nombre, hc).replace("<title>","").replace(" | PokÃ©dex</title>"," ");
 		id = Comparador.Encontrar(Comparador.Patrones.Pokemon_Imagen, hc);
 		System.out.println(id);
 		id = id.substring(56,59);

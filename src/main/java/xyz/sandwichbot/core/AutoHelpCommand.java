@@ -10,15 +10,18 @@ import xyz.sandwichbot.models.*;
 //import xyz.sandwichbot.annotations.*;
 
 public class AutoHelpCommand {
-	public static final String[] HELP_OPTIONS = {"ayuda","h","help","info","informacion","inf","aiuda","jelp"};
+	public static final String[] HELP_OPTIONS = {"ayuda","h","help","aiuda","jelp"};
 	public static void help(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
-		String extra = "\nPara saber mas sobre este comando, escriba %s%s %sayuda.";
+		String extra = "\nPara saber mÃ¡s sobre este comando, escriba %s%s %sayuda.";
 		EmbedBuilder eb = new EmbedBuilder();
 		BotRunner runner = BotRunner._self;
 		eb.setTitle(runner.help_title);
 		eb.setDescription(runner.help_description);
 		eb.addField("", "Categorias", false);
 		for(ModelCategory category : runner.categories) {
+			if(runner.hide_nsfw_category && category.isNsfw() && !e.getTextChannel().isNSFW()) {
+				continue;
+			}
 			eb.addField(category.getName(),category.getDesc(), false);
 			for(ModelCommand command : category.getCommands()) {
 				String als = "";
@@ -47,7 +50,7 @@ public class AutoHelpCommand {
 					}
 					als=" _`[Alias: " + als.substring(1) + "]`_";
 				}
-				eb.setTitle(cmd.getName() + als + " | Categoría: " + cmd.getCategory().getName());
+				eb.setTitle(cmd.getName() + als + " | Categorï¿½a: " + cmd.getCategory().getName());
 				eb.setDescription(cmd.getDesc());
 				eb.addField("","PARAMETROS/OPCIONES:",false);
 				if(cmd.getParameter()!=null) {

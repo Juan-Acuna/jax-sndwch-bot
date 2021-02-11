@@ -2,14 +2,16 @@ package xyz.sandwichbot.models;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class ModelCommand {
+public class ModelCommand implements Comparable<ModelCommand>{
 	private String name;
 	private String desc;
 	private String[] alias;
 	private boolean enabled;
 	private String parameter;
 	private String parameterDesc;
+	private boolean visible;
 	private ArrayList<ModelOption> options;
 	private ModelCategory category;
 	private Method source;
@@ -61,6 +63,12 @@ public class ModelCommand {
 	public void setParameterDesc(String parameterDesc) {
 		this.parameterDesc = parameterDesc;
 	}
+	public boolean isVisible() {
+		return visible;
+	}
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
 	public ArrayList<ModelOption> getOptions() {
 		return options;
 	}
@@ -78,5 +86,12 @@ public class ModelCommand {
 	}
 	public void setSource(Method source) {
 		this.source = source;
+	}
+	@Override
+	public int compareTo(ModelCommand arg0) {
+		return name.compareTo(arg0.name);
+	}
+	public void sortOptions() {
+		Collections.sort(options);
 	}
 }

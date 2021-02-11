@@ -2,6 +2,8 @@ package xyz.sandwichbot.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
 
 import org.reflections.Reflections;
@@ -24,6 +26,7 @@ public class BotRunner {
 	protected String help_title;
 	protected String help_description;
 	private String commands_package;
+	protected boolean hide_nsfw_category=false;
 	
 	//objs
 	protected ArrayList<ModelCategory> categories;
@@ -60,6 +63,12 @@ public class BotRunner {
 	public void setHelp_description(String help_description) {
 		this.help_description = help_description;
 	}
+	public boolean isHide_nsfw_category() {
+		return hide_nsfw_category;
+	}
+	public void setHide_nsfw_category(boolean hide_nsfw_category) {
+		this.hide_nsfw_category = hide_nsfw_category;
+	}
 	private BotRunner(String commandsPackage) {
 		commands_package=commandsPackage;
 		reflections = new Reflections(commands_package);
@@ -82,6 +91,8 @@ public class BotRunner {
 			Method[] ms = c.getDeclaredMethods();
 			Category catanno = c.getDeclaredAnnotation(Category.class);
 			cmdcategory = new ModelCategory(c.getSimpleName(), catanno.desc());
+			cmdcategory.setNsfw(catanno.nsfw());
+			cmdcategory.setVisible(catanno.visible());
 			for(Method m : ms) {
 				Command cmdanno = m.getDeclaredAnnotation(Command.class);
 				if(cmdanno==null) {
@@ -90,6 +101,7 @@ public class BotRunner {
 				botcmd = new ModelCommand(cmdanno.name(),cmdanno.desc(),cmdcategory,m);
 				botcmd.setAlias(cmdanno.alias());
 				botcmd.setEnabled(cmdanno.enabled());
+				botcmd.setVisible(cmdanno.visible());
 				Parameter p = m.getDeclaredAnnotation(Parameter.class);
 				if(p!=null) {
 					botcmd.setParameter(p.name());
@@ -97,12 +109,15 @@ public class BotRunner {
 				}
 				Option[] op = m.getDeclaredAnnotationsByType(Option.class);
 				for(Option o : op) {
-					botcmd.addOption(new ModelOption(o.name(), o.desc(), o.alias(),o.enabled()));
+					botcmd.addOption(new ModelOption(o.name(), o.desc(), o.alias(),o.enabled(),o.visible()));
 				}
+				botcmd.sortOptions();
 				commands.add(botcmd);
 			}
+			cmdcategory.sortCommands();
 			categories.add(cmdcategory);
 		}
+		Collections.sort(categories);
 	}
 	
 	public void listenForCommand(MessageReceivedEvent e) throws Exception {
@@ -134,6 +149,9 @@ public class BotRunner {
 					 * 
 					 * 
 					 * */
+					if(!cmd.isVisible()) {
+						return;
+					}
 					if(!cmd.isEnabled()) {
 						EmbedBuilder eb = new EmbedBuilder();
 						eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
@@ -157,6 +175,9 @@ public class BotRunner {
 							 * 
 							 * 
 							 * */
+							if(!cmd.isVisible()) {
+								return;
+							}
 							if(!cmd.isEnabled()) {
 								EmbedBuilder eb = new EmbedBuilder();
 								eb.setTitle("Este comando no se encuentra habilitado. :pensive:");

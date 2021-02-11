@@ -10,11 +10,11 @@ import xyz.sandwichbot.annotations.Command;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.models.InputParameter;
 
-@Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
+@Category(desc="Comandos de mÃºsica. Â¿Que?Â¿Acaso esperabas otra descripciÃ³n?")
 public class Musica {
 	public static boolean enUso = false;
 	
-	@Command(name="play",desc="Reproduce musica obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"},enabled=false)
+	@Command(name="Play",desc="Reproduce mÃºsica obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"},enabled=false)
 	public static void reproducir(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		//TextChannel txtChannel = e.getTextChannel();
 		Guild guild = e.getGuild();

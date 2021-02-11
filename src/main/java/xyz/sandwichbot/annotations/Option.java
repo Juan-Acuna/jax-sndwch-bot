@@ -17,4 +17,5 @@ public @interface Option {
 	String desc();
 	String[] alias() default {};
 	boolean enabled() default true;
+	boolean visible() default true;
 }

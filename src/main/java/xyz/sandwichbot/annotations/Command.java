@@ -13,4 +13,5 @@ public @interface Command {
 	String desc() default "";
 	String[] alias() default {};
 	boolean enabled() default true;
+	boolean visible() default true;
 }

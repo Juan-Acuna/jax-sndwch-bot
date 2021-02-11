@@ -97,6 +97,13 @@ public class Constantes {
 			return pkm;
 		}
 	}
+	public static class JaxSandwich{
+		public static final String BaseURL ="https://jaxsandwichbot.000webhostapp.com";
+		
+		public static class Imagenes{
+			public static final String nonsfw = BaseURL + "/img/nsfw/nonsfw.gif";
+		}
+	}
 	//RECURSOS EXTERNOS
 	public static class RecursoExterno{
 		public static final String LINK_RANDOM_CAT = "http://aws.random.cat/meow";

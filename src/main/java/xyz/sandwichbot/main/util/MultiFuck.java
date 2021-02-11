@@ -135,7 +135,7 @@ public class MultiFuck implements Runnable{
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
 		if(lnk==null) {
-			eb.setFooter("No se encontró contenido (#PichulaTriste), intentalo nuevamente","https://turismoreal-2020.000webhostapp.com/enchufenopor.gif");
+			eb.setFooter("No se encontró contenido (#PichulaTriste), intentalo nuevamente",Constantes.JaxSandwich.Imagenes.nonsfw);
 			channel.sendMessage(eb.build()).queue();
 			return;
 		}
@@ -157,11 +157,10 @@ public class MultiFuck implements Runnable{
 		}
 	}
 	public void enviarRestriccion() {
-		String lnk = "https://turismoreal-2020.000webhostapp.com/enchufenopor.gif";
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.addField("¡Deja esa cosa horrorosa o verás!....", "Este canal no permite este tipo de contenido :smirk:", true);
-		eb.setFooter("Busca un canal con la etiqueta \"NSFW\" y yo mismo te desabrocho el patalon 😈👉👌😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
-		eb.setThumbnail(lnk);
+		eb.setFooter("Busca un canal con la etiqueta \"NSFW\" y yo mism@ te quito la ropa 🍑🍆😈👉👌😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setThumbnail(Constantes.JaxSandwich.Imagenes.nonsfw);
 		eb.setColor(Color.red);
 		channel.sendMessage(eb.build()).queue();
 	}
