@@ -24,7 +24,7 @@ public class SandwichBot extends ListenerAdapter{
 		builder = JDABuilder.createDefault(token);
 		builder.addEventListeners(this);
 		runner = BotRunner.init("xyz.sandwichbot.commands");
-		prefijo = "ss.";
+		prefijo = "s.";
 		runner.setPrefix(prefijo);
 		runner.setOptionsPrefix("-");
 		runner.setHelp_title("Hola, soy Sandwich!");
