@@ -136,7 +136,7 @@ public class MultiFuck implements Runnable{
 		eb.setColor(Color.red);
 		if(lnk==null) {
 			eb.setFooter("No se encontró contenido (#PichulaTriste), intentalo nuevamente",Constantes.JaxSandwich.Imagenes.nonsfw);
-			channel.sendMessage(eb.build()).queue();
+			SandwichBot.SendAndDestroy(channel, eb.build(), 15);
 			return;
 		}
 		//System.out.println(lnk);

@@ -48,7 +48,7 @@ public class PlayerManager {
 			public void trackLoaded(AudioTrack track) {
 				musicManager.scheduler.queue(track);
 				
-				channel.sendMessage("AGREGANDO A LA COLA: *")
+				channel.sendMessage("Reproduciendo: *")
 				.append(track.getInfo().title)
 				.append("* de *")
 				.append(track.getInfo().author + "*")
