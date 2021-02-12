@@ -33,12 +33,12 @@ public class Comun {
 		int autodesTime=15;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
-				if(p.getKey().equals("autodestruir")){
+				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
-					if(!p.getValueAsString().equals("none")) {
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}else if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Saludar");
 					return;
 				}
@@ -73,12 +73,12 @@ public class Comun {
 		int autodesTime=15;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
-				if(p.getKey().equals("autodestruir")) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
-					if(!p.getValueAsString().equals("none")) {
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}else if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "YouTube");
 					return;
 				}
@@ -160,16 +160,15 @@ public class Comun {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("Wena l@s cabr@s del server!");
 		eb.setDescription("Me presento: me llamo :sandwich:Jax Sandwich y como podrás observar, soy un sandwich "
-		+"(lleno de mayonesa igual que tú :smirk::peach:).\nSoy bastante joven, apenas tengo unas dos semanas de vida "
-		+"(soy más ilegal que tu loli preferida) y esta es apenas mi primera vez siendo hostead@\nSi, lo se, use una @, "
-		+"pos resulta que soy un bot de discord, así que basicamente no tengo sexo(a menos que tu quieras bb:kissing_heart:)."
+		+"(lleno de mayonesa igual que tú :smirk:).\nSoy bastante joven, apenas tengo unas dos semanas y media de vida "
+		+"(soy más ilegal que tu loli preferida)."
 		+"\nHora de ir directo al grano: no hago mucho, pero estoy segur@ que disfrutarás mi contenido:wink::smirk:.");
 		eb.addField("¡Ah, lo olvidaba!", "Para saber que verga puedo hacer, escribe '"+SandwichBot.ActualBot().getPrefijo()+"ayuda'🍑", false);
 		eb.addBlankField(false);
 		eb.addBlankField(false);
-		eb.addField(">>> VERSION: 0.0.1_SNAPSHOT, primera versión online estable.\nPara más información acerca de este bot, "
+		eb.addField(">>> VERSION: 0.0.1, primera versión online estable.\nPara más información acerca de este bot, "
 				+"visita:~~me el ano~~ sitio web aún no disponible.", "", false);
-		eb.setFooter("DISCLAIMER: No soy dueño de ninguno de los recursos gráficos ni el contenido relativo a pokémon "
+		eb.setFooter("DISCLAIMER: No soy dueño de ninguna de las marcas ni de los recursos gráficos "
 		+"provistos por este bot. Todo ese contenido le pertenece a las fuentes originales donde fueron obtenidas. "
 		+"Este bot es solo para entretenimiento y no lucra con su contenido.");
 		eb.setColor(Color.yellow);

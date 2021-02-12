@@ -40,23 +40,23 @@ public class NSFW {
 		for(InputParameter p : parametros) {
 			//System.out.println(p.getClave()+"-"+p.getTipo());
 			if(p.getType() == InputParamType.Standar) {
-				if(p.getKey().equals("autodestruir")) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
-					if(!p.getValueAsString().equals("none")) {
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}else if(p.getKey().equals("cantidad")) {
+				}else if(p.getKey().equalsIgnoreCase("cantidad")) {
 					cantidad = p.getValueAsInt();
-				}else if(p.getKey().equals("gif")) {
+				}else if(p.getKey().equalsIgnoreCase("gif")) {
 					gif= p.getValueAsBoolean(Constantes.VALORES.TRUE);
-				}else if(p.getKey().equals("tags")) {
+				}else if(p.getKey().equalsIgnoreCase("tags")) {
 					tags = p.getValueAsString().replaceAll("\\s",",").split(",");
-				}else if(p.getKey().equals("video")) {
+				}else if(p.getKey().equalsIgnoreCase("video")) {
 					video = true;
 					gif=false;
-				}else if(p.getKey().equals("random")) {
+				}else if(p.getKey().equalsIgnoreCase("random")) {
 					random = true;
-				}else if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "NSFW");
 					return;
 				}
@@ -100,12 +100,12 @@ public class NSFW {
 		int autodesTime=15;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
-				if(p.getKey().equals("autodestruir")) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
-					if(!p.getValueAsString().equals("none")) {
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}else if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Xvideos");
 					return;
 				}

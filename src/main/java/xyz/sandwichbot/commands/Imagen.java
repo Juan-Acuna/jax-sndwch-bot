@@ -19,9 +19,9 @@ public class Imagen {
 		int cantidad =1;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
-				if(p.getKey().equals(Constantes.PARAMETROS.CANTIDAD[0])) {
+				if(p.getKey().equalsIgnoreCase(Constantes.PARAMETROS.CANTIDAD[0])) {
 					cantidad = p.getValueAsInt();
-				}else if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Gatos");
 					return;
 				}

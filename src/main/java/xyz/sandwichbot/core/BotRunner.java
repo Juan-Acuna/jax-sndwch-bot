@@ -127,7 +127,7 @@ public class BotRunner {
 			String r = (message.split(" ")[0]).trim();
 			if(autoHelpCommand) {
 				for(String cs : AutoHelpCommand.HELP_OPTIONS) {
-					if(r.toLowerCase().equals(commandsPrefix + cs.toLowerCase())) {
+					if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cs.toLowerCase())) {
 						ArrayList<InputParameter> pars = new ArrayList<InputParameter>();
 						Thread runner;
 						Method ayudacmd = AutoHelpCommand.class.getDeclaredMethod("help", MessageReceivedEvent.class, ArrayList.class);
@@ -139,7 +139,7 @@ public class BotRunner {
 				}
 			}
 			for(ModelCommand cmd : commands) {
-				if(r.toLowerCase().equals(commandsPrefix + cmd.getName().toLowerCase())){
+				if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cmd.getName().toLowerCase())){
 					/* BUSCAR PARAMETROS*/
 					ArrayList<InputParameter> pars = findParametros(message,cmd);
 					/* EJECUTAR COMANDO EN THREAD*/
@@ -165,7 +165,7 @@ public class BotRunner {
 					return;
 				}else {
 					for(String a : cmd.getAlias()) {
-						if(r.toLowerCase().equals(commandsPrefix + a.toLowerCase())) {
+						if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + a.toLowerCase())) {
 							/* BUSCAR PARAMETROS*/
 							ArrayList<InputParameter> pars = findParametros(message,cmd);
 							/* EJECUTAR COMANDO EN THREAD*/

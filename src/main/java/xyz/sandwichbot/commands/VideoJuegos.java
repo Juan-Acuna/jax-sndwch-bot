@@ -33,16 +33,16 @@ public class VideoJuegos {
 				if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Pokedex");
 					return;
-				}else if(p.getKey().equals("autodestruir")){
+				}else if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(!p.getValueAsString().equals("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}else if(p.getKey().equals("numero")){
+				}else if(p.getKey().equalsIgnoreCase("numero")){
 					pkmnId = p.getValueAsInt();
 				}else if(p.getKey().equalsIgnoreCase("3D")){
 					_3d=true;
-				}else if(p.getKey().equals("variocolor")){
+				}else if(p.getKey().equalsIgnoreCase("variocolor")){
 					shiny = true;
 				}
 			}else if(p.getType() == InputParamType.Custom){

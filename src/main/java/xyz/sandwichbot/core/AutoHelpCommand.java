@@ -42,7 +42,7 @@ public class AutoHelpCommand {
 		EmbedBuilder eb = new EmbedBuilder();
 		BotRunner runner = BotRunner._self;
 		for(ModelCommand cmd : runner.commands) {
-			if(cmd.getName().toLowerCase().equals(command.toLowerCase())) {
+			if(cmd.getName().toLowerCase().equalsIgnoreCase(command.toLowerCase())) {
 				String als = "";
 				if(cmd.getAlias().length>0) {
 					for(String a : cmd.getAlias()) {
