@@ -15,16 +15,15 @@ import xyz.sandwichbot.annotations.Command;
 import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.Comparador;
-import xyz.sandwichbot.main.util.lavaplayer.GuildMusicManager;
-import xyz.sandwichbot.main.util.lavaplayer.PlayerManager;
+import xyz.sandwichbot.main.util.lavaplayer.*;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
 
-@Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
+@Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?",visible=false)
 public class Musica {
 	public static boolean enUso = false;
 	
-	@Command(name="Play",desc="Reproduce música obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"},enabled=true)
+	@Command(name="Play",desc="Reproduce música obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"},enabled=false)
 	public static void reproducir(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		boolean autodes=false;
 		int autodesTime =15;
@@ -75,14 +74,25 @@ public class Musica {
 		if(!isURL(busqueda)) {
 			busqueda = "ytsearch:" + busqueda;
 		}
+		
+		/*GuildMusicManager mng = PlayerControl.getInstance().getMusicManager(guild);
+        //AudioPlayer player = mng.player;
+        //TrackScheduler scheduler = mng.scheduler;
+        
+        PlayerControl.getInstance().loadAndPlay(mng, tChannel, busqueda, false);*/
+		
 		PlayerManager.getInstance().loadAndPlay(tChannel, busqueda);
+		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
+		//AudioPlayer player = musicManager.audioPlayer;
+		
+		
 	}
 	
 	
 	public static void pausar() {
 		
 	}
-	
+	/*
 	@Command(name="Siguiente",desc="Salta a la siguiente canción en la cola actual. Si no quedan canciones, la reproducción se termina.",alias={"sk","saltar","skip"})
 	public static void siguiente(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		final TextChannel tChannel = e.getTextChannel();
@@ -178,7 +188,7 @@ public class Musica {
 		}
 		final AudioTrackInfo info = track.getInfo();
 		tChannel.sendMessageFormat("Canción actual: %s de %s (%s)",info.title,info.author,info.uri).queue();
-	}
+	}*/
 	
 	public static void buscar() {
 		

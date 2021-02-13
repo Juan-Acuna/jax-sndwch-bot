@@ -46,8 +46,9 @@ public class PlayerManager {
 
 			@Override
 			public void trackLoaded(AudioTrack track) {
+				System.out.println("uniendo a la cola");
 				musicManager.scheduler.queue(track);
-				
+				System.out.println("ya se unio a la cola");
 				channel.sendMessage("Reproduciendo: *")
 				.append(track.getInfo().title)
 				.append("* de *")

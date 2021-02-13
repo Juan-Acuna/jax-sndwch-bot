@@ -4,6 +4,7 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
 
 import net.dv8tion.jda.api.audio.AudioSendHandler;
@@ -12,6 +13,7 @@ public class AudioPlayerSendHandler implements AudioSendHandler{
 	private final AudioPlayer audioPlayer;
 	private final ByteBuffer buffer;
 	private final MutableAudioFrame frame;
+	private AudioFrame lastFrame;
 	
 	
 	public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
@@ -25,14 +27,17 @@ public class AudioPlayerSendHandler implements AudioSendHandler{
 	@Override
 	public boolean canProvide() {
 		// TODO Auto-generated method stub
-		return this.audioPlayer.provide(this.frame);
+		//return this.audioPlayer.provide(this.frame);
+		lastFrame =  audioPlayer.provide();
+		return lastFrame != null;
 	}
 
 	@Override
 	public ByteBuffer provide20MsAudio() {
 		// TODO Auto-generated method stub
-		final Buffer tmp = ((Buffer)this.buffer).flip();
-		return (ByteBuffer) tmp;
+		/*final Buffer tmp = ((Buffer)this.buffer).flip();
+		return (ByteBuffer) tmp;*/
+		return ByteBuffer.wrap(lastFrame.getData());
 	}
 	@Override
 	public boolean isOpus() {

@@ -166,7 +166,7 @@ public class Comun {
 		eb.addField("¡Ah, lo olvidaba!", "Para saber que verga puedo hacer, escribe '"+SandwichBot.ActualBot().getPrefijo()+"ayuda'🍑", false);
 		eb.addBlankField(false);
 		eb.addBlankField(false);
-		eb.addField(">>> VERSION: 0.0.1, primera versión online estable.\nPara más información acerca de este bot, "
+		eb.addField(">>> VERSION: 0.1.1\nPara más información acerca de este bot, "
 				+"visita:~~me el ano~~ sitio web aún no disponible.", "", false);
 		eb.setFooter("DISCLAIMER: No soy dueño de ninguna de las marcas ni de los recursos gráficos "
 		+"provistos por este bot. Todo ese contenido le pertenece a las fuentes originales donde fueron obtenidas. "

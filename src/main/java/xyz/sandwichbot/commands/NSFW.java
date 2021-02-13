@@ -146,4 +146,38 @@ public class NSFW {
 		}
 		
 	}
+	@Command(name="OtakuNSFW",desc="Es como el de NSFW clásico... Pero con monas chinas :wink::smirk:",alias= {"hentai","otakuns","ons","o18","h18","otakuporn"},enabled=false,visible=false)
+	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="cantidad",desc="Indica la cantidad de imagenes que devolverá el comando. DEBE SER UN VALOR NUMÉRICO ENTRE 1 Y 100 (se que quieres más, pero tu mano se va a hacer mierda...me preocupo por ti manit@). Si ingresas mal este número te quedarás sin placer:smirk:",alias={"c","cant","num"})
+	@Option(name="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
+	public static void otakus(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+		e.getChannel().purgeMessagesById(e.getMessageId());
+		int cantidad = 1;
+		String fuente = null;
+		String[] tags = null;
+		boolean autodes = false;
+		int autodesTime = 15;
+		for(InputParameter p : parametros) {
+			if(p.getType() == InputParamType.Standar) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")) {
+					autodes=true;
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+						autodesTime = p.getValueAsInt();
+					}
+				}else if(p.getKey().equalsIgnoreCase("cantidad")) {
+					cantidad = p.getValueAsInt();
+				}else if(p.getKey().equalsIgnoreCase("tags")) {
+					tags = p.getValueAsString().replaceAll("\\s",",").split(",");
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+					AutoHelpCommand.sendHelp(e.getChannel(), "OtakuNSFW");
+					return;
+				}
+			}
+		}
+		if(cantidad>100) {
+			cantidad = 100;
+		}else if(cantidad<=0) {
+			cantidad=1;
+		}
+	}
 }
