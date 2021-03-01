@@ -1,11 +1,6 @@
 package xyz.sandwichbot.commands;
 
-import java.net.URI;
 import java.util.ArrayList;
-
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -82,9 +77,9 @@ public class Musica {
         PlayerControl.getInstance().loadAndPlay(mng, tChannel, busqueda, false);*/
 		
 		PlayerManager.getInstance().loadAndPlay(tChannel, busqueda);
-		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
+		//GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
 		//AudioPlayer player = musicManager.audioPlayer;
-		
+		//player.getPlayingTrack();
 		
 	}
 	

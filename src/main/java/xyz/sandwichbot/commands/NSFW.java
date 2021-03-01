@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import xyz.sandwichbot.annotations.*;
 import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.Constantes;
@@ -79,12 +80,15 @@ public class NSFW {
 		fk.setAutoDes(autodes);
 		fk.setAutodesTime(autodesTime);
 		fk.setRand(random);
-		Thread fuck;		
-		if(!e.getTextChannel().isNSFW()){
-			fk.enviarRestriccion();
-			return;
+		Thread fuck;
+		try {
+			if(!e.getTextChannel().isNSFW()){
+				fk.enviarRestriccion();
+				return;
+			}
+		}catch(Exception ex) {
+			
 		}
-		
 		for(int i = 1; i<=cantidad;i++) {
 			fuck = new Thread(fk);
 			fuck.start();
@@ -146,14 +150,15 @@ public class NSFW {
 		}
 		
 	}
-	@Command(name="OtakuNSFW",desc="Es como el de NSFW clásico... Pero con monas chinas :wink::smirk:",alias= {"hentai","otakuns","ons","o18","h18","otakuporn"},enabled=false,visible=false)
+	@Command(name="OtakuNSFW",desc="Es como el de NSFW clásico... Pero con monas chinas :wink::smirk:",alias= {"hentai","otakuns","ons","o18","h18","otakuporn","monaschinas"},enabled=true,visible=false)
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="cantidad",desc="Indica la cantidad de imagenes que devolverá el comando. DEBE SER UN VALOR NUMÉRICO ENTRE 1 Y 100 (se que quieres más, pero tu mano se va a hacer mierda...me preocupo por ti manit@). Si ingresas mal este número te quedarás sin placer:smirk:",alias={"c","cant","num"})
 	@Option(name="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
-	public static void otakus(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	@Option(name="fuente",desc="Indica la fuente de origen del contenido a mostrar.\nFuentes permitidas:\n-  [Konachan.com](https://konachan.com)\n-  3Dbooru\n-  Gelbooru\n-  Danbooru\n-  [Konachan.net](https://konachan.net)\n-  Lolibooru\n-  Rule34\n-  XBooru",alias={"f","source","origen"})
+	public static void otakus(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		e.getChannel().purgeMessagesById(e.getMessageId());
 		int cantidad = 1;
-		String fuente = null;
+		String fuente = "konachan";
 		String[] tags = null;
 		boolean autodes = false;
 		int autodesTime = 15;
@@ -178,6 +183,29 @@ public class NSFW {
 			cantidad = 100;
 		}else if(cantidad<=0) {
 			cantidad=1;
+		}
+		MultiFuck fk;
+		if(cantidad>=8) {
+			fk = new MultiFuck(e.getChannel(),true);
+		}else {
+			fk = new MultiFuck(e.getChannel());
+		}
+		fk.setTags(tags);
+		fk.setAutoDes(autodes);
+		fk.setAutodesTime(autodesTime);
+		fk.setFuente(fuente);
+		Thread fuck;
+		try {
+			if(!e.getTextChannel().isNSFW()){
+				fk.enviarRestriccion();
+				return;
+			}
+		}catch(Exception ex) {
+			
+		}
+		for(int i = 1; i<=cantidad;i++) {
+			fuck = new Thread(fk);
+			fuck.start();
 		}
 	}
 }

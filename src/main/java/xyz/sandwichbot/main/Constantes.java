@@ -8,6 +8,7 @@ import java.util.Random;
 
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
+import xyz.sandwichbot.main.util.NSFWSource;
 
 public class Constantes {
 	//PACKAGE : "xyz.sandwichbot.commands"
@@ -51,6 +52,7 @@ public class Constantes {
 		public static final String Bicho = "🐞";
 		public static final String Dragon = "🐉";
 		public static final String Electrico = "⚡";
+		public static final String Fantasma = "👻";
 		public static final String Fuego = "🔥";
 		public static final String Hada = "🌟";
 		public static final String Hielo = "❄";
@@ -63,7 +65,6 @@ public class Constantes {
 		public static final String Tierra = "⛰";
 		public static final String Veneno = "☠";
 		public static final String Volador = "🕊";
-		public static final String Fantasma = "👻";
 		public static String getTipo(String tipo) throws Exception {
 			tipo = tipo.replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u");
 			tipo = tipo.replace("Á", "a").replace("É", "e").replace("Í", "i").replace("Ó", "o").replace("Ú", "u");
@@ -111,17 +112,6 @@ public class Constantes {
 		public static final String LINK_YOUTUBE_QUERY = "https://www.youtube.com/results?search_query=";
 		public static final String LINK_WIKIDEX_QUERY = "https://www.wikidex.net/wiki/";
 		public static final String LINK_POKEMON_QUERY ="https://www.pokemon.com/el/pokedex/";
-		public static String toWDEX_PKMN(String pkmn) {
-			
-			return "";
-		}
-		
-		public static String toWDEX_PKMN_REGION() {
-
-			return "";
-		}
-		
-		
 		public static class NSFW{
 			public static String toRB_link(int pid, boolean gif, boolean video, boolean random, String[] tags) throws Exception {
 				String t = "mmale+female";
@@ -168,7 +158,7 @@ public class Constantes {
 				String url = "https://www.xvideos.com/?k="+busqueda+"&top";
 				return url;
 			}
-			public static String toO_link(int pid, int fuente, String[] tags) throws Exception {
+			public static String toO_link(int pid, NSFWSource fuente, String[] tags) throws Exception {
 				String t = "";
 				if(tags!=null) {
 					for(String s : tags) {
@@ -180,22 +170,32 @@ public class Constantes {
 				}
 				String url = "";
 				switch(fuente) {
-					case 0:
+					case Konachan:
+						url = KONACHAN_QUERY;
 						break;
-					case 1:
+					case _3DBooru:
+						url = _3DBOORU_QUERY;
 						break;
-					case 2:
+					case Gelbooru:
+						url = GELBOORU_QUERY;
 						break;
-					case 3:
+					case Danbooru:
+						url = DANBOORU_QUERY;
 						break;
-					case 4:
+					case KonachanNet:
+						url = KONACHAN_NET_QUERY;
 						break;
-					case 5:
+					case LBooru:
+						url = LBOORU_QUERY;
 						break;
-					case 6:
+					case R34:
+						url = R34_QUERY;
 						break;
-					case 7:
+					case XBooru:
+						url = XBOORU_QUERY;
 						break;
+					default:
+						return null;
 				}
 				url +="uncensored" + t;
 				return url;

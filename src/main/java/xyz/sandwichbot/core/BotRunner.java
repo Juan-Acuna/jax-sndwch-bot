@@ -11,6 +11,7 @@ import org.reflections.Reflections;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import xyz.sandwichbot.annotations.*;
 import xyz.sandwichbot.models.ModelCommand;
 import xyz.sandwichbot.models.ModelOption;
@@ -149,10 +150,10 @@ public class BotRunner {
 					 * 
 					 * 
 					 * */
-					if(!cmd.isVisible()) {
-						return;
-					}
 					if(!cmd.isEnabled()) {
+						if(!cmd.isVisible()) {
+							return;
+						}
 						EmbedBuilder eb = new EmbedBuilder();
 						eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
 						e.getChannel().sendMessage(eb.build()).queue();
@@ -175,10 +176,10 @@ public class BotRunner {
 							 * 
 							 * 
 							 * */
-							if(!cmd.isVisible()) {
-								return;
-							}
 							if(!cmd.isEnabled()) {
+								if(!cmd.isVisible()) {
+									return;
+								}
 								EmbedBuilder eb = new EmbedBuilder();
 								eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
 								e.getChannel().sendMessage(eb.build()).queue();
@@ -195,6 +196,78 @@ public class BotRunner {
 			}
 		}
 	}
+	public void listenForPrivateCommand(PrivateMessageReceivedEvent e) throws Exception {
+		String message = e.getMessage().getContentRaw();
+		String r = (message.split(" ")[0]).trim();
+		if(autoHelpCommand) {
+			for(String cs : AutoHelpCommand.HELP_OPTIONS) {
+				if(r.toLowerCase().equalsIgnoreCase(cs.toLowerCase())) {
+					ArrayList<InputParameter> pars = new ArrayList<InputParameter>();
+					Thread runner;
+					Method ayudacmd = AutoHelpCommand.class.getDeclaredMethod("help", MessageReceivedEvent.class, ArrayList.class);
+					CommandRunner cr = new CommandRunner(ayudacmd, pars, e);
+					runner = new Thread(cr);
+					runner.start();
+					return;
+				}
+			}
+		}
+		for(ModelCommand cmd : commands) {
+			if(r.toLowerCase().equalsIgnoreCase(cmd.getName().toLowerCase())){
+				/* BUSCAR PARAMETROS*/
+				ArrayList<InputParameter> pars = findParametros(message,cmd);
+				/* EJECUTAR COMANDO EN THREAD*/
+				/*
+				 * 
+				 * CONFIRMAR QUE EL COMANDO NO ESTE DESHABILITADO!!.
+				 * 
+				 * 
+				 * */
+				if(!cmd.isEnabled()) {
+					if(!cmd.isVisible()) {
+						return;
+					}
+					EmbedBuilder eb = new EmbedBuilder();
+					eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
+					e.getChannel().sendMessage(eb.build()).queue();
+					return;
+				}
+				Thread runner;
+				CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
+				runner = new Thread(cr);
+				runner.start();
+				return;
+			}else {
+				for(String a : cmd.getAlias()) {
+					if(r.toLowerCase().equalsIgnoreCase(a.toLowerCase())) {
+						/* BUSCAR PARAMETROS*/
+						ArrayList<InputParameter> pars = findParametros(message,cmd);
+						/* EJECUTAR COMANDO EN THREAD*/
+						/*
+						 * 
+						 * CONFIRMAR QUE EL COMANDO NO ESTE DESHABILITADO!!.
+						 * 
+						 * 
+						 * */
+						if(!cmd.isEnabled()) {
+							if(!cmd.isVisible()) {
+								return;
+							}
+							EmbedBuilder eb = new EmbedBuilder();
+							eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
+							e.getChannel().sendMessage(eb.build()).queue();
+							return;
+						}
+						Thread runner;
+						CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
+						runner = new Thread(cr);
+						runner.start();
+						return;
+					}
+				}
+			}
+		}
+	}
 	private ArrayList<InputParameter> findParametros(String input,ModelCommand command){
 		String[] s = input.split(" ");
 		ArrayList<InputParameter> lista = new ArrayList<InputParameter>();
@@ -204,13 +277,13 @@ public class BotRunner {
 				p=null;
 				p = new InputParameter();
 				for(ModelOption mo : command.getOptions()) {
-					if(s[i].toLowerCase().equals(optionsPrefix + mo.getName())) {
+					if(s[i].toLowerCase().equalsIgnoreCase(optionsPrefix + mo.getName())) {
 						p.setKey(mo.getName());
 						p.setType(InputParamType.Standar);
 						break;
 					}else {
 						for(String a : mo.getAlias()) {
-							if(s[i].toLowerCase().equals(optionsPrefix+a)) {
+							if(s[i].toLowerCase().equalsIgnoreCase(optionsPrefix+a)) {
 								p.setKey(mo.getName());
 								p.setType(InputParamType.Standar);
 								break;
@@ -235,7 +308,7 @@ public class BotRunner {
 				p.setType(InputParamType.Custom);
 				p.setKey("custom");
 				p.setValue(s[i]);
-			}else if(!p.getValueAsString().equals("none")){
+			}else if(!p.getValueAsString().equalsIgnoreCase("none")){
 				p.setValue(p.getValueAsString()+" "+s[i]);
 			}else {
 				p.setValue(s[i]);

@@ -154,24 +154,6 @@ public class Comun {
 		
 		
 		
-		e.getChannel().sendMessage(getInfo()).queue();
-	}
-	public static MessageEmbed getInfo() {
-		EmbedBuilder eb = new EmbedBuilder();
-		eb.setTitle("Wena l@s cabr@s del server!");
-		eb.setDescription("Me presento: me llamo :sandwich:Jax Sandwich y como podrás observar, soy un sandwich "
-		+"(lleno de mayonesa igual que tú :smirk:).\nSoy bastante joven, apenas tengo unas dos semanas y media de vida "
-		+"(soy más ilegal que tu loli preferida)."
-		+"\nHora de ir directo al grano: no hago mucho, pero estoy segur@ que disfrutarás mi contenido:wink::smirk:.");
-		eb.addField("¡Ah, lo olvidaba!", "Para saber que verga puedo hacer, escribe '"+SandwichBot.ActualBot().getPrefijo()+"ayuda'🍑", false);
-		eb.addBlankField(false);
-		eb.addBlankField(false);
-		eb.addField(">>> VERSION: 0.1.1\nPara más información acerca de este bot, "
-				+"visita:~~me el ano~~ sitio web aún no disponible.", "", false);
-		eb.setFooter("DISCLAIMER: No soy dueño de ninguna de las marcas ni de los recursos gráficos "
-		+"provistos por este bot. Todo ese contenido le pertenece a las fuentes originales donde fueron obtenidas. "
-		+"Este bot es solo para entretenimiento y no lucra con su contenido.");
-		eb.setColor(Color.yellow);
-		return eb.build();
+		e.getChannel().sendMessage(SandwichBot.getInfo(e.getTextChannel().isNSFW())).queue();
 	}
 }

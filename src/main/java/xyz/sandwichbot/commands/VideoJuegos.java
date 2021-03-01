@@ -1,5 +1,6 @@
 package xyz.sandwichbot.commands;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -28,7 +29,9 @@ public class VideoJuegos {
 		int pkmnId = -1;
 		boolean shiny = false;
 		boolean _3d = false;
+		System.out.println("*****************************\nPARAMETROOS:");
 		for(InputParameter p : parametros) {
+			System.out.println(p.getKey() + " - " + p.getValueAsString() + " - " + p.getType());
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Pokedex");
@@ -49,6 +52,7 @@ public class VideoJuegos {
 				pkmn = p.getValueAsString();
 			}
 		}
+		System.out.println("***************************");
 		if(pkmn==null && pkmnId<0) {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Debe ingresar el nombre de un pokémon o su número en la pokédex nacional con la opcion '-numero' (para mas info use '-ayuda') para usar este comando.");
@@ -69,63 +73,67 @@ public class VideoJuegos {
 			}
 		}
 		//busca ese pokemon
-		pkmn = pkmn.replace(" ","-");
-		String hc = "";
+		pkmn = pkmn.replace(" ","_");
+		String hc="";
 		try {
-			hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.LINK_POKEMON_QUERY+pkmn);
+			hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.LINK_WIKIDEX_QUERY+pkmn);
 		}catch(Exception ex) {
 			//pokemon no existe
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("El pokémon '" + pkmn.replace("-", " ") + "' no existe. Asegurate de escribirlo bien.");
 			e.getChannel().sendMessage(eb.build()).queue();
 		}
-		String[] fuente = hc.split("Peso");
-		boolean isGigamax = fuente.length>2;
+		//System.out.println("HC2:"+hc.substring(93300, 95500));
+		//String[] fuente = hc.split("Peso");
+		//boolean isGigamax = fuente.length>2;
 		String nombre ="";
 		String id = "";
 		String imagen ="";
 		String tipo ="";
 		String habilidad="";
-		nombre = Comparador.Encontrar(Comparador.Patrones.Pokemon_Nombre, hc).replace("<title>","").replace(" | Pokédex</title>"," ");
-		id = Comparador.Encontrar(Comparador.Patrones.Pokemon_Imagen, hc);
-		System.out.println(id);
-		id = id.substring(56,59);
-		System.out.println(id);
+		nombre =Comparador.Encontrar(Comparador.Patrones.Pokemon_Nombre, hc);
+		id = Comparador.Encontrar(Comparador.Patrones.Pokemon_Id, hc);
 		if(shiny) {
-			String img = ClienteHttp.peticionHttp(Constantes.RecursoExterno.LINK_WIKIDEX_QUERY+pkmn.replace("-", "_"));
-			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_8s, img);
+			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_8s, hc);
 			if(imagen==null) {
-				imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_7s, img);
+				imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_7s, hc);
 			}
 		}else if(_3d) {
-			String img = ClienteHttp.peticionHttp(Constantes.RecursoExterno.LINK_WIKIDEX_QUERY+pkmn.replace("-", "_"));
-			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_8, img);
+			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_8, hc);
 			if(imagen == null) {
-				imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_7, img);
+				imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_3D_7, hc);
 			}
 		}else {
-			imagen = Comparador.Encontrar(Comparador.Patrones.Pokemon_Imagen, hc);
+			imagen =Comparador.Encontrar(Comparador.Patrones.Pokemon_Imagen, hc);
+			if(imagen==null) {
+				imagen =Comparador.Encontrar(Comparador.Patrones.Pokemon_Imagen2, hc);
+			}
+			imagen = imagen.replace("og:image\" content=\"", "");
 		}
-		ArrayList<String> tipos = Comparador.EncontrarTodos(Comparador.Patrones.Pokemon_Tipo, hc);
-		if(tipos.size()==2) {
-			String t = tipos.get(0).substring(tipos.get(0).indexOf(">")+1);
-			t += " " + Constantes.Pkm.getTipo(t);
-			tipo += "s: " + t;
-			t = tipos.get(1).substring(tipos.get(1).indexOf(">")+1);
-			t += " " + Constantes.Pkm.getTipo(t);
-			tipo += " | " + t;
+		tipo =Comparador.Encontrar(Comparador.Patrones.Pokemon_Tipo, hc);
+		if(tipo==null) {
+			//tipo = tipo.toUpperCase().substring(0,1) + tipo.toLowerCase().substring(1);
+			tipo =Comparador.Encontrar(Comparador.Patrones.Pokemon_Tipos, hc);
+			String[] st = tipo.split("\" title=\"Tipo [0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}\"><img alt=\"Tipo [0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}.gif\" src=\"https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z]{1,3}/[0-9a-zA-Z]{1,3}/latest/[0-9]{6,16}/Tipo_[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}.gif\" decoding=\"async\" [0-9a-zA-Z \"=]{2,45} /></a> <a href=\"/wiki/Tipo_");
+			String t = URLDecoder.decode(st[0].replace("title=\"Tipo\">Tipos</a></th><td><a href=\"/wiki/Tipo_", ""),"UTF-8");
+			tipo = "s: " + t.toUpperCase().substring(0,1) + t.toLowerCase().substring(1) + " " +Constantes.Pkm.getTipo(t);
+			tipo += " | " + URLDecoder.decode(st[1].toUpperCase().substring(0,1),"UTF-8") + URLDecoder.decode(st[1].toLowerCase().substring(1),"UTF-8") + " " + Constantes.Pkm.getTipo(URLDecoder.decode(st[1],"UTF-8"));
+			//" | "+st[1];
 		}else {
-			String t = tipos.get(0).substring(tipos.get(0).indexOf(">")+1);
-			t += " " + Constantes.Pkm.getTipo(t);
-			tipo += ": " + t;
+			String t = tipo.replace(">Tipo</a></th><td><a href=\"/wiki/Tipo_", "");
+			tipo = ": " + t.toUpperCase().substring(0,1) + t.toLowerCase().substring(1) + " " + Constantes.Pkm.getTipo(t);
 		}
-		ArrayList<String> habs = Comparador.EncontrarTodos(Comparador.Patrones.Pokemon_Habilidad, fuente[1]);
-		if(habs.size()==2) {
-			habilidad += "es:\n" + habs.get(0).replace("<a href=\"\" class=\"moreInfo\">                      <span class=\"attribute-value\">", "");
-			habilidad += " | " + habs.get(1).replace("<a href=\"\" class=\"moreInfo\">                      <span class=\"attribute-value\">", "");
+		habilidad=Comparador.Encontrar(Comparador.Patrones.Pokemon_Habilidad, hc);
+		if(habilidad==null) {
+			habilidad=Comparador.Encontrar(Comparador.Patrones.Pokemon_Habilidades, hc);
+			String[] st = habilidad.split("\" title=\"[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}\">[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}</a><br /><a href=\"/wiki/");
+			habilidad = "es:\n"+URLDecoder.decode(st[0].replace(">Habilidades</a></th><td><a href=\"/wiki/", "").replace("_", " "),"UTF-8") +" | "+URLDecoder.decode(st[1].replace("_", " "),"UTF-8");
 		}else {
-			habilidad += ": " + habs.get(0).replace("<a href=\"\" class=\"moreInfo\">                      <span class=\"attribute-value\">", "");
+			habilidad = ": " + URLDecoder.decode(habilidad.replace(">Habilidad</a></th><td><a href=\"/wiki/","").replace("_", " "),"UTF-8");
 		}
+		nombre = nombre.replace("<title>", "").replace(" - WikiDex, la enciclopedia Pokémon<", "");
+		id=id.replace(">#<span style=\"font-size:", "").split("%;\">")[1].replace("<", "");
+		System.out.println("IMAGENLACONCHADETUMADRE:"+imagen);
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle(nombre + "   |  NAC# "+ id);
 		eb.addField("Tipo" + tipo,"Habilidad" + habilidad, false);

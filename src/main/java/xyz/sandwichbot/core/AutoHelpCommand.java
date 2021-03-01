@@ -22,8 +22,14 @@ public class AutoHelpCommand {
 			if(runner.hide_nsfw_category && category.isNsfw() && !e.getTextChannel().isNSFW()) {
 				continue;
 			}
+			if(!category.isVisible()) {
+				continue;
+			}
 			eb.addField(category.getName(),category.getDesc(), false);
 			for(ModelCommand command : category.getCommands()) {
+				if(!command.isVisible()) {
+					continue;
+				}
 				String als = "";
 				if(command.getAlias().length>0) {
 					for(String a : command.getAlias()) {
@@ -58,6 +64,9 @@ public class AutoHelpCommand {
 				}
 				if(cmd.getOptions().size()>0) {
 					for(ModelOption option : cmd.getOptions()) {
+						if(!option.isVisible()) {
+							continue;
+						}
 						String als2 = "";
 						
 						if(option.getAlias().length>0) {
@@ -66,7 +75,7 @@ public class AutoHelpCommand {
 							}
 							als2=" _`[Alias: " + als2.substring(1) + "]`_";
 						}
-						eb.addField("> " + (option.isEnabled()?"":"*(No disponible)* ") + runner.optionsPrefix + option.getName() + als2, ">>> " + option.getDesc(), false);
+						eb.addField("> " + (option.isEnabled()?"":"*(No disponible)* ~") + runner.optionsPrefix + option.getName() + als2  + (option.isEnabled()?"":"~"), ">>> " + option.getDesc(), false);
 					}
 				}
 				break;

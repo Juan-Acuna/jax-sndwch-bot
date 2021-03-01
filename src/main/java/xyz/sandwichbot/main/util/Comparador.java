@@ -14,17 +14,28 @@ public class Comparador {
 		public static final String Wikidex_R_Link = "/wiki/Lista_de_Pok%C3%A9mon_seg%C3%BAn_la_Pok%C3%A9dex_de_[a-zA-Z]{5,15}";
 		public static final String Pokemon_LinkId = "[0-9]{1,4}</td><td><a href=\"/wiki/[a-zA-Z2_.%:]{3,12}";
 		
-		public static final String Pokemon_Nombre = "<title>[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35} | Pokédex</title>";
-		public static final String Pokemon_Id = "[2:a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}<span class=\"pokemon-number\">N.°[0-9]{3}";
-		public static final String Pokemon_Imagen = "https://assets.pokemon.com/assets/cms2/img/pokedex/full/[0-9]{1,4}.png";
-		public static final String Pokemon_Tipo = "/el/pokedex/\\?type=[0-9a-zA-Z%_ ]{2,35}\">[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}";
-		public static final String Pokemon_Habilidad = "<a href=\"\" class=\"moreInfo\">                      <span class=\"attribute-value\">[0-9a-zA-ZñÑ_ .:áéíóúÁÉÍÓÚ]{1,35}";
+		/* POKEMON */
+		//BASICO
+		public static final String Pokemon_Nombre = "<title>[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35} - WikiDex, la enciclopedia Pokémon<";
+		public static final String Pokemon_Id = ">#<span style=\"font-size:[0-9]{1,4}%;\">[0-9]{3}<";
+		public static final String Pokemon_Imagen = "og:image\" content=\"https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z/]{1,15}/latest/[0-9]{6,16}/[0-9a-zA-ZñÑ_% .:áéíóúÁÉÍÓÚ]{1,35}.png/[0-9]{1,4}px-[0-9a-zA-ZñÑ_% .:áéíóúÁÉÍÓÚ]{1,35}.png";
+		public static final String Pokemon_Imagen2 = "og:image\" content=\"https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z/]{1,15}/latest/[0-9]{6,16}/[0-9a-zA-ZñÑ_% .:áéíóúÁÉÍÓÚ]{1,35}.png";
+		public static final String Pokemon_Tipo = ">Tipo</a></th><td><a href=\"/wiki/Tipo_[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}";
+		public static final String Pokemon_Tipos = "title=\"Tipo\">Tipos</a></th><td><a href=\"/wiki/Tipo_[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}\" title=\"Tipo [0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}\"><img alt=\"Tipo [0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}.gif\" src=\"https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z]{1,3}/[0-9a-zA-Z]{1,3}/latest/[0-9]{6,16}/Tipo_[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}.gif\" decoding=\"async\" [0-9a-zA-Z \"=]{2,45} /></a> <a href=\"/wiki/Tipo_[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}";
+		public static final String Pokemon_Habilidad = ">Habilidad</a></th><td><a href=\"/wiki/[0-9a-zA-ZñÑ_ .%:áéíóúÁÉÍÓÚ]{1,35}";
+		public static final String Pokemon_Habilidades = ">Habilidades</a></th><td><a href=\"/wiki/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}\" title=\"[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}\">[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}</a><br /><a href=\"/wiki/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}";
 		
-		public static final String Pokemon_3D_7 = "https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z]{1,3}/[0-9a-zA-Z]{1,3}/latest/[0-9a-zA-Z]{1,16}/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_XY.gif";
-		public static final String Pokemon_3D_7s= "https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z]{1,3}/[0-9a-zA-Z]{1,3}/latest/[0-9a-zA-Z]{1,16}/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_XY_variocolor.gif";
-		public static final String Pokemon_3D_8 = "https://images.wikidexcdn.net/mwuploads/wikidex/thumb/[0-9a-zA-Z]{1,3}/[0-9a-zA-Z]{1,3}/latest/[0-9a-zA-Z]{1,16}/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_EpEc.gif/228px-[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_EpEc.gif";
-		public static final String Pokemon_3D_8s= "https://images.wikidexcdn.net/mwuploads/wikidex/thumb/[0-9a-zA-Z]{1,3}/[0-9a-zA-Z]{1,3}/latest/[0-9a-zA-Z]{1,16}/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_EpEc_variocolor.gif/228px-[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_EpEc_variocolor.gif";
+		//STATS Y OTROS
+		public static final String Pokemon_Grito = "https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z]{1,3}/[0-9a-zA-Z]{1,3}/latest/[0-9]{6,16}/Grito_de_[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}.ogg";
 		
+		
+		//IMAGENES
+		public static final String Pokemon_3D_7 = "https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z/]{1,15}/latest/[0-9a-zA-Z]{1,16}/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_XY.gif";
+		public static final String Pokemon_3D_7s= "https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z/]{1,15}/latest/[0-9a-zA-Z]{1,16}/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_XY_variocolor.gif";
+		public static final String Pokemon_3D_8 = "https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z/]{1,15}/latest/[0-9a-zA-Z]{1,16}/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_EpEc.gif/[0-9]{1,4}px-[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_EpEc.gif";
+		public static final String Pokemon_3D_8s= "https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z/]{1,15}/latest/[0-9a-zA-Z]{1,16}/[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_EpEc_variocolor.gif/[0-9]{1,4}px-[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}_EpEc_variocolor.gif";
+		
+		/* POKEMON */
 		
 		public static final String XV_Link = "/video[0-9]{3,10}/([a-zA-Z0-9_]{1,100})";
 		public static final String RB_ImageQuery = "https://realbooru.com/index.php\\?page=post\\&s=view\\&id=[0-9]{5,7}";

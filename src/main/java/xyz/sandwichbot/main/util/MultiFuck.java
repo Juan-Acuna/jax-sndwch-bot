@@ -16,6 +16,7 @@ import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.main;
 
 public class MultiFuck implements Runnable{
+	NSFWSource fuente = NSFWSource.Realbooru;
 	MessageChannel channel;
 	boolean pausado = false;
 	String[] tags = null;
@@ -33,6 +34,32 @@ public class MultiFuck implements Runnable{
 	public MultiFuck(MessageChannel channel, boolean pausado) {
 		this.channel=channel;
 		this.pausado=pausado;
+	}
+	public NSFWSource getFuente() {
+		return fuente;
+	}
+	public void setFuente(String fuente) throws Exception {
+		if(fuente.equalsIgnoreCase("realbooru")) {
+			this.fuente=NSFWSource.Realbooru;
+		}else if(fuente.equalsIgnoreCase("konachan")) {
+			this.fuente=NSFWSource.Konachan;
+		}else if(fuente.equalsIgnoreCase("3dbooru")) {
+			this.fuente=NSFWSource._3DBooru;
+		}else if(fuente.equalsIgnoreCase("gelbooru")) {
+			this.fuente=NSFWSource.Gelbooru;
+		}else if(fuente.equalsIgnoreCase("danbooru")) {
+			this.fuente=NSFWSource.Danbooru;
+		}else if(fuente.equalsIgnoreCase("konachannet")) {
+			this.fuente=NSFWSource.KonachanNet;
+		}else if(fuente.equalsIgnoreCase("lbooru")) {
+			this.fuente=NSFWSource.LBooru;
+		}else if(fuente.equalsIgnoreCase("r34")) {
+			this.fuente=NSFWSource.R34;
+		}else if(fuente.equalsIgnoreCase("xbooru")) {
+			this.fuente=NSFWSource.XBooru;
+		}else {
+			throw new Exception("fuente desconocida");
+		}
 	}
 	public void setAutoDes(boolean b) {
 		this.autodes=b;
@@ -84,13 +111,19 @@ public class MultiFuck implements Runnable{
 				}
 			}
 			//System.out.println(n);
-			ArrayList<String> lnks;
+			ArrayList<String> lnks = new ArrayList<>();
 			String hc = "";
 			int tries = 4;
 			int nn = 15;
 			do {
-				hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.NSFW.toRB_link(n,gif,video, rand,tags));
-				lnks = Comparador.EncontrarTodos(Comparador.Patrones.RB_ImageQuery, hc);
+				if(fuente==NSFWSource.Realbooru) {
+					hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.NSFW.toRB_link(n,gif,video, rand,tags));
+					lnks = Comparador.EncontrarTodos(Comparador.Patrones.RB_ImageQuery, hc);
+				}else {
+					hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.NSFW.toO_link(n,fuente,tags));
+					System.out.println("HC:"+hc);
+					//lnks = Comparador.EncontrarTodos(Comparador.Patrones.RB_ImageQuery, hc);
+				}
 				nn--;
 				if(nn<=0) {
 					nn=1;
@@ -123,7 +156,11 @@ public class MultiFuck implements Runnable{
 				System.out.println("n: "+n+",tries: "+tries);
 			}while(lnks ==null || tries<=0);*/
 			condon.unlock();
-			return Comparador.Encontrar(Comparador.Patrones.RB_Image, hc);
+			if(fuente==NSFWSource.Realbooru) {
+				return Comparador.Encontrar(Comparador.Patrones.RB_Image, hc);
+			}else {
+				return Comparador.Encontrar(Comparador.Patrones.RB_Image, hc);
+			}
 		}catch(Exception e) {
 			condon.unlock();
 			return null;
