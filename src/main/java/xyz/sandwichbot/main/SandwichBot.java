@@ -75,7 +75,7 @@ public class SandwichBot extends ListenerAdapter{
 	@Override
 	public void onGuildJoin(GuildJoinEvent e) {
 		TextChannel c = e.getGuild().getDefaultChannel();
-		//c.sendMessage(getInfo(c.isNSFW())).queue();
+		c.sendMessage(getInfo(c.isNSFW())).queue();
 	}
 	@Override
 	public void onPrivateMessageReceived(PrivateMessageReceivedEvent e) {
