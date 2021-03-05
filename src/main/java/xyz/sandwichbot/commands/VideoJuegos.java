@@ -116,12 +116,12 @@ public class VideoJuegos {
 			tipo =Comparador.Encontrar(Comparador.Patrones.Pokemon_Tipos, hc);
 			String[] st = tipo.split("\" title=\"Tipo [0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}\"><img alt=\"Tipo [0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}.gif\" src=\"https://images.wikidexcdn.net/mwuploads/wikidex/[0-9a-zA-Z]{1,3}/[0-9a-zA-Z]{1,3}/latest/[0-9]{6,16}/Tipo_[0-9a-zA-Z%_ áéíóúÁÉÍÓÚ]{2,35}.gif\" decoding=\"async\" [0-9a-zA-Z \"=]{2,45} /></a> <a href=\"/wiki/Tipo_");
 			String t = URLDecoder.decode(st[0].replace("title=\"Tipo\">Tipos</a></th><td><a href=\"/wiki/Tipo_", ""),"UTF-8");
-			tipo = "s: " + t.toUpperCase().substring(0,1) + t.toLowerCase().substring(1) + " " +Constantes.Pkm.getTipo(URLDecoder.decode(t,"UTF-8"));
+			tipo = "s: " + t.toUpperCase().substring(0,1) + t.toLowerCase().substring(1) + " " +Constantes.Pkm.getTipo(t);
 			tipo += " | " + URLDecoder.decode(st[1].toUpperCase().substring(0,1),"UTF-8") + URLDecoder.decode(st[1].toLowerCase().substring(1),"UTF-8") + " " + Constantes.Pkm.getTipo(URLDecoder.decode(st[1],"UTF-8"));
 			//" | "+st[1];
 		}else {
-			String t = tipo.replace(">Tipo</a></th><td><a href=\"/wiki/Tipo_", "");
-			tipo = ": " + t.toUpperCase().substring(0,1) + t.toLowerCase().substring(1) + " " + Constantes.Pkm.getTipo(URLDecoder.decode(t,"UTF-8"));
+			String t = URLDecoder.decode(tipo.replace(">Tipo</a></th><td><a href=\"/wiki/Tipo_", ""),"UTF-8");
+			tipo = ": " + t.toUpperCase().substring(0,1) + t.toLowerCase().substring(1) + " " + Constantes.Pkm.getTipo(t);
 		}
 		habilidad=Comparador.Encontrar(Comparador.Patrones.Pokemon_Habilidad, hc);
 		if(habilidad==null) {
