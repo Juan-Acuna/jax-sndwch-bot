@@ -16,7 +16,7 @@ import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.main;
 
 public class MultiFuck implements Runnable{
-	NSFWSource fuente = NSFWSource.Realbooru;
+	NSFWSource fuente = NSFWSource.RealBooru;
 	MessageChannel channel;
 	boolean pausado = false;
 	String[] tags = null;
@@ -40,15 +40,15 @@ public class MultiFuck implements Runnable{
 	}
 	public void setFuente(String fuente) throws Exception {
 		if(fuente.equalsIgnoreCase("realbooru")) {
-			this.fuente=NSFWSource.Realbooru;
+			this.fuente=NSFWSource.RealBooru;
 		}else if(fuente.equalsIgnoreCase("konachan")) {
 			this.fuente=NSFWSource.Konachan;
 		}else if(fuente.equalsIgnoreCase("3dbooru")) {
 			this.fuente=NSFWSource._3DBooru;
 		}else if(fuente.equalsIgnoreCase("gelbooru")) {
-			this.fuente=NSFWSource.Gelbooru;
+			this.fuente=NSFWSource.GelBooru;
 		}else if(fuente.equalsIgnoreCase("danbooru")) {
-			this.fuente=NSFWSource.Danbooru;
+			this.fuente=NSFWSource.DanBooru;
 		}else if(fuente.equalsIgnoreCase("konachannet")) {
 			this.fuente=NSFWSource.KonachanNet;
 		}else if(fuente.equalsIgnoreCase("lbooru")) {
@@ -116,11 +116,11 @@ public class MultiFuck implements Runnable{
 			int tries = 4;
 			int nn = 15;
 			do {
-				if(fuente==NSFWSource.Realbooru) {
+				if(fuente==NSFWSource.RealBooru) {
 					hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.NSFW.toRB_link(n,gif,video, rand,tags));
 					lnks = Comparador.EncontrarTodos(Comparador.Patrones.RB_ImageQuery, hc);
 				}else {
-					hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.NSFW.toO_link(n,fuente,tags));
+					hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.NSFW.toBooru_link(n,fuente,tags));
 					System.out.println("HC:"+hc);
 					//lnks = Comparador.EncontrarTodos(Comparador.Patrones.RB_ImageQuery, hc);
 				}
@@ -156,7 +156,7 @@ public class MultiFuck implements Runnable{
 				System.out.println("n: "+n+",tries: "+tries);
 			}while(lnks ==null || tries<=0);*/
 			condon.unlock();
-			if(fuente==NSFWSource.Realbooru) {
+			if(fuente==NSFWSource.RealBooru) {
 				return Comparador.Encontrar(Comparador.Patrones.RB_Image, hc);
 			}else {
 				return Comparador.Encontrar(Comparador.Patrones.RB_Image, hc);

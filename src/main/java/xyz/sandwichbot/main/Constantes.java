@@ -158,7 +158,7 @@ public class Constantes {
 				String url = "https://www.xvideos.com/?k="+busqueda+"&top";
 				return url;
 			}
-			public static String toO_link(int pid, NSFWSource fuente, String[] tags) throws Exception {
+			public static String toBooru_link(int pid, NSFWSource fuente, String[] tags) throws Exception {
 				String t = "";
 				if(tags!=null) {
 					for(String s : tags) {
@@ -170,17 +170,20 @@ public class Constantes {
 				}
 				String url = "";
 				switch(fuente) {
+					case RealBooru:
+						url = REALBOORU_QUERY;
+						break;
 					case Konachan:
-						url = KONACHAN_QUERY;
+						url = KONACHAN_QUERY + "uncensored";
 						break;
 					case _3DBooru:
 						url = _3DBOORU_QUERY;
 						break;
-					case Gelbooru:
+					case GelBooru:
 						url = GELBOORU_QUERY;
 						break;
-					case Danbooru:
-						url = DANBOORU_QUERY;
+					case DanBooru:
+						url = DANBOORU_QUERY + "uncensored";
 						break;
 					case KonachanNet:
 						url = KONACHAN_NET_QUERY;
@@ -194,21 +197,28 @@ public class Constantes {
 					case XBooru:
 						url = XBOORU_QUERY;
 						break;
-					default:
-						return null;
+					case Yandere:
+						url = YANDERE_QUERY;
+						break;
+					case SafeBooru:
+						url = SAFEBOORU_QUERY;
+						break;
 				}
-				url +="uncensored" + t;
+				url += t;
 				return url;
 			}
 			public static final String LINK_XV_BASE = "https://www.xvideos.com";
-			public static final String KONACHAN_QUERY = "https://konachan.com/post?tags=";
-			public static final String _3DBOORU_QUERY = "";
-			public static final String DANBOORU_QUERY = "";
-			public static final String GELBOORU_QUERY = "";
-			public static final String KONACHAN_NET_QUERY = "";
-			public static final String LBOORU_QUERY = "";
-			public static final String R34_QUERY = "";
-			public static final String XBOORU_QUERY = "";
+			public static final String REALBOORU_QUERY = "https://realbooru.com/index.php?page=post&s=list&tags=";//gif
+			public static final String KONACHAN_QUERY = "https://konachan.com/post?tags=";//nogif, ru
+			public static final String _3DBOORU_QUERY = "http://behoimi.org/post?commit=Search&tags=";//censored
+			public static final String DANBOORU_QUERY = "https://danbooru.donmai.us/posts?tags=";//gif, premium(max2), ru
+			public static final String GELBOORU_QUERY = "https://gelbooru.com/index.php?page=post&s=list&tags=";//nogif
+			public static final String KONACHAN_NET_QUERY = "https://konachan.net/post?tags=";//nogif, censored
+			public static final String LBOORU_QUERY = "https://lolibooru.moe/post?tags=";//censored
+			public static final String R34_QUERY = "https://rule34.xxx/index.php?page=post&s=list&tags=";//gif
+			public static final String XBOORU_QUERY = "https://xbooru.com/index.php?page=post&s=list&tags=";//gif
+			public static final String YANDERE_QUERY = "https://yande.re/post?tags=";//nogif
+			public static final String SAFEBOORU_QUERY = "https://safebooru.org/index.php?page=post&s=list&tags=";//censored, gif
 		}
 	}
 }

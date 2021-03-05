@@ -1,13 +1,18 @@
 package xyz.sandwichbot.main.util;
 
 public enum NSFWSource {
-	Realbooru,
+	Google,
+	RandomCat,
+	RealBooru,
 	Konachan,
 	_3DBooru,
-	Gelbooru,
-	Danbooru,
+	GelBooru,
+	DanBooru,
 	KonachanNet,
 	LBooru,
 	R34,
-	XBooru
+	XBooru,
+	Yandere,
+	SafeBooru,
+	Custom
 }

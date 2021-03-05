@@ -24,7 +24,7 @@ import xyz.sandwichbot.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos frecuentes con propósitos variados.")
 public class Comun {
-	@Command(name="Saludar",desc="Da un cálido saludo a un amigo(aún no funciona con menciones:pensive:)",alias={"s","saluda","putea","putear"})
+	@Command(name="Saludar",desc="Da un cálido saludo a un amigo(aún no funciona con menciones:pensive:)",alias={"s","saluda","putea","putear"},enabled=false)
 	@Parameter(name="Nombre del objetivo",desc="Nombre del objetivo(ejemplo: Tulencio).\nSe permiten espacios. Todo texto que comience con un '-' no formará parte del nombre.")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	public static void saludar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {

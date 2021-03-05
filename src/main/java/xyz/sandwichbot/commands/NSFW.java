@@ -14,6 +14,8 @@ import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
+import xyz.sandwichbot.main.util.ControladorImagenes;
+import xyz.sandwichbot.main.util.FuenteImagen;
 import xyz.sandwichbot.main.util.MultiFuck;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
@@ -68,34 +70,37 @@ public class NSFW {
 		}else if(cantidad<=0) {
 			cantidad=1;
 		}
-		MultiFuck fk;
+		ControladorImagenes gi;
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setColor(Color.red);
+		eb.setFooter("Tranquil@ cochin@, no diré quien eres 🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
 		if(cantidad>=8) {
-			fk = new MultiFuck(e.getChannel(),true);
+			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.RealBooru,eb,true);
 		}else {
-			fk = new MultiFuck(e.getChannel());
+			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.RealBooru,eb);
 		}
-		fk.setGif(gif);
-		fk.setTags(tags);
-		fk.setVideo(video);
-		fk.setAutoDes(autodes);
-		fk.setAutodesTime(autodesTime);
-		fk.setRand(random);
+		gi.setGif(gif);
+		gi.setTags(tags);
+		gi.setVideo(video);
+		gi.setAutodes(autodes);
+		gi.setAutodesTime(autodesTime);
+		gi.setRand(random);
 		Thread fuck;
 		try {
 			if(!e.getTextChannel().isNSFW()){
-				fk.enviarRestriccion();
+				gi.enviarRestriccion();
 				return;
 			}
 		}catch(Exception ex) {
 			
 		}
 		for(int i = 1; i<=cantidad;i++) {
-			fuck = new Thread(fk);
+			fuck = new Thread(gi);
 			fuck.start();
 		}
 	}
 	@Command(name="Xvideos",desc="Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(Aún no soy capaz de reproducirlos, denme tiempo:pensive:).",alias={"xv","xvid","xxxv","videosnopor"})
-	@Parameter(name="Nombre del objetivo",desc="Texto con el cual se realizará la busqueda en xvideos (ejemplo: 'creampie'... esta vez no me equivoqué de página :smirk:).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
+	@Parameter(name="Busqueda",desc="Texto con el cual se realizará la busqueda en xvideos (ejemplo: 'creampie'... esta vez no me equivoqué de página :smirk:).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	public static void xvideos(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		e.getChannel().purgeMessagesById(e.getMessageId());
@@ -150,11 +155,11 @@ public class NSFW {
 		}
 		
 	}
-	@Command(name="OtakuNSFW",desc="Es como el de NSFW clásico... Pero con monas chinas :wink::smirk:",alias= {"hentai","otakuns","ons","o18","h18","otakuporn","monaschinas"},enabled=true,visible=false)
+	@Command(name="OtakuNSFW",desc="Es como el de NSFW clásico... Pero con monas chinas :wink::smirk:",alias= {"hentai","otakuns","ons","o18","h18","otakuporn"})
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="cantidad",desc="Indica la cantidad de imagenes que devolverá el comando. DEBE SER UN VALOR NUMÉRICO ENTRE 1 Y 100 (se que quieres más, pero tu mano se va a hacer mierda...me preocupo por ti manit@). Si ingresas mal este número te quedarás sin placer:smirk:",alias={"c","cant","num"})
 	@Option(name="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
-	@Option(name="fuente",desc="Indica la fuente de origen del contenido a mostrar.\nFuentes permitidas:\n-  [Konachan.com](https://konachan.com)\n-  3Dbooru\n-  Gelbooru\n-  Danbooru\n-  [Konachan.net](https://konachan.net)\n-  Lolibooru\n-  Rule34\n-  XBooru",alias={"f","source","origen"})
+	@Option(name="fuente",desc="Indica la fuente de origen del contenido a mostrar.\nFuentes permitidas:\n- [Konachan.com](https://konachan.com)\n- [Gelbooru](https://gelbooru.com)\n- [Danbooru](https://danbooru.donmai.us)\n- [XBooru](https://xbooru.com)\n - [Yandere](https://yande.re)",alias={"f","source","origen"})
 	public static void otakus(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		e.getChannel().purgeMessagesById(e.getMessageId());
 		int cantidad = 1;
@@ -171,6 +176,8 @@ public class NSFW {
 					}
 				}else if(p.getKey().equalsIgnoreCase("cantidad")) {
 					cantidad = p.getValueAsInt();
+				}else if(p.getKey().equalsIgnoreCase("fuente")) {
+					fuente = p.getValueAsString();
 				}else if(p.getKey().equalsIgnoreCase("tags")) {
 					tags = p.getValueAsString().replaceAll("\\s",",").split(",");
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
@@ -184,27 +191,47 @@ public class NSFW {
 		}else if(cantidad<=0) {
 			cantidad=1;
 		}
-		MultiFuck fk;
-		if(cantidad>=8) {
-			fk = new MultiFuck(e.getChannel(),true);
-		}else {
-			fk = new MultiFuck(e.getChannel());
+		FuenteImagen fi = FuenteImagen.Konachan;
+		if(fuente.equalsIgnoreCase("konachan") || fuente.equalsIgnoreCase("konachan.com") || fuente.equalsIgnoreCase("k")) {//konachan
+			fi = FuenteImagen.Konachan;
+		}else if(fuente.equalsIgnoreCase("danbooru") || fuente.equalsIgnoreCase("db") || fuente.equalsIgnoreCase("danboru") || fuente.equalsIgnoreCase("d")  || fuente.equalsIgnoreCase("danbooru.donmai.us")) {//danbooru
+			fi = FuenteImagen.DanBooru;
+		}else if(fuente.equalsIgnoreCase("gelbooru") || fuente.equalsIgnoreCase("g") || fuente.equalsIgnoreCase("gelbooru.com") || fuente.equalsIgnoreCase("gelboru") || fuente.equalsIgnoreCase("gelboru.com") || fuente.equalsIgnoreCase("gel")) {//gelbooru
+			fi = FuenteImagen.GelBooru;
+		}else if(fuente.equalsIgnoreCase("xbooru") || fuente.equalsIgnoreCase("x") || fuente.equalsIgnoreCase("xbooru.com") || fuente.equalsIgnoreCase("xboru") || fuente.equalsIgnoreCase("xboru.com")) {//xbooru
+			fi = FuenteImagen.XBooru;
+		}else if(fuente.equalsIgnoreCase("yandere") || fuente.equalsIgnoreCase("y") || fuente.equalsIgnoreCase("yande.re") || fuente.equalsIgnoreCase("yande") || fuente.equalsIgnoreCase("ere")) {//yandere
+			fi = FuenteImagen.Yandere;
 		}
-		fk.setTags(tags);
-		fk.setAutoDes(autodes);
-		fk.setAutodesTime(autodesTime);
-		fk.setFuente(fuente);
+		/*else if(fuente.equalsIgnoreCase("3dbooru") || fuente.equalsIgnoreCase("3d") || fuente.equalsIgnoreCase("behoimi.org") || fuente.equalsIgnoreCase("3")  || fuente.equalsIgnoreCase("3dboru")) {//3dbooru
+			fi = FuenteImagen._3DBooru;
+		}*/
+		else {
+			e.getChannel().sendMessage("Fuente '" + fuente + "' no encontrada. Voy a usar la fuente por defecto(http://Konachan.com)").queue();
+		}
+		ControladorImagenes gi;
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setColor(Color.red);
+		eb.setFooter("Tranquil@ cochin@, no diré quien eres 🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		if(cantidad>=8) {
+			gi = new ControladorImagenes(e.getChannel(),fi,eb,true);
+		}else {
+			gi = new ControladorImagenes(e.getChannel(),fi,eb);
+		}
+		gi.setTags(tags);
+		gi.setAutodes(autodes);
+		gi.setAutodesTime(autodesTime);
 		Thread fuck;
 		try {
 			if(!e.getTextChannel().isNSFW()){
-				fk.enviarRestriccion();
+				gi.enviarRestriccion();
 				return;
 			}
 		}catch(Exception ex) {
 			
 		}
 		for(int i = 1; i<=cantidad;i++) {
-			fuck = new Thread(fk);
+			fuck = new Thread(gi);
 			fuck.start();
 		}
 	}
