@@ -19,7 +19,7 @@ public class ControladorImagenes implements Runnable{
 
 	MessageChannel channel;
 	boolean pausado = false;
-	FuenteImagen fuente2;
+	FuenteImagen fuente;
 	String[] tags = null;
 	boolean gif = true;
 	boolean video =false;
@@ -45,7 +45,7 @@ public class ControladorImagenes implements Runnable{
 			}else {
 				Thread.sleep(300);
 			}
-			if(!fuente2.getName().equalsIgnoreCase("randomcat")) {
+			if(!fuente.getName().equalsIgnoreCase("randomcat")) {
 				lnk = linkBooru();
 				System.out.println("lnk: " + lnk);
 				if(lnk==null) {
@@ -83,22 +83,22 @@ public class ControladorImagenes implements Runnable{
 	}
 	
 	private String linkAPI() throws Exception {
-		String hc = ClienteHttp.peticionHttp(fuente2.getQueryUrl());
+		String hc = ClienteHttp.peticionHttp(fuente.getQueryUrl());
 		if(hc == null) {
 			throw new Exception();
 		}
 		JSONObject j = new JSONObject(hc);
-		return j.getString(fuente2.getImgPattern());
+		return j.getString(fuente.getImgPattern());
 	}
 	private String linkBooru() throws Exception {
 		random = new Random(System.currentTimeMillis());
 		try {
 			int n = 0;
-			if(fuente2.getMaxPage()>1) {
+			if(fuente.getMaxPage()>1) {
 				if(tags==null) {
-					n = random.nextInt(fuente2.getMaxPage());
+					n = random.nextInt(fuente.getMaxPage());
 				}else {
-					n = random.nextInt((fuente2.getMaxPage()/3)*2);
+					n = random.nextInt((fuente.getMaxPage()/3)*2);
 					n = n - tags.length*2;
 					if(n<=0) {
 						n=1;
@@ -112,13 +112,13 @@ public class ControladorImagenes implements Runnable{
 			int tries = 4;
 			int nn = 15;
 			do {
-				String teststr = fuente2.getQuery(n, tags, gif,video, rand);
+				String teststr = fuente.getQuery(n, tags, gif,video, rand);
 				System.out.println("query:"+teststr);
 				hc = ClienteHttp.peticionHttp(teststr);//SUSTITUIR POR LINK
-				System.out.println("ptrn:"+fuente2.getSelectionPattern());
-				System.out.println("name:"+fuente2.getName());
+				System.out.println("ptrn:"+fuente.getSelectionPattern());
+				System.out.println("name:"+fuente.getName());
 				System.out.println("HC:"+hc.substring(3000));
-				lnks = Comparador.EncontrarTodos(fuente2.getSelectionPattern(), hc);
+				lnks = Comparador.EncontrarTodos(fuente.getSelectionPattern(), hc);
 				nn--;
 				if(nn<=0) {
 					nn=2;
@@ -146,16 +146,16 @@ public class ControladorImagenes implements Runnable{
 			String qry = lnks.get(sel).replaceAll("href=\"", "");
 			if(!(qry.startsWith("http://") || qry.startsWith("https://"))) {
 				if(qry.startsWith("/")) {
-					qry = fuente2.getUrl() + qry;
+					qry = fuente.getUrl() + qry;
 				}else {
-					qry = fuente2.getUrl() + "/" + qry;
+					qry = fuente.getUrl() + "/" + qry;
 				}
 			}
 			hc = ClienteHttp.peticionHttp(qry);
 			System.out.println("qry: "+qry);
-			System.out.println("ptrnimg:"+fuente2.getImgPattern());
+			System.out.println("ptrnimg:"+fuente.getImgPattern());
 			//System.out.println("HC:"+hc.substring(23000));
-			String rtn = Comparador.Encontrar(fuente2.getImgPattern(), hc);
+			String rtn = Comparador.Encontrar(fuente.getImgPattern(), hc);
 			System.out.println(rtn);
 			return rtn.replaceAll("src=\"", "").replaceAll("\"", "");
 		}catch(Exception e) {
@@ -187,13 +187,13 @@ public class ControladorImagenes implements Runnable{
 	
 	public ControladorImagenes(MessageChannel channel, FuenteImagen fuente2, EmbedBuilder builder) {
 		this.channel = channel;
-		this.fuente2 = fuente2;
+		this.fuente = fuente2;
 		this.builder = builder;
 	}
 	public ControladorImagenes(MessageChannel channel, FuenteImagen fuente2, EmbedBuilder builder, boolean pausado) {
 		this.channel = channel;
 		this.pausado = pausado;
-		this.fuente2 = fuente2;
+		this.fuente = fuente2;
 		this.builder = builder;
 	}
 	
@@ -212,10 +212,10 @@ public class ControladorImagenes implements Runnable{
 		this.pausado = pausado;
 	}
 	public FuenteImagen getFuente2() {
-		return fuente2;
+		return fuente;
 	}
 	public void setFuente2(FuenteImagen fuente2) {
-		this.fuente2 = fuente2;
+		this.fuente = fuente2;
 	}
 	public String[] getTags() {
 		return tags;

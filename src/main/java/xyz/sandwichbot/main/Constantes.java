@@ -1,14 +1,11 @@
 package xyz.sandwichbot.main;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
-import xyz.sandwichbot.main.util.NSFWSource;
 
 public class Constantes {
 	//PACKAGE : "xyz.sandwichbot.commands"
@@ -113,112 +110,13 @@ public class Constantes {
 		public static final String LINK_WIKIDEX_QUERY = "https://www.wikidex.net/wiki/";
 		public static final String LINK_POKEMON_QUERY ="https://www.pokemon.com/el/pokedex/";
 		public static class NSFW{
-			public static String toRB_link(int pid, boolean gif, boolean video, boolean random, String[] tags) throws Exception {
-				String t = "mmale+female";
-				if(tags!=null) {
-					t = "";
-					//System.out.println("TAGS: ");
-					for(String s : tags) {
-						if(s.trim().replace(" ","").length()<=0) {
-							continue;
-						}
-						//System.out.println(s);
-						t += "+" + URLEncoder.encode(s, StandardCharsets.UTF_8.toString());
-					}
-				}
-				//System.out.println("random:"+random);
-				String tipo = "";
-				if(random) {
-					Random r = new Random(System.currentTimeMillis());
-					int i = r.nextInt(18)+1;
-					if(i==1 || i==4 || i==7 || i==10 || i==13 || i==16) {
-						tipo="";
-					}else if(i==2 || i==5 || i==8 || i==11 || i==14 || i==17) {
-						tipo="video+";
-					}else if(i==3 || i==6 || i==9 || i==12 || i==15 || i==18) {
-						tipo="gif+";
-					}
-					//System.out.println("I:"+i);
-				}else {
-					if(video) {
-						tipo = "video+";
-						gif=false;
-					}
-					if(gif) {
-						tipo="gif+";
-					}
-				}
-				/**/
-				String url = "https://realbooru.com/index.php?page=post&s=list&tags=" + tipo + t.substring(1) + "&pid="+pid;
-				//System.out.println(url);
-				return url;
-			}
 			public static String toXV_link(String busqueda) throws Exception {
 				busqueda = URLEncoder.encode(busqueda, StandardCharsets.UTF_8.toString());
 				String url = "https://www.xvideos.com/?k="+busqueda+"&top";
 				return url;
 			}
-			public static String toBooru_link(int pid, NSFWSource fuente, String[] tags) throws Exception {
-				String t = "";
-				if(tags!=null) {
-					for(String s : tags) {
-						if(s.trim().replace(" ","").length()<=0) {
-							continue;
-						}
-						t += "+" + URLEncoder.encode(s, StandardCharsets.UTF_8.toString());
-					}
-				}
-				String url = "";
-				switch(fuente) {
-					case RealBooru:
-						url = REALBOORU_QUERY;
-						break;
-					case Konachan:
-						url = KONACHAN_QUERY + "uncensored";
-						break;
-					case _3DBooru:
-						url = _3DBOORU_QUERY;
-						break;
-					case GelBooru:
-						url = GELBOORU_QUERY;
-						break;
-					case DanBooru:
-						url = DANBOORU_QUERY + "uncensored";
-						break;
-					case KonachanNet:
-						url = KONACHAN_NET_QUERY;
-						break;
-					case LBooru:
-						url = LBOORU_QUERY;
-						break;
-					case R34:
-						url = R34_QUERY;
-						break;
-					case XBooru:
-						url = XBOORU_QUERY;
-						break;
-					case Yandere:
-						url = YANDERE_QUERY;
-						break;
-					case SafeBooru:
-						url = SAFEBOORU_QUERY;
-						break;
-				}
-				url += t;
-				return url;
-			}
+			
 			public static final String LINK_XV_BASE = "https://www.xvideos.com";
-			public static final String REALBOORU_QUERY = "https://realbooru.com/index.php?page=post&s=list&tags=";//gif
-			public static final String KONACHAN_QUERY = "https://konachan.com/post?tags=";//nogif, ru
-			public static final String _3DBOORU_QUERY = "http://behoimi.org/post?commit=Search&tags=";//censored
-			public static final String DANBOORU_QUERY = "https://danbooru.donmai.us/posts?tags=";//gif, premium(max2), ru
-			public static final String GELBOORU_QUERY = "https://gelbooru.com/index.php?page=post&s=list&tags=";//nogif
-			public static final String KONACHAN_NET_QUERY = "https://konachan.net/post?tags=";//nogif, censored
-			public static final String LBOORU_QUERY = "https://lolibooru.moe/post?tags=";//censored
-			public static final String R34_QUERY = "https://rule34.xxx/index.php?page=post&s=list&tags=";//gif
-			public static final String XBOORU_QUERY = "https://xbooru.com/index.php?page=post&s=list&tags=";//gif
-			public static final String YANDERE_QUERY = "https://yande.re/post?tags=";//nogif
-			public static final String SAFEBOORU_QUERY = "https://safebooru.org/index.php?page=post&s=list&tags=";//censored, gif
 		}
 	}
 }

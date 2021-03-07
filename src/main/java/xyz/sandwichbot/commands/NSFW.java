@@ -16,7 +16,7 @@ import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.main.util.ControladorImagenes;
 import xyz.sandwichbot.main.util.FuenteImagen;
-import xyz.sandwichbot.main.util.MultiFuck;
+import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
 
@@ -24,12 +24,13 @@ import xyz.sandwichbot.models.InputParameter.InputParamType;
 +" Comandos vitales para una sociedad civilizada y culta.",nsfw=true)
 public class NSFW {
 	@Command(name="NSFW",desc="Como si no supieras que hace este comando cochin@ :wink::smirk:",alias= {"ns","por","uff","porno","prn","nopor","nopo","porn","cochinadas","18","+18","7u7"})
-	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="cantidad",desc="Indica la cantidad de imagenes que devolverá el comando. DEBE SER UN VALOR NUMÉRICO ENTRE 1 Y 100 (se que quieres más, pero tu mano se va a hacer mierda...me preocupo por ti manit@). Si ingresas mal este número te quedarás sin placer:smirk:",alias={"c","cant","num"})
 	@Option(name="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
 	@Option(name="gif",desc="Indica si el contenido es animado o no. Si no se especifica esta opción, por defecto el contenido es animado (equivalente a '-gif true')",alias={"g","gf","animado","anim"})
 	@Option(name="video",desc="Esta opcion indica que el recurso devuelto debe ser un video. Si se usa junto con la opcion '-gif', esta ultima sera ignorada.",alias={"v","vid","mp4"})
 	@Option(name="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
+	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
 	public static void nsfw(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		e.getChannel().purgeMessagesById(e.getMessageId());
 		int cantidad = 1;
@@ -40,6 +41,7 @@ public class NSFW {
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean random = false;
+		boolean noanon = false;
 		for(InputParameter p : parametros) {
 			//System.out.println(p.getClave()+"-"+p.getTipo());
 			if(p.getType() == InputParamType.Standar) {
@@ -54,6 +56,8 @@ public class NSFW {
 					gif= p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("tags")) {
 					tags = p.getValueAsString().replaceAll("\\s",",").split(",");
+				}else if(p.getKey().equalsIgnoreCase("credito")) {
+					noanon = true;
 				}else if(p.getKey().equalsIgnoreCase("video")) {
 					video = true;
 					gif=false;
@@ -73,7 +77,7 @@ public class NSFW {
 		ControladorImagenes gi;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
-		eb.setFooter("Tranquil@ cochin@, no diré quien eres 🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ")+"🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
 		if(cantidad>=8) {
 			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.RealBooru,eb,true);
 		}else {
@@ -94,6 +98,23 @@ public class NSFW {
 		}catch(Exception ex) {
 			
 		}
+		EmbedBuilder eb2 = new EmbedBuilder();
+		String str = " imagenes";
+		if(random) {
+			str = " imagenes y videos aleatorios";
+		}else if(video) {
+			str = " videos";
+		}else if(gif) {
+			str = " imagenes animadas";
+		}
+		eb2.setColor(Color.red);
+		eb2.addField("A petición de " + "nombre", cantidad + str + (tags==null?".":" con las siguientes etiquetas: `"+Tools.arrayToString(tags))+"`.", false);
+		if(autodes) {
+			SandwichBot.SendAndDestroy(e.getChannel(), eb2.build(), autodesTime);
+		}else {
+			e.getChannel().sendMessage(eb2.build()).queue();
+		}
+		
 		for(int i = 1; i<=cantidad;i++) {
 			fuck = new Thread(gi);
 			fuck.start();

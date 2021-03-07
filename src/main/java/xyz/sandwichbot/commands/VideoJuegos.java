@@ -22,6 +22,7 @@ public class VideoJuegos {
 	@Option(name="variocolor",desc="Retorna pokémon, cuya imagen es reemplazada por su versión variocolor. La imagen devuelta es un render 3D animado. Si se usa la opción '-3D', esta última es ignorada.",alias={"shiny","s","sny","shaini","chino","vc","vario"})
 	@Option(name="3D",desc="Retorna pokémon, cuya imagen es reemplazada por un render 3D animado de la criatura.",alias={"3","render","real","rl"})
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void pokedex(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		boolean autodes = false;
 		int autodesTime = 15;
@@ -29,9 +30,8 @@ public class VideoJuegos {
 		int pkmnId = -1;
 		boolean shiny = false;
 		boolean _3d = false;
-		System.out.println("*****************************\nPARAMETROOS:");
+		boolean anon = false;
 		for(InputParameter p : parametros) {
-			System.out.println(p.getKey() + " - " + p.getValueAsString() + " - " + p.getType());
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Pokedex");
@@ -47,12 +47,16 @@ public class VideoJuegos {
 					_3d=true;
 				}else if(p.getKey().equalsIgnoreCase("variocolor")){
 					shiny = true;
+				}else if(p.getKey().equalsIgnoreCase("anonimo")){
+					anon = true;
 				}
 			}else if(p.getType() == InputParamType.Custom){
 				pkmn = p.getValueAsString();
 			}
 		}
-		System.out.println("***************************");
+		if(anon) {
+			e.getChannel().purgeMessagesById(e.getMessageId());
+		}
 		if(pkmn==null && pkmnId<0) {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Debe ingresar el nombre de un pokémon o su número en la pokédex nacional con la opcion '-numero' (para mas info use '-ayuda') para usar este comando.");

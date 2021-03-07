@@ -27,10 +27,12 @@ public class Comun {
 	@Command(name="Saludar",desc="Da un cálido saludo a un amigo(aún no funciona con menciones:pensive:)",alias={"s","saluda","putea","putear"},enabled=false)
 	@Parameter(name="Nombre del objetivo",desc="Nombre del objetivo(ejemplo: Tulencio).\nSe permiten espacios. Todo texto que comience con un '-' no formará parte del nombre.")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void saludar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		String nombre = null;
 		boolean autodes = false;
 		int autodesTime=15;
+		boolean anon=false;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
@@ -38,6 +40,8 @@ public class Comun {
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
+				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
+					anon=true;
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Saludar");
 					return;
@@ -45,6 +49,9 @@ public class Comun {
 			}else if(p.getType() == InputParamType.Custom){
 				nombre = p.getValueAsString();
 			}
+		}
+		if(anon) {
+			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(nombre!=null) {
 			if(autodes) {
@@ -67,10 +74,12 @@ public class Comun {
 	@Command(name="YouTube",desc="Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(Aún no soy capaz de reproducirlos, denme tiempo:pensive:).",alias={"yt","y","yutu","video","videos","llutu"})
 	@Parameter(name="Nombre del objetivo",desc="Texto con el cual se realizará la busqueda en Youtube (ejemplo: s.youtube '[creampie](https://preppykitchen.com/cream-pie/)'... chucha, creo me equivoqué de página xD).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void youtube(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		String busqueda = null;
 		boolean autodes = false;
 		int autodesTime=15;
+		boolean anon = false;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
@@ -78,6 +87,8 @@ public class Comun {
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
+				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
+					anon=true;
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "YouTube");
 					return;
@@ -85,6 +96,9 @@ public class Comun {
 			}else if(p.getType() == InputParamType.Custom){
 				busqueda = p.getValueAsString();
 			}
+		}
+		if(anon) {
+			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(busqueda!=null) {
 			busqueda = URLEncoder.encode(busqueda, StandardCharsets.UTF_8.toString());
@@ -114,15 +128,38 @@ public class Comun {
 				}
 				return;
 			}
-			e.getChannel().sendMessage("No se encontraron resultados):").queue();
+			SandwichBot.SendAndDestroy(e.getChannel(),"No se encontraron resultados):", 10);
 			return;
 		}else {
-			e.getChannel().sendMessage("Debe especificar una busqueda.").queue();
+			SandwichBot.SendAndDestroy(e.getChannel(),"Debe especificar una busqueda.", 10);
 		}
 		
 	}
 	@Command(name="Invocar",desc="Comano extraño pero útil. Hace que me conecte a los canales de texto y voz del invocador",alias= {"invoke","llamar","ven"})
+	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void invocar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+		boolean autodes = false;
+		int autodesTime = 15;
+		boolean anon = false;
+		for(InputParameter p : parametros) {
+			if(p.getType() == InputParamType.Standar) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")) {
+					autodes=true;
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+						autodesTime = p.getValueAsInt();
+					}
+				}if(p.getKey().equalsIgnoreCase("anonimo")) {
+					anon=true;
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+					AutoHelpCommand.sendHelp(e.getChannel(), "Presentacion");
+					return;
+				}
+			}
+		}
+		if(anon) {
+			e.getChannel().purgeMessagesById(e.getMessageId());
+		}
 		Guild guild = e.getGuild();
 		Member m = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
 		GuildVoiceState vs = m.getVoiceState();
@@ -134,26 +171,53 @@ public class Comun {
 				return;
 			}
 		}
-		if(Musica.enUso) {
-			//no puedo, ya estoy en uso
-			//posiblemente mande a otros bots de musica
-			return;
-		}
 		if(!invocador.getVoiceState().inVoiceChannel()) {
 			//necesita estar en un canal de voz para reproducir musica
-			e.getChannel().sendMessage("primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@").queue();
+			if(autodes) {
+				SandwichBot.SendAndDestroy(e.getChannel(),"primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@",autodesTime);
+			}else {
+				e.getChannel().sendMessage("primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@").queue();
+			}
 			return;
 		}
 		AudioManager audioManager = guild.getAudioManager();
-		e.getChannel().sendMessage("voy").queue();
+		if(autodes) {
+			SandwichBot.SendAndDestroy(e.getChannel(),"voy",autodesTime);
+		}else {
+			e.getChannel().sendMessage("voy").queue();
+		}
+		
 		audioManager.openAudioConnection(vchannel);
 	}
 	@Command(name="Presentacion",desc="Comando para saber más de mi (no es lo mismo que el de ayuda).",alias= {"informacion","info","inf"})//,enabled=false,visible=false)
+	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void info(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
-		
-		
-		
-		
-		e.getChannel().sendMessage(SandwichBot.getInfo(e.getTextChannel().isNSFW())).queue();
+		boolean autodes = false;
+		int autodesTime = 15;
+		boolean anon = false;
+		for(InputParameter p : parametros) {
+			if(p.getType() == InputParamType.Standar) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")) {
+					autodes=true;
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+						autodesTime = p.getValueAsInt();
+					}
+				}if(p.getKey().equalsIgnoreCase("anonimo")) {
+					anon=true;
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+					AutoHelpCommand.sendHelp(e.getChannel(), "Presentacion");
+					return;
+				}
+			}
+		}
+		if(anon) {
+			e.getChannel().purgeMessagesById(e.getMessageId());
+		}
+		if(autodes) {
+			SandwichBot.SendAndDestroy(e.getChannel(),SandwichBot.getInfo(e.getTextChannel().isNSFW()),autodesTime);
+		}else {
+			e.getChannel().sendMessage(SandwichBot.getInfo(e.getTextChannel().isNSFW())).queue();
+		}
 	}
 }
