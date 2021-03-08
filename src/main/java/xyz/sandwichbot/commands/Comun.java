@@ -220,4 +220,16 @@ public class Comun {
 			e.getChannel().sendMessage(SandwichBot.getInfo(e.getTextChannel().isNSFW())).queue();
 		}
 	}
+	
+	@Command(name="VoteBan",desc="Inicia una votacion para banear a un usuario del servidor(temporalmente). *ESTE COMANDO REQUIERE SER ACTIVADO PREVIAMENTE POR UN ADMINISTRADOR DEL SERVIDOR.*",alias= {"vb","vban"},enabled=false)
+	@Parameter(name="Nombre Objetivo(mención)",desc="Nombre(mención) del usuario a Banear. Se permiten mas de uno.")
+	public static void voteban() {
+		
+	}
+	
+	@Command(name="Embed",desc="Devuelve el mensaje introducido por el usuario en forma de 'Embed' (mensaje decorado con un estilo especial de discord).",alias= {"emb"},enabled=false)
+	public static void embed() {
+		
+	}
+	
 }

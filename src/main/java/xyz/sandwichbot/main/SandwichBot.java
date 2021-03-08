@@ -87,6 +87,7 @@ public class SandwichBot extends ListenerAdapter{
 		}
 	}
 	
+	
 	public static void SendAndDestroy(MessageChannel c, MessageEmbed emb, int time) {
 		c.sendMessage(emb).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));
 	}
@@ -103,7 +104,7 @@ public class SandwichBot extends ListenerAdapter{
 		eb.addField("¡Ah, lo olvidaba!", "Para saber que verga puedo hacer, escribe '"+SandwichBot.ActualBot().getPrefijo()+"ayuda'🍑", false);
 		eb.addBlankField(false);
 		eb.addBlankField(false);
-		eb.addField(">>> VERSION: 0.1.1\nPara más información acerca de este bot, "
+		eb.addField(">>> VERSION: 0.1.3\nPara más información acerca de este bot, "
 				+"visita: sitio web aún no disponible. Te me esperas.", "", false);
 		eb.setFooter("DISCLAIMER: No soy dueño de ninguna de las marcas ni de los recursos gráficos "
 		+"provistos por este bot. Todo ese contenido le pertenece a las fuentes originales donde fueron obtenidas. "
