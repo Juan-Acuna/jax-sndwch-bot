@@ -47,7 +47,7 @@ public class ControladorImagenes implements Runnable{
 			}
 			if(!fuente.getName().equalsIgnoreCase("randomcat")) {
 				lnk = linkBooru();
-				System.out.println("lnk: " + lnk);
+				//System.out.println("lnk: " + lnk);
 				if(lnk==null) {
 					EmbedBuilder eb = new EmbedBuilder();
 					eb.setFooter("No se encontró contenido (#PichulaTriste), intentalo nuevamente",Constantes.JaxSandwich.Imagenes.nonsfw);
@@ -57,7 +57,7 @@ public class ControladorImagenes implements Runnable{
 			}else{
 				lnk = linkAPI();
 			}
-			System.out.println("url: " + lnk);
+			//System.out.println("url: " + lnk);
 			builder.setImage(lnk);
 			lock.unlock();
 			if(autodes) {
@@ -73,10 +73,10 @@ public class ControladorImagenes implements Runnable{
 				}channel.sendMessage(builder.build()).queue();
 			}
 		} catch (Exception e) {
-			System.out.println("**ERROR****************");
+			//System.out.println("**ERROR****************");
 			e.printStackTrace();
-			System.out.println(e.getLocalizedMessage());
-			System.out.println("**ERROR****************");
+			//System.out.println(e.getLocalizedMessage());
+			//System.out.println("**ERROR****************");
 			lock.unlock();
 		}
 		
@@ -113,11 +113,11 @@ public class ControladorImagenes implements Runnable{
 			int nn = 15;
 			do {
 				String teststr = fuente.getQuery(n, tags, gif,video, rand);
-				System.out.println("query:"+teststr);
+				//System.out.println("query:"+teststr);
 				hc = ClienteHttp.peticionHttp(teststr);//SUSTITUIR POR LINK
-				System.out.println("ptrn:"+fuente.getSelectionPattern());
-				System.out.println("name:"+fuente.getName());
-				System.out.println("HC:"+hc.substring(3000));
+				//System.out.println("ptrn:"+fuente.getSelectionPattern());
+				//System.out.println("name:"+fuente.getName());
+				//System.out.println("HC:"+hc.substring(3000));
 				lnks = Comparador.EncontrarTodos(fuente.getSelectionPattern(), hc);
 				nn--;
 				if(nn<=0) {
@@ -152,16 +152,16 @@ public class ControladorImagenes implements Runnable{
 				}
 			}
 			hc = ClienteHttp.peticionHttp(qry);
-			System.out.println("qry: "+qry);
-			System.out.println("ptrnimg:"+fuente.getImgPattern());
+			//System.out.println("qry: "+qry);
+			//System.out.println("ptrnimg:"+fuente.getImgPattern());
 			//System.out.println("HC:"+hc.substring(23000));
 			String rtn = Comparador.Encontrar(fuente.getImgPattern(), hc);
-			System.out.println(rtn);
+			//System.out.println(rtn);
 			return rtn.replaceAll("src=\"", "").replaceAll("\"", "");
 		}catch(Exception e) {
-			System.out.println("Error: " + e.getLocalizedMessage());
+			//System.out.println("Error: " + e.getLocalizedMessage());
 			e.printStackTrace();
-			System.out.println("Fin error*******************");
+			//System.out.println("Fin error*******************");
 			return null;
 		}
 	}

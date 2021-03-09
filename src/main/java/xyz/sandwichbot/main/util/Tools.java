@@ -14,6 +14,9 @@ public class Tools {
 		return arrayToString(array, sep, true);
 	}
 	public static String arrayToString(String[] array, String sep, boolean space) {
+		if(array==null) {
+			return "";
+		}
 		array = clearArray(array);
 		String str = "";
 		for(String s : array) {
@@ -48,8 +51,14 @@ public class Tools {
 				}
 				l.add(s);
 			}
+		}else {
+			return null;
 		}
-		return (String[]) l.toArray();
+		String[] arr = new String[l.size()];
+		for(int i = 0; i < l.size(); i++) {
+			arr[i] = l.get(i);
+		}
+		return arr;
 	}
 	public static String replaceFromString(String patron, String texto, String reemplazo) {
 		if(reemplazo==null) {

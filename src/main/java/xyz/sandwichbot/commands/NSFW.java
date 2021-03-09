@@ -56,7 +56,7 @@ public class NSFW {
 					gif= p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("tags")) {
 					tags = p.getValueAsString().replaceAll("\\s",",").split(",");
-				}else if(p.getKey().equalsIgnoreCase("credito")) {
+				}else if(p.getKey().equalsIgnoreCase("creditos")) {
 					noanon = true;
 				}else if(p.getKey().equalsIgnoreCase("video")) {
 					video = true;
@@ -98,21 +98,23 @@ public class NSFW {
 		}catch(Exception ex) {
 			
 		}
-		EmbedBuilder eb2 = new EmbedBuilder();
-		String str = " imagenes";
-		if(random) {
-			str = " imagenes y videos aleatorios";
-		}else if(video) {
-			str = " videos";
-		}else if(gif) {
-			str = " imagenes animadas";
-		}
-		eb2.setColor(Color.red);
-		eb2.addField("A petición de " + "nombre", cantidad + str + (tags==null?".":" con las siguientes etiquetas: `"+Tools.arrayToString(tags))+"`.", false);
-		if(autodes) {
-			SandwichBot.SendAndDestroy(e.getChannel(), eb2.build(), autodesTime);
-		}else {
-			e.getChannel().sendMessage(eb2.build()).queue();
+		if(noanon) {
+			EmbedBuilder eb2 = new EmbedBuilder();
+			String str = " imagen" + (cantidad>1?"es":"");
+			if(random) {
+				str = " imagen" + (cantidad>1?"es":"") + " y video" + (cantidad>1?"s":"") + " aleatorio" + (cantidad>1?"s":"");
+			}else if(video) {
+				str = " video" + (cantidad>1?"s":"");
+			}else if(gif) {
+				str = " imagen" + (cantidad>1?"es":"") + " animada" + (cantidad>1?"s":"");
+			}
+			eb2.setColor(Color.red);
+			eb2.addField("A petición de " + e.getAuthor().getName(), cantidad + str + (tags==null?".":" con las siguientes etiquetas: `" + Tools.arrayToString(tags) +"`."), false);
+			if(autodes) {
+				SandwichBot.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
+			}else {
+				e.getChannel().sendMessage(eb2.build()).queue();
+			}
 		}
 		
 		for(int i = 1; i<=cantidad;i++) {
@@ -181,6 +183,7 @@ public class NSFW {
 	@Option(name="cantidad",desc="Indica la cantidad de imagenes que devolverá el comando. DEBE SER UN VALOR NUMÉRICO ENTRE 1 Y 100 (se que quieres más, pero tu mano se va a hacer mierda...me preocupo por ti manit@). Si ingresas mal este número te quedarás sin placer:smirk:",alias={"c","cant","num"})
 	@Option(name="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
 	@Option(name="fuente",desc="Indica la fuente de origen del contenido a mostrar.\nFuentes permitidas:\n- [Konachan.com](https://konachan.com)\n- [Gelbooru](https://gelbooru.com)\n- [Danbooru](https://danbooru.donmai.us)\n- [XBooru](https://xbooru.com)\n - [Yandere](https://yande.re)",alias={"f","source","origen"})
+	@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
 	public static void otakus(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		e.getChannel().purgeMessagesById(e.getMessageId());
 		int cantidad = 1;
@@ -188,6 +191,7 @@ public class NSFW {
 		String[] tags = null;
 		boolean autodes = false;
 		int autodesTime = 15;
+		boolean noanon=false;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
@@ -197,6 +201,8 @@ public class NSFW {
 					}
 				}else if(p.getKey().equalsIgnoreCase("cantidad")) {
 					cantidad = p.getValueAsInt();
+				}else if(p.getKey().equalsIgnoreCase("creditos")) {
+					noanon = true;
 				}else if(p.getKey().equalsIgnoreCase("fuente")) {
 					fuente = p.getValueAsString();
 				}else if(p.getKey().equalsIgnoreCase("tags")) {
@@ -233,7 +239,7 @@ public class NSFW {
 		ControladorImagenes gi;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
-		eb.setFooter("Tranquil@ cochin@, no diré quien eres 🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ") + "🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
 		if(cantidad>=8) {
 			gi = new ControladorImagenes(e.getChannel(),fi,eb,true);
 		}else {
@@ -242,6 +248,18 @@ public class NSFW {
 		gi.setTags(tags);
 		gi.setAutodes(autodes);
 		gi.setAutodesTime(autodesTime);
+		if(noanon) {
+			EmbedBuilder eb2 = new EmbedBuilder();
+			String str = " imagen" + (cantidad>1?"es":"");
+			eb2.setColor(Color.red);
+			eb2.addField("A petición de " + e.getAuthor().getName(), cantidad + str + (tags==null?".":" con las siguientes etiquetas: `" + Tools.arrayToString(tags) +"`."), false);
+			eb2.addField("Fuente de la" + (cantidad>1?"s":"") + " imagen" + (cantidad>1?"es":"") + ": " + fi.getName(),".",false);
+			if(autodes) {
+				SandwichBot.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
+			}else {
+				e.getChannel().sendMessage(eb2.build()).queue();
+			}
+		}
 		Thread fuck;
 		try {
 			if(!e.getTextChannel().isNSFW()){
