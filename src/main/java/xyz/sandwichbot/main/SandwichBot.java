@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -17,6 +18,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import xyz.sandwichbot.commands.Comun;
 import xyz.sandwichbot.commands.Musica;
 import xyz.sandwichbot.core.BotRunner;
+import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
 
@@ -94,6 +96,9 @@ public class SandwichBot extends ListenerAdapter{
 	public static void SendAndDestroy(MessageChannel c, String msg,int time) {
 		c.sendMessage(msg).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));
 	}
+	public static void SendAndDestroy(MessageChannel c, Message msg,int time) {
+		c.sendMessage(msg).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));
+	}
 	public static MessageEmbed getInfo(boolean nsfw) {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle("Wena l@s cabr@s del server!");
@@ -104,12 +109,12 @@ public class SandwichBot extends ListenerAdapter{
 		eb.addField("¡Ah, lo olvidaba!", "Para saber que verga puedo hacer, escribe '"+SandwichBot.ActualBot().getPrefijo()+"ayuda'🍑", false);
 		eb.addBlankField(false);
 		eb.addBlankField(false);
-		eb.addField(">>> VERSION: 0.1.3\nPara más información acerca de este bot, "
+		eb.addField(">>> VERSION: 0.1.4\nPara más información acerca de este bot, "
 				+"visita: sitio web aún no disponible. Te me esperas.", "", false);
 		eb.setFooter("DISCLAIMER: No soy dueño de ninguna de las marcas ni de los recursos gráficos "
 		+"provistos por este bot. Todo ese contenido le pertenece a las fuentes originales donde fueron obtenidas. "
 		+"Este bot es solo para entretenimiento y no lucra con su contenido.");
-		eb.setColor(Color.yellow);
+		eb.setColor(Tools.stringColorCast("ddd955"));
 		return eb.build();
 	}
 }

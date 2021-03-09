@@ -56,7 +56,7 @@ public class AutoHelpCommand {
 					}
 					als=" _`[Alias: " + als.substring(1) + "]`_";
 				}
-				eb.setTitle(cmd.getName() + als + " | Categor�a: " + cmd.getCategory().getName());
+				eb.setTitle(cmd.getName() + als + " | Categoría: " + cmd.getCategory().getName());
 				eb.setDescription(cmd.getDesc());
 				eb.addField("","PARAMETROS/OPCIONES:",false);
 				if(cmd.getParameter()!=null) {

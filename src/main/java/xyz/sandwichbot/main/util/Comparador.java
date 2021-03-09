@@ -47,7 +47,9 @@ public class Comparador {
 	}
 	
 	public static boolean Coincide(String patron, String texto) {
-		return Pattern.matches(patron, texto);
+		p = Pattern.compile(patron);
+		m = p.matcher(texto);
+		return m.find();
 	}
 	
 	public static String Encontrar(String patron, String texto) {
