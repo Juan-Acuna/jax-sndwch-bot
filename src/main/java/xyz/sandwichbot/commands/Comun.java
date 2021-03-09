@@ -330,7 +330,7 @@ public class Comun {
 		if(mensaje!=null) {
 			String[] cs = mensaje.split("\\{%\\}", 2);
 			if(cs.length>1) {
-				eb.addField(cs[0], Tools.toMarkDownLink(cs[1]), false);
+				eb.addField(cs[0], Tools.tryToMarkDownLink(cs[1]), false);
 			}else {
 				eb.addField(cs[0], "", false);
 			}
@@ -339,9 +339,9 @@ public class Comun {
 			String[] cs = c.split("\\{%\\}", 2);
 			System.out.println(cs.length);
 			System.out.println(cs[1]);
-			System.out.println(Tools.toMarkDownLink(cs[1]));
+			System.out.println(Tools.tryToMarkDownLink(cs[1]));
 			if(cs.length>1) {
-				eb.addField(cs[0], Tools.toMarkDownLink(cs[1]), false);
+				eb.addField(cs[0], Tools.tryToMarkDownLink(cs[1]), false);
 			}else {
 				eb.addField(cs[0], "", false);
 			}

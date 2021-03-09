@@ -67,6 +67,9 @@ public class Tools {
 		if(reemplazo==null) {
 			reemplazo = "";
 		}
+		if(patron==null) {
+			return texto;
+		}
 		if(texto!=null) {
 			return texto.replaceAll(patron,reemplazo);
 		}
@@ -81,7 +84,7 @@ public class Tools {
 	public static String quotePattern(String patron, String caracter) {
 		return patron = patron.replaceAll("\\"+caracter, "\\\\"+caracter);
 	}
-	public static String toMarkDownLink(String texto) {
+	public static String tryToMarkDownLink(String texto) {
 		ArrayList<String> links = Comparador.EncontrarTodos("\\{%link%\\}(.{0,500})\\{%link%\\}[ ]{0,100}\\{%href%\\}(.{1,1000})\\{%href%\\}", texto);
 		for(String l : links) {
 			String ph = Comparador.Encontrar("[ ]{0,100}\\{%href%\\}(.{0,1000})\\{%href%\\}",l);
@@ -92,11 +95,11 @@ public class Tools {
 			String str = Tools.replaceFromString("\\{%link%\\}", l, "[");
 			str = Tools.replaceFromString("\\{%link%\\}", str,"]");
 			str = Tools.replaceFromString("\\{%href%\\}(.{0,1000})\\{%href%\\}", str,ph);
-			str = Tools.replaceAllFromString(Tools.quotePattern(l, cars), texto, str);
 			str = Tools.replaceAllFromString("\\][\\s]{0,100}\\(", str, "](");
+			str = Tools.replaceAllFromString(Tools.quotePattern(l, cars), texto, str);
 			return str;
 		}
-		return "";
+		return texto;
 	}
 	public static String toValidHttpUrl(String link) {
 		if(link==null) {
