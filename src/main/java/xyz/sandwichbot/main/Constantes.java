@@ -8,35 +8,7 @@ import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
 
 public class Constantes {
-	//PACKAGE : "xyz.sandwichbot.commands"
-	
-	//REGISTRO DE ROLES
-	
-	//REGISTRO DE COMANDOS
-	public static class COMANDOS{
-		public static final String[] saludar = {"s","saluda","putea","putear"};
-		public static final String[] youtube = {"yt","y","yutu","video","videos","llutu"};
-		public static final String[] meow = {"mew","mw","miau","gato"};
-		public static final String[] nsfw = {"ns","p","porno","prn","nopor","nopo","porn","cochinadas","18","+18","7u7"};
-		public static final String[] ayuda = {"help","h"};
-		public static final String[] version = {"v","ver"};
-	}
-	//REGISTRO DE PARAMETROS
-	public static class PARAMETROS{
-		//STANDAR
-		public static final String[] CANTIDAD = {"c","cant","num"};
-		public static final String[] GIF = {"g","gf","animado","anim"};
-		public static final String[] TAGS = {"t","tg","tgs"};
-		public static final String[] FUENTE = {"f","source","src"};
-		public static final String[] BUSCAR = {"b","busca","search","find","busqueda"};
-		//NULOS
-		public static final String[] AYUDA = {"help","h"};
-		public static final String[] VIDEO = {"v","vid","mp4"};
-		public static final String[] RANDOM = {"r","rdm","rand","azar"};
-		public static final String[] VERSION = {"ver"};
-		public static final String[] ANONIMO = {"anon","ano","anonymous","anonym","secreto","secret"};
-		public static final String[] AUTODESTROY = {"autodestruir","ad","autodes","autorm","arm"};
-	}
+
 	//REGISTRO DE VALORES STANDAR
 	public static class VALORES{
 		public static final String[] TRUE = {"true","t","1","y","yes","s","si","v"};
@@ -100,6 +72,10 @@ public class Constantes {
 		
 		public static class Imagenes{
 			public static final String nonsfw = BaseURL + "/img/nsfw/nonsfw.gif";
+		}
+		public static class JAX{
+			public static final String R = BaseURL + "/jax/jax.token.register.php";
+			public static final String A = BaseURL + "/jax/jax.commands.auth.php";
 		}
 	}
 	//RECURSOS EXTERNOS

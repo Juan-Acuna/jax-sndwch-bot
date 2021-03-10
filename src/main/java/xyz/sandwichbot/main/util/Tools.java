@@ -1,6 +1,11 @@
 package xyz.sandwichbot.main.util;
 
 import java.awt.Color;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 public class Tools {
@@ -186,5 +191,40 @@ public class Tools {
 			}
 			return Color.GRAY;
 		}
+	}
+	public static String bytesToHex(byte[] hash) {
+	    StringBuilder hexString = new StringBuilder(2 * hash.length);
+	    for (int i = 0; i < hash.length; i++) {
+	        String hex = Integer.toHexString(0xff & hash[i]);
+	        if(hex.length() == 1) {
+	            hexString.append('0');
+	        }
+	        hexString.append(hex);
+	    }
+	    return hexString.toString();
+	}
+	public static String encriptSHA256(String texto) {
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("SHA-256");
+			byte[] hash = digest.digest(texto.getBytes(StandardCharsets.UTF_8));
+			return Tools.bytesToHex(hash);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static String ToURLencoded(String texto)
+	{
+		try {
+			return URLEncoder.encode(texto, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public static String ToURLencoded(String texto, String codificacion) throws UnsupportedEncodingException
+	{
+		return URLEncoder.encode(texto, codificacion);
 	}
 }

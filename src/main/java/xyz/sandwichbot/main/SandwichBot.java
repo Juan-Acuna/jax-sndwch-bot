@@ -1,7 +1,5 @@
 package xyz.sandwichbot.main;
 
-import java.awt.Color;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -15,12 +13,8 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import xyz.sandwichbot.commands.Comun;
-import xyz.sandwichbot.commands.Musica;
 import xyz.sandwichbot.core.BotRunner;
 import xyz.sandwichbot.main.util.Tools;
-import xyz.sandwichbot.models.InputParameter;
-import xyz.sandwichbot.models.InputParameter.InputParamType;
 
 public class SandwichBot extends ListenerAdapter{
 	
@@ -30,7 +24,9 @@ public class SandwichBot extends ListenerAdapter{
 	private BotRunner runner;
 	private String prefijo;
 	private String prefijoOpcion;
+	private String JaxToken;
 	private SandwichBot(String token) {
+		JaxToken = System.getenv().get("JAX_TOKEN");
 		builder = JDABuilder.createDefault(token);
 		builder.addEventListeners(this);
 		runner = BotRunner.init("xyz.sandwichbot.commands");
@@ -64,6 +60,9 @@ public class SandwichBot extends ListenerAdapter{
 	}
 	public String getPrefijoOpcion() {
 		return prefijoOpcion;
+	}
+	public String getJAX() {
+		return JaxToken;
 	}
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {

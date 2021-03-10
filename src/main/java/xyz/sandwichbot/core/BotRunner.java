@@ -122,9 +122,8 @@ public class BotRunner {
 	}
 	
 	public void listenForCommand(MessageReceivedEvent e) throws Exception {
-		//System.out.println("ESTE OTRO TAMBIEN LO ESCUCHO");
 		String message = e.getMessage().getContentRaw();
-		if(message.startsWith(commandsPrefix)) {
+		if(message.toLowerCase().startsWith(commandsPrefix)) {
 			String r = (message.split(" ")[0]).trim();
 			if(autoHelpCommand) {
 				for(String cs : AutoHelpCommand.HELP_OPTIONS) {
@@ -199,6 +198,9 @@ public class BotRunner {
 	public void listenForPrivateCommand(PrivateMessageReceivedEvent e) throws Exception {
 		String message = e.getMessage().getContentRaw();
 		String r = (message.split(" ")[0]).trim();
+		if(r.toLowerCase().startsWith(commandsPrefix)) {
+			r = r.substring(commandsPrefix.length());
+		}
 		if(autoHelpCommand) {
 			for(String cs : AutoHelpCommand.HELP_OPTIONS) {
 				if(r.toLowerCase().equalsIgnoreCase(cs.toLowerCase())) {

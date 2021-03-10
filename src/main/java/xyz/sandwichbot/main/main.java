@@ -13,7 +13,7 @@ public class main {
 		SandwichBot Bot = SandwichBot.create(System.getenv().get("DISCORD_TOKEN"));
 		Bot.run();
 		Bot.getJDA().getPresence().setActivity(Activity.playing("Trollear"));
-		Bot.getJDA().getPresence().setStatus(OnlineStatus.INVISIBLE);;
+		Bot.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);;
 	}
 
 }
