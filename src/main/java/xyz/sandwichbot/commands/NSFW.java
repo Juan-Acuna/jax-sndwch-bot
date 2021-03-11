@@ -314,7 +314,7 @@ public class NSFW {
 				}else if(p.getKey().equalsIgnoreCase("random")) {
 					random = true;
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "NSFW");
+					AutoHelpCommand.sendHelp(e.getChannel(), "Rule34");
 					return;
 				}
 			}
