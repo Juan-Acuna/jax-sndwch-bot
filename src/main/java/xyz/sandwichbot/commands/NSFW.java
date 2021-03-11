@@ -274,4 +274,102 @@ public class NSFW {
 			fuck.start();
 		}
 	}
+	@Command(name="Rule34",desc="Internet esta lleno de reglas, esta es la más importante.",alias= {"r34","34"})
+	@Option(name="cantidad",desc="Indica la cantidad de imagenes que devolverá el comando. DEBE SER UN VALOR NUMÉRICO ENTRE 1 Y 100 (se que quieres más, pero tu mano se va a hacer mierda...me preocupo por ti manit@). Si ingresas mal este número te quedarás sin placer:smirk:",alias={"c","cant","num"})
+	@Option(name="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
+	@Option(name="gif",desc="Indica si el contenido es animado o no. Si no se especifica esta opción, por defecto el contenido es animado (equivalente a '-gif true')",alias={"g","gf","animado","anim"})
+	@Option(name="video",desc="Esta opcion indica que el recurso devuelto debe ser un video. Si se usa junto con la opcion '-gif', esta ultima sera ignorada.",alias={"v","vid","mp4"})
+	@Option(name="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
+	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
+	public static void r34(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+		e.getChannel().purgeMessagesById(e.getMessageId());
+		int cantidad = 1;
+		//String fuente = null;
+		boolean gif = true;
+		String[] tags = null;
+		boolean video = false;
+		boolean autodes = false;
+		int autodesTime = 15;
+		boolean random = false;
+		boolean noanon = false;
+		for(InputParameter p : parametros) {
+			if(p.getType() == InputParamType.Standar) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")) {
+					autodes=true;
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+						autodesTime = p.getValueAsInt();
+					}
+				}else if(p.getKey().equalsIgnoreCase("cantidad")) {
+					cantidad = p.getValueAsInt();
+				}else if(p.getKey().equalsIgnoreCase("gif")) {
+					gif= p.getValueAsBoolean(Constantes.VALORES.TRUE);
+				}else if(p.getKey().equalsIgnoreCase("tags")) {
+					tags = p.getValueAsString().replaceAll("\\s",",").split(",");
+				}else if(p.getKey().equalsIgnoreCase("creditos")) {
+					noanon = true;
+				}else if(p.getKey().equalsIgnoreCase("video")) {
+					video = true;
+					gif=false;
+				}else if(p.getKey().equalsIgnoreCase("random")) {
+					random = true;
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+					AutoHelpCommand.sendHelp(e.getChannel(), "NSFW");
+					return;
+				}
+			}
+		}
+		if(cantidad>100) {
+			cantidad = 100;
+		}else if(cantidad<=0) {
+			cantidad=1;
+		}
+		ControladorImagenes gi;
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.setColor(Color.red);
+		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ")+"🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		if(cantidad>=8) {
+			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.R34,eb,true);
+		}else {
+			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.R34,eb);
+		}
+		gi.setGif(gif);
+		gi.setTags(tags);
+		gi.setVideo(video);
+		gi.setAutodes(autodes);
+		gi.setAutodesTime(autodesTime);
+		gi.setRand(random);
+		Thread fuck;
+		try {
+			if(!e.getTextChannel().isNSFW()){
+				gi.enviarRestriccion();
+				return;
+			}
+		}catch(Exception ex) {
+			
+		}
+		if(noanon) {
+			EmbedBuilder eb2 = new EmbedBuilder();
+			String str = " imagen" + (cantidad>1?"es":"");
+			if(random) {
+				str = " imagen" + (cantidad>1?"es":"") + " y video" + (cantidad>1?"s":"") + " aleatorio" + (cantidad>1?"s":"");
+			}else if(video) {
+				str = " video" + (cantidad>1?"s":"");
+			}else if(gif) {
+				str = " imagen" + (cantidad>1?"es":"") + " animada" + (cantidad>1?"s":"");
+			}
+			eb2.setColor(Color.red);
+			eb2.addField("A petición de " + e.getAuthor().getName(), cantidad + str + (tags==null?".":" con las siguientes etiquetas: `" + Tools.arrayToString(tags) +"`."), false);
+			if(autodes) {
+				SandwichBot.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
+			}else {
+				e.getChannel().sendMessage(eb2.build()).queue();
+			}
+		}
+		
+		for(int i = 1; i<=cantidad;i++) {
+			fuck = new Thread(gi);
+			fuck.start();
+		}
+	}
 }

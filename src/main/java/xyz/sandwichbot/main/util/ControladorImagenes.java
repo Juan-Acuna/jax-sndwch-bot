@@ -117,7 +117,7 @@ public class ControladorImagenes implements Runnable{
 				hc = ClienteHttp.peticionHttp(teststr);//SUSTITUIR POR LINK
 				//System.out.println("ptrn:"+fuente.getSelectionPattern());
 				//System.out.println("name:"+fuente.getName());
-				//System.out.println("HC:"+hc.substring(3000));
+				System.out.println("HC:"+hc.substring(1000));
 				lnks = Comparador.EncontrarTodos(fuente.getSelectionPattern(), hc);
 				nn--;
 				if(nn<=0) {
@@ -154,7 +154,7 @@ public class ControladorImagenes implements Runnable{
 			hc = ClienteHttp.peticionHttp(qry);
 			//System.out.println("qry: "+qry);
 			//System.out.println("ptrnimg:"+fuente.getImgPattern());
-			//System.out.println("HC:"+hc.substring(23000));
+			System.out.println("HC:"+hc.substring(2000));
 			String rtn = Comparador.Encontrar(fuente.getImgPattern(), hc);
 			//System.out.println(rtn);
 			return rtn.replaceAll("src=\"", "").replaceAll("\"", "");
