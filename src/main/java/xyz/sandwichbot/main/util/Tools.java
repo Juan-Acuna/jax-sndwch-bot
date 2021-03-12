@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Tools {
 	public static String arrayToString(String[] array) {
@@ -226,5 +227,20 @@ public class Tools {
 	public static String ToURLencoded(String texto, String codificacion) throws UnsupportedEncodingException
 	{
 		return URLEncoder.encode(texto, codificacion);
+	}
+	public static String getRandomGuy() {
+		String[] color = {"rojo","verde","azul","amarillo","blanco","blanco con manchas","negro","gris","naranja","rosa","marrón","turqueza"};
+		String[] persona = {"un weon","una vieja qla","una señora","un viejo ql","una weona","una ex-monja","el mati","el corxea ql","el wldo ql","el barsinsom","el piñera ql","un paco ql","un marihuano ql"};
+		String[] accion  = {"tocando una guitarra","orinando en la cuneta","lamiendo un dildo","durmiendo un carrito de supermercado","llorando en una silla","acariciando una paloma","fumandose un porro"};
+		String[] ropa    = {"con un polerón","con una polera","en calzonsillos","en calzones","en pelota","con una chaqueta","con una falda","en traje de baño","en pijama","en un disfraz de pikachu"};
+		
+		Random r = new Random(System.currentTimeMillis());
+		
+		int selcol = r.nextInt(color.length);
+		int selper = r.nextInt(persona.length);
+		int selacc = r.nextInt(accion.length);
+		int selrop = r.nextInt(ropa.length);
+		
+		return persona[selper] + " " + accion[selacc] + " " + (ropa[selrop].startsWith("en")?ropa[selrop]:ropa[selrop] + " color " + color[selcol]);
 	}
 }

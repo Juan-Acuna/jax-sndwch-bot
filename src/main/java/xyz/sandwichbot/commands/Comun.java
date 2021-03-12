@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -356,4 +357,114 @@ public class Comun {
 		}
 	}
 	
+	@Command(name="Funar",desc="Funa a un usuario.",alias= {"funa","fn"},enabled=true)
+	@Parameter(name="Nombre del objetivo",desc="nombre del usuario a ser funado (Puede ser una mención).")
+	@Option(name="razon",desc="Corresponde a la razón de la funa. Si no se especifica, la razón sera 'por put@'.",alias={"r","reason"})
+	@Option(name="recompensa",desc="Recompensa de la funa (en tokens:smirk:).",alias={"tokens","t"})
+	@Option(name="autor",desc="Corresponde al autor de la funa. Si se deja en blanco, se usará el usuario que invocó el comando. Se puede incluir un link en el autor, escribiendolo entre las etiquetas `{%href%}`. También se puede incluir una imagen, para ello escriba la url de la imagen entre las etiquetas `{%img%}`. `SI NO SE ESPECIFICA ESTA OPCIÓN LA FUNA SERÁ ANONIMA.`",alias={"a","author"})
+	@Option(name="imagen",desc="Corresponde a la imagen del embed. Si se deja vacío, su usará la imagen del usuario funado (SOLO si este cuenta con una y se usó una mencion para entregar su nombre). Use esta opcion para especificar la imagen por url, de lo contrario suba un archivo.",alias={"i","img"})
+	@Option(name="color",desc="Corresponde a el color del embed. Se debe proporcionar un valor hexadecimal de 3 o 6 caracteres sin contar el caracter '#'(ej: #fff). También están permitidos los siguientes colores predefinidos: blanco, negro, rojo, verde, azul, amarillo, gris, gris oscuro, cian y magenta (se debe escribir el nombre correctamente. Se permiten también en ingrlés).",alias={"c","col"})
+	@Option(name="genero",desc="Indica si a quien se funa es hombre o mujer. Los valores son:\nHOMBRE: m, masculino y hombre\nMUJER: f, femenino y mujer\nSi no se especifica esta opción, no se asumirá ninguno.",alias={"gen","g","sexo"})
+	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
+	public static void funar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+		boolean autodes = false;
+		int autodesTime = 15;
+		boolean anon = false;
+		EmbedBuilder eb = new EmbedBuilder();
+		
+		User mencionado = null;
+		String genero = null;
+		String nombre = null;
+		String razon = null;
+		String recompensa = null;
+		String autor = null;
+		String color = "negro";
+		String img = null;
+		String footer_img = null;
+		
+		for(InputParameter p : parametros) {
+			if(p.getType() == InputParamType.Standar) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")){
+					autodes=true;
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+						autodesTime = p.getValueAsInt();
+					}
+				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
+					anon=true;
+				}else if(p.getKey().equalsIgnoreCase("razon")) {
+					razon=p.getValueAsString();
+				}else if(p.getKey().equalsIgnoreCase("recompensa")) {
+					recompensa=p.getValueAsString();
+				}else if(p.getKey().equalsIgnoreCase("imagen")) {
+					img = p.getValueAsString();
+				}else if(p.getKey().equalsIgnoreCase("color")) {
+					color = p.getValueAsString();
+				}else if(p.getKey().equalsIgnoreCase("genero")) {
+					if(p.getValueAsString().equalsIgnoreCase("m") || p.getValueAsString().equalsIgnoreCase("masculino") || p.getValueAsString().equalsIgnoreCase("hombre")) {
+						genero="m";
+					}else if(p.getValueAsString().equalsIgnoreCase("f") || p.getValueAsString().equalsIgnoreCase("femenino") || p.getValueAsString().equalsIgnoreCase("mujer")) {
+						genero = "f";
+					}
+				}else if(p.getKey().equalsIgnoreCase("autor")) {
+					autor = p.getValueAsString();
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+					AutoHelpCommand.sendHelp(e.getChannel(), "Funar");
+					return;
+				}
+			}else if(p.getType() == InputParamType.Custom){
+				nombre = p.getValueAsString();
+			}
+		}
+		if(e.getMessage().getMentionedUsers().size()>=1) {
+			mencionado = e.getMessage().getMentionedUsers().get(0);
+			//se etiqueta
+		}
+		eb.setTitle("SE BUSCA");
+		eb.setDescription("Se busca" +(genero==null?",":(genero.equals("f")?" a esta ctm":" a este ctm")) + " por " + (razon==null?"ser muy "+(genero==null?"put@":(genero.equals("f")?"puta":"puto")):razon) + ".");
+		if(autor!=null) {
+			if(autor.equals("none")) {
+				eb.setAuthor(e.getAuthor().getName(), null, e.getAuthor().getAvatarUrl());
+			}else {
+				String aHref = Comparador.Encontrar("\\{%href%\\}(.{5,500})\\{%href%\\}",autor);
+				String aImg = Comparador.Encontrar("\\{%img%\\}(.{5,500})\\{%img%\\}",autor);
+				String aNombre = Tools.replaceFromString(aImg,Tools.replaceFromString(aHref,autor,""),"");
+				aImg = Tools.toValidHttpUrl(Tools.replaceAllFromString("\\{%img%\\}", aImg, ""));
+				aHref = Tools.toValidHttpUrl(Tools.replaceAllFromString("\\{%href%\\}", aHref, ""));
+				eb.setAuthor(aNombre, aHref, aImg);
+			}
+		}else {
+			eb.setAuthor("Anónimo");
+		}
+		eb.addField("VIV" + (genero==null?"@":(genero.equals("f")?"A":"O")) + " O MUET" + (genero==null?"@":(genero.equals("f")?"A":"O")), ">>> Se ofrece recompensa de `" + recompensa + " Tokens` para quien logre su captura.", false);
+		if(mencionado!=null) {
+			nombre = mencionado.getAsMention();
+		}
+		eb.addField("", "`Responde al nombre de `" + nombre + ".", false);
+		eb.setFooter("Para reclamar la recompensa, favor entregar al funao en la inter a "+ Tools.getRandomGuy() +" o llame al +56 9 4983 0717.", Tools.toValidHttpUrl(footer_img));
+		if(img!=null) {
+			if(img.equals("none") && mencionado != null) {
+				img = mencionado.getAvatarUrl();
+			}
+		}else if(e.getMessage().getAttachments().size()>=1){
+			if(e.getMessage().getAttachments().get(0).isImage()) {
+				img = e.getMessage().getAttachments().get(0).getUrl();
+			}
+		}else {
+			eb.addField("", "``` \n\n\n Imagen no disponible. \n\n\n ```", false);
+		}
+		System.out.println(img);
+		if(img!=null && !img.equals("none")) {
+			eb.setImage(Tools.toValidHttpUrl(img));
+		}
+		eb.setColor(Tools.stringColorCast(color));
+		if(anon) {
+			e.getChannel().purgeMessagesById(e.getMessageId());
+		}
+		if(autodes) {
+			SandwichBot.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
+		}else {
+			e.getChannel().sendMessage(eb.build()).queue();
+		}
+	}
 }

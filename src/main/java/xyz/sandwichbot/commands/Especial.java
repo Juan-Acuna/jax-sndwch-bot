@@ -35,7 +35,7 @@ public class Especial {
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "SET");
+					AutoHelpCommand.sendHelp(e.getChannel(), "REG");
 					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
