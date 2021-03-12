@@ -229,10 +229,10 @@ public class Tools {
 		return URLEncoder.encode(texto, codificacion);
 	}
 	public static String getRandomGuy() {
-		String[] color = {"rojo","verde","azul","amarillo","blanco","blanco con manchas","negro","gris","naranja","rosa","marrón","turqueza"};
-		String[] persona = {"un weon","una vieja qla","una señora","un viejo ql","una weona","una ex-monja","el mati","el corxea ql","el wldo ql","el barsinsom","el piñera ql","un paco ql","un marihuano ql"};
-		String[] accion  = {"tocando una guitarra","orinando en la cuneta","lamiendo un dildo","durmiendo un carrito de supermercado","llorando en una silla","acariciando una paloma","fumandose un porro"};
-		String[] ropa    = {"con un polerón","con una polera","en calzonsillos","en calzones","en pelota","con una chaqueta","con una falda","en traje de baño","en pijama","en un disfraz de pikachu"};
+		String[] color   = {"rojo","verde","azul","amarillo","blanco","blanco con manchas","negro","gris","naranja","rosa","marrón","turqueza"};
+		String[] persona = {"un weón","una vieja qla","una señora","un viejo ql","una weona","una ex-monja","el mati","el corxea ql","el waldo ql","el barsinsom","el piñera ql","un paco ql","un marihuano ql"};
+		String[] accion  = {"tocando una guitarra","orinando en la cuneta","lamiendo un dildo","durmiendo en un carrito de supermercado","llorando en una silla","\"jugando\" con un vibrador anal de 12 velocidades sincronizable con el celular","acariciando una paloma","fumandose un porro","tratando de sacarse una costilla😏","comiendose un aliado"};
+		String[] ropa    = {"con un polerón","con un gorro","en bata","con una polera","en calzonsillos","en calzones","en pelota","con una chaqueta","con una falda","en traje de baño","en pijama","en un disfraz de pikachu"};
 		
 		Random r = new Random(System.currentTimeMillis());
 		
@@ -241,6 +241,6 @@ public class Tools {
 		int selacc = r.nextInt(accion.length);
 		int selrop = r.nextInt(ropa.length);
 		
-		return persona[selper] + " " + accion[selacc] + " " + (ropa[selrop].startsWith("en")?ropa[selrop]:ropa[selrop] + " color " + color[selcol]);
+		return persona[selper] + " " + accion[selacc] + (accion[selacc].startsWith("\"")?"":" " + (ropa[selrop].startsWith("en")?ropa[selrop]:ropa[selrop] + " color " + color[selcol]));
 	}
 }
