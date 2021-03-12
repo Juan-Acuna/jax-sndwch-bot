@@ -338,9 +338,6 @@ public class Comun {
 		}
 		for(String c : campos) {
 			String[] cs = c.split("\\{%\\}", 2);
-			System.out.println(cs.length);
-			System.out.println(cs[1]);
-			System.out.println(Tools.tryToMarkDownLink(cs[1]));
 			if(cs.length>1) {
 				eb.addField(cs[0], Tools.tryToMarkDownLink(cs[1]), false);
 			}else {
@@ -436,7 +433,7 @@ public class Comun {
 		}else {
 			eb.setAuthor("Anónimo");
 		}
-		eb.addField("VIV" + (genero==null?"@":(genero.equals("f")?"A":"O")) + " O MUET" + (genero==null?"@":(genero.equals("f")?"A":"O")), ">>> Se ofrece recompensa de `" + recompensa + " Tokens` para quien logre su captura.", false);
+		eb.addField("VIV" + (genero==null?"@":(genero.equals("f")?"A":"O")) + " O MUERT" + (genero==null?"@":(genero.equals("f")?"A":"O")), ">>> Se ofrece recompensa de `" + recompensa + " Tokens` para quien logre su captura.", false);
 		if(mencionado!=null) {
 			nombre = mencionado.getAsMention();
 		}
@@ -450,12 +447,11 @@ public class Comun {
 			if(e.getMessage().getAttachments().get(0).isImage()) {
 				img = e.getMessage().getAttachments().get(0).getUrl();
 			}
-		}else {
-			eb.addField("", "``` \n\n\n Imagen no disponible. \n\n\n ```", false);
 		}
-		System.out.println(img);
 		if(img!=null && !img.equals("none")) {
 			eb.setImage(Tools.toValidHttpUrl(img));
+		}else {
+			eb.addField("", "``` \n\n\n Imagen no disponible. \n\n\n ```", false);
 		}
 		eb.setColor(Tools.stringColorCast(color));
 		if(anon) {
