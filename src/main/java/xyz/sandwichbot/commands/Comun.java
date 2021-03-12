@@ -438,7 +438,7 @@ public class Comun {
 			nombre = mencionado.getAsMention();
 		}
 		eb.addField("", "`Responde al nombre de `" + nombre + ".", false);
-		eb.setFooter("Para reclamar la recompensa, favor entregar al funao en la inter a "+ Tools.getRandomGuy() +" o llame al +56 9 4983 0717.", Tools.toValidHttpUrl(footer_img));
+		eb.setFooter("Para reclamar la recompensa, favor entregar al funao en la inter, será recibido por "+ Tools.getRandomGuy() +" o llame al +56 9 4983 0717.", Tools.toValidHttpUrl(footer_img));
 		if(img!=null) {
 			if(img.equals("none") && mencionado != null) {
 				img = mencionado.getAvatarUrl();
