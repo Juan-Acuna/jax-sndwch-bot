@@ -28,6 +28,7 @@ public class BotRunner {
 	protected String help_description;
 	private String commands_package;
 	protected boolean hide_nsfw_category=false;
+	private boolean bot_on;
 	
 	//objs
 	protected ArrayList<ModelCategory> categories;
@@ -70,6 +71,12 @@ public class BotRunner {
 	public void setHide_nsfw_category(boolean hide_nsfw_category) {
 		this.hide_nsfw_category = hide_nsfw_category;
 	}
+	public boolean isBot_on() {
+		return bot_on;
+	}
+	public void setBot_on(boolean bot_is_on) {
+		this.bot_on = bot_is_on;
+	}
 	private BotRunner(String commandsPackage) {
 		commands_package=commandsPackage;
 		reflections = new Reflections(commands_package);
@@ -94,6 +101,7 @@ public class BotRunner {
 			cmdcategory = new ModelCategory(c.getSimpleName(), catanno.desc());
 			cmdcategory.setNsfw(catanno.nsfw());
 			cmdcategory.setVisible(catanno.visible());
+			cmdcategory.setSpecial(catanno.isSpecial());
 			for(Method m : ms) {
 				Command cmdanno = m.getDeclaredAnnotation(Command.class);
 				if(cmdanno==null) {
@@ -128,6 +136,9 @@ public class BotRunner {
 			if(autoHelpCommand) {
 				for(String cs : AutoHelpCommand.HELP_OPTIONS) {
 					if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cs.toLowerCase())) {
+						if(!bot_on) {
+							e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+						}
 						ArrayList<InputParameter> pars = new ArrayList<InputParameter>();
 						Thread runner;
 						Method ayudacmd = AutoHelpCommand.class.getDeclaredMethod("help", MessageReceivedEvent.class, ArrayList.class);
@@ -140,15 +151,7 @@ public class BotRunner {
 			}
 			for(ModelCommand cmd : commands) {
 				if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cmd.getName().toLowerCase())){
-					/* BUSCAR PARAMETROS*/
 					ArrayList<InputParameter> pars = findParametros(message,cmd);
-					/* EJECUTAR COMANDO EN THREAD*/
-					/*
-					 * 
-					 * CONFIRMAR QUE EL COMANDO NO ESTE DESHABILITADO!!.
-					 * 
-					 * 
-					 * */
 					if(!cmd.isEnabled()) {
 						if(!cmd.isVisible()) {
 							return;
@@ -158,6 +161,9 @@ public class BotRunner {
 						e.getChannel().sendMessage(eb.build()).queue();
 						return;
 					}
+					if(!bot_on && !cmd.getCategory().isSpecial()) {
+						e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+					}
 					Thread runner;
 					CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
 					runner = new Thread(cr);
@@ -166,15 +172,7 @@ public class BotRunner {
 				}else {
 					for(String a : cmd.getAlias()) {
 						if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + a.toLowerCase())) {
-							/* BUSCAR PARAMETROS*/
 							ArrayList<InputParameter> pars = findParametros(message,cmd);
-							/* EJECUTAR COMANDO EN THREAD*/
-							/*
-							 * 
-							 * CONFIRMAR QUE EL COMANDO NO ESTE DESHABILITADO!!.
-							 * 
-							 * 
-							 * */
 							if(!cmd.isEnabled()) {
 								if(!cmd.isVisible()) {
 									return;
@@ -183,6 +181,9 @@ public class BotRunner {
 								eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
 								e.getChannel().sendMessage(eb.build()).queue();
 								return;
+							}
+							if(!bot_on && !cmd.getCategory().isSpecial()) {
+								e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
 							}
 							Thread runner;
 							CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
@@ -205,6 +206,9 @@ public class BotRunner {
 			for(String cs : AutoHelpCommand.HELP_OPTIONS) {
 				if(r.toLowerCase().equalsIgnoreCase(cs.toLowerCase())) {
 					ArrayList<InputParameter> pars = new ArrayList<InputParameter>();
+					if(!bot_on) {
+						e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+					}
 					Thread runner;
 					Method ayudacmd = AutoHelpCommand.class.getDeclaredMethod("help", MessageReceivedEvent.class, ArrayList.class);
 					CommandRunner cr = new CommandRunner(ayudacmd, pars, e);
@@ -216,15 +220,7 @@ public class BotRunner {
 		}
 		for(ModelCommand cmd : commands) {
 			if(r.toLowerCase().equalsIgnoreCase(cmd.getName().toLowerCase())){
-				/* BUSCAR PARAMETROS*/
 				ArrayList<InputParameter> pars = findParametros(message,cmd);
-				/* EJECUTAR COMANDO EN THREAD*/
-				/*
-				 * 
-				 * CONFIRMAR QUE EL COMANDO NO ESTE DESHABILITADO!!.
-				 * 
-				 * 
-				 * */
 				if(!cmd.isEnabled()) {
 					if(!cmd.isVisible()) {
 						return;
@@ -234,6 +230,9 @@ public class BotRunner {
 					e.getChannel().sendMessage(eb.build()).queue();
 					return;
 				}
+				if(!bot_on && !cmd.getCategory().isSpecial()) {
+					e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+				}
 				Thread runner;
 				CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
 				runner = new Thread(cr);
@@ -242,15 +241,7 @@ public class BotRunner {
 			}else {
 				for(String a : cmd.getAlias()) {
 					if(r.toLowerCase().equalsIgnoreCase(a.toLowerCase())) {
-						/* BUSCAR PARAMETROS*/
 						ArrayList<InputParameter> pars = findParametros(message,cmd);
-						/* EJECUTAR COMANDO EN THREAD*/
-						/*
-						 * 
-						 * CONFIRMAR QUE EL COMANDO NO ESTE DESHABILITADO!!.
-						 * 
-						 * 
-						 * */
 						if(!cmd.isEnabled()) {
 							if(!cmd.isVisible()) {
 								return;
@@ -259,6 +250,9 @@ public class BotRunner {
 							eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
 							e.getChannel().sendMessage(eb.build()).queue();
 							return;
+						}
+						if(!bot_on && !cmd.getCategory().isSpecial()) {
+							e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
 						}
 						Thread runner;
 						CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);

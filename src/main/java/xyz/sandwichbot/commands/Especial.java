@@ -1,12 +1,18 @@
 package xyz.sandwichbot.commands;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.json.JSONObject;
 
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import xyz.sandwichbot.annotations.*;
 import xyz.sandwichbot.core.AutoHelpCommand;
+import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.Constantes.JaxSandwich;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
@@ -49,11 +55,7 @@ public class Especial {
 			SandwichBot.SendAndDestroy(e.getChannel(),"Debe mencionar a un usuario para registrarlo.", autodesTime);
 			return;
 		}
-		String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.R + "?hash=" + Tools.encriptSHA256(e.getAuthor().getId()) + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()) + "&new=" + Tools.encriptSHA256(e.getMessage().getMentionedUsers().get(0).getId()));
-		System.out.println(hc);
-		JSONObject j = new JSONObject(hc);
-		boolean res = j.getBoolean("res");
-		if(!res) {
+		if(!Tools.JAX.register(e.getAuthor().getId(), e.getMessage().getMentionedUsers().get(0).getId())) {
 			SandwichBot.SendAndDestroy(e.getChannel(),"No se pudo registrar", autodesTime);
 			return;
 		}
@@ -68,17 +70,30 @@ public class Especial {
 			e.getChannel().sendMessage("Registrado.").queue();
 		}
 	}
-	/*
 	
-	@Command(name="SET",desc="Ajusta el parametro ",alias={})
-	@Parameter(name="msg",desc="msg")
+	@Command(name="SET",desc="Ajusta el parametro indicado.")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void set(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	@Option(name="apodo",desc="Cambia el apodo del bot en el servidor actual. Si se usa en un chat privado no tiene efecto.",alias={"nombre","n"})
+	@Option(name="conexion",desc="Indica el estado de conexión del bot. Los valores son:\n0 - Desconectado\n1 - Conectado\n2 - Ausente\n3 - No molestar\n4 - Invisible",alias={"status","st","online"})
+	@Option(name="imagen",desc="Establece la imagen del Bot",alias={"img","i","avatar"},enabled=false)
+	@Option(name="actividad",desc="Cambia la actividad que esta realizando el bot.",alias={"ac","estado","jugando"})
+	@Option(name="mutear",desc="Mutea el bot en el servidor actual. Si se usa en un chat privado no tiene efecto.",alias={"mute","m"},enabled=false)
+	@Option(name="ensordecer",desc="Ensordece al bot en el servidor actual. Si se usa en un chat privado no tiene efecto.",alias={"sordo","e","ensor"},enabled=false)
+	@Option(name="switch",desc="Enciende o apaga el bot dependiendo del estado actual. Esto afecta a todos los servidores.",alias={"sw"})
+	public static void set(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+		if(!Tools.JAX.auth(e.getAuthor().getId())) {
+			return;
+		}
 		boolean autodes = false;
 		int autodesTime=15;
 		boolean anon=false;
-		String msg = null;
+		
+		String img = null;
+		boolean muteado = false;
+		boolean sordo = false;
+		boolean on = SandwichBot.ActualBot().isBotOn();
+		
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
@@ -88,28 +103,75 @@ public class Especial {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
+				}else if(p.getKey().equalsIgnoreCase("imagen")) {
+					if(!p.getValueAsString().equals("none")) {
+						//=Tools.toValidHttpUrl(p.getValueAsString());  ASIGNAR AVATAR
+					}
+				}else if(p.getKey().equalsIgnoreCase("apodo")) {
+					if(e.getChannelType() == ChannelType.PRIVATE) {
+						continue;
+					}
+					e.getGuild().getMember(SandwichBot.ActualBot().getJDA().getSelfUser()).modifyNickname(p.getValueAsString());
+				}else if(p.getKey().equalsIgnoreCase("avatar")) {
+					
+					img = p.getValueAsString();
+				}else if(p.getKey().equalsIgnoreCase("conexion")) {
+					switch(p.getValueAsInt()) {
+					case 0:
+						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.OFFLINE);
+						break;
+					case 1:
+						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
+						break;
+					case 2:
+						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.IDLE);
+						break;
+					case 3:
+						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
+						break;
+					case 4:
+						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.INVISIBLE);
+						break;
+					}
+				}else if(p.getKey().equalsIgnoreCase("actividad")) {
+					SandwichBot.ActualBot().getJDA().getPresence().setActivity(Activity.playing(p.getValueAsString()));
+				}else if(p.getKey().equalsIgnoreCase("mutear")) {
+					muteado = p.getValueAsBoolean(Constantes.VALORES.TRUE);
+				}else if(p.getKey().equalsIgnoreCase("ensordecer")) {
+					sordo = p.getValueAsBoolean(Constantes.VALORES.TRUE);
+				}else if(p.getKey().equalsIgnoreCase("switch")) {
+					SandwichBot.ActualBot().setBotOn(!on);
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "SET");
 					return;
 				}
-			}else if(p.getType() == InputParamType.Custom){
-				msg = p.getValueAsString();
 			}
 		}
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
-		System.out.println("msg:" + e.getMessage().getMentionedUsers().get(0).getId() + " | " + e.getMessage().getMentionedUsers().get(0).getName());
 		if(autodes) {
 			if(autodesTime<=0) {
 				autodesTime=5;
 			}else if(autodesTime>900) {
 				autodesTime=900;
 			}
-			SandwichBot.SendAndDestroy(e.getChannel(),"msg: " + Tools.ToURLencoded(Tools.encriptSHA256(msg)) + " | user: " + Tools.ToURLencoded(Tools.encriptSHA256(e.getAuthor().getId())), autodesTime);
+			SandwichBot.SendAndDestroy(e.getChannel(),"msg", autodesTime);
 		}else {
-			e.getChannel().sendMessage("msg: " +Tools.encriptSHA256(msg) + " | user: " + Tools.encriptSHA256(e.getAuthor().getId())).queue();		}
+			e.getChannel().sendMessage("msg").queue();
+		}
 	}
 	
-	*/
+	@Command(name="jax",visible=false)
+	@Parameter(name="",desc="")
+	public static void jax(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+		if(Tools.JAX.auth(e.getAuthor().getId())) {
+			String enc = Tools.toBase64(Tools.cifrar(parametros.get(0).getValueAsString()));
+			e.getChannel().sendMessage("Mensaje original: " + parametros.get(0)).queue();
+			e.getChannel().sendMessage("Mensaje encriptado: " + enc).queue();
+			e.getChannel().sendMessage("Mensaje desencriptado: " + Tools.descifrar(Tools.fromBase64ToBytes(enc))).queue();
+		}
+		//Random r = new Random(System.currentTimeMillis());
+		
+	}
 }

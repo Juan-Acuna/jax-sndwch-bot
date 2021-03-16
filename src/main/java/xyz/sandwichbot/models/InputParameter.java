@@ -45,15 +45,27 @@ public class InputParameter {
 		return value;
 	}
 	public int getValueAsInt() {
+		if(value.equals("none")) {
+			return -1;
+		}
 		return Integer.parseInt((String)value);
 	}
 	public double getValueAsDouble() {
+		if(value.equals("none")) {
+			return -1;
+		}
 		return Double.parseDouble(value);
 	}
 	public float getValueAsFloat() {
+		if(value.equals("none")) {
+			return -1f;
+		}
 		return Float.parseFloat(value);
 	}
 	public char getValueAsChar() {
+		if(value.equals("none")) {
+			return '\0';
+		}
 		return value.charAt(0);
 	}
 	public boolean getValueAsBoolean(String[] standarTrue) {

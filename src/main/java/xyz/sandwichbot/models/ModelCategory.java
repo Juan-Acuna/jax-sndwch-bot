@@ -8,6 +8,7 @@ public class ModelCategory implements Comparable<ModelCategory>{
 	private String desc;
 	private boolean nsfw;
 	private boolean visible;
+	private boolean isSpecial;
 	private ArrayList<ModelCommand> commands;
 	public ModelCategory(){}
 	public ModelCategory(String name, String desc) {
@@ -47,6 +48,12 @@ public class ModelCategory implements Comparable<ModelCategory>{
 	}
 	public void addCommand(ModelCommand command) {
 		this.commands.add(command);
+	}
+	public boolean isSpecial() {
+		return isSpecial;
+	}
+	public void setSpecial(boolean isSpecial) {
+		this.isSpecial = isSpecial;
 	}
 	@Override
 	public int compareTo(ModelCategory arg0) {

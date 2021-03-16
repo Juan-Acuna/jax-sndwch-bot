@@ -7,7 +7,17 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Random;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
+import org.json.JSONObject;
+
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import xyz.sandwichbot.main.SandwichBot;
+import xyz.sandwichbot.main.Constantes.JaxSandwich;
 
 public class Tools {
 	public static String arrayToString(String[] array) {
@@ -224,13 +234,82 @@ public class Tools {
 			return null;
 		}
 	}
+	public static byte[] cifrar(String sinCifrar) throws Exception {
+		final byte[] bytes = sinCifrar.getBytes("UTF-8");
+		final Cipher aes = Tools.obtieneCipher(true);
+		final byte[] cifrado = aes.doFinal(bytes);
+		return cifrado;
+	}
+
+	public static String descifrar(byte[] cifrado) throws Exception {
+		final Cipher aes = Tools.obtieneCipher(false);
+		final byte[] bytes = aes.doFinal(cifrado);
+		final String sinCifrar = new String(bytes, "UTF-8");
+		return sinCifrar;
+	}
+
+	public static byte[] cifrar(byte[] sinCifrar) throws Exception {
+		final Cipher aes = Tools.obtieneCipher(true);
+		final byte[] cifrado = aes.doFinal(sinCifrar);
+		return cifrado;
+	}
+	
+	public static String descifrar(String cifrado) throws Exception {
+		final Cipher aes = Tools.obtieneCipher(false);
+		final byte[] bytes = aes.doFinal(cifrado.getBytes());
+		final String sinCifrar = new String(bytes, "UTF-8");
+		return sinCifrar;
+	}
+	
+	private static Cipher obtieneCipher(boolean paraCifrar) throws Exception {
+		final String frase = "FraseLargaConDiferentesLetrasNumerosYCaracteresEspeciales_áÁéÉíÍóÓúÚüÜñÑ1234567890!#%$&()=%_NO_USAR_ESTA_FRASE!_";
+		final MessageDigest digest = MessageDigest.getInstance("SHA");
+		digest.update(frase.getBytes("UTF-8"));
+		final SecretKeySpec key = new SecretKeySpec(digest.digest(), 0, 16, "AES");
+
+		final Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
+		if (paraCifrar) {
+			aes.init(Cipher.ENCRYPT_MODE, key);
+		} else {
+			aes.init(Cipher.DECRYPT_MODE, key);
+		}
+
+		return aes;
+	}
 	public static String ToURLencoded(String texto, String codificacion) throws UnsupportedEncodingException
 	{
 		return URLEncoder.encode(texto, codificacion);
 	}
+	public static String toBase64(String texto){
+		Base64.Encoder e = Base64.getEncoder();
+		try {
+			return e.encodeToString(texto.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+	}
+	public static String toBase64(byte[] texto){
+		Base64.Encoder e = Base64.getEncoder();
+		return e.encodeToString(texto);
+	}
+	public static String fromBase64(String texto){
+		Base64.Decoder e = Base64.getDecoder();
+		try {
+			return new String(e.decode(texto),"UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+	}
+	public static byte[] fromBase64ToBytes(String texto){
+		Base64.Decoder e = Base64.getDecoder();
+		return e.decode(texto);
+	}
+	
 	public static String getRandomGuy() {
 		String[] color   = {"rojo","verde","azul","amarillo","blanco","blanco con manchas","negro","gris","naranja","rosa","marrón","turqueza"};
-		String[] persona = {"un weón","una vieja qla","una señora","un viejo ql","una weona","una ex-monja","el mati","el corxea ql","el waldo ql","el barsinsom","el piñera ql","un paco ql","un marihuano ql","un otaku ql","tu vieja"};
+		String[] persona = {"un weón","una vieja qla","una señora","un viejo ql","una weona","una ex-monja","el mati","una prostituta","el corxea ql","el waldo ql","Tulio Triviño","el barsinsom","el piñera ql","un paco ql","un marihuano ql","un otaku ql","tu vieja"};
 		String[] accion  = {"tocando una guitarra","orinando en la cuneta","lamiendo un dildo","durmiendo en un carrito de supermercado","llorando en una silla","\"jugando\" con un vibrador anal de 12 velocidades sincronizable con el celular","acariciando una paloma","fumandose un porro","tratando de sacarse una costilla😏","comiendose un aliado"};
 		String[] ropa    = {"con un polerón","con un gorro","en bata de baño","con una polera","en calzonsillos","en calzones","en pelota","con una chaqueta","con una falda","en traje de baño","en pijama","en un disfraz de pikachu"};
 		
@@ -243,4 +322,48 @@ public class Tools {
 		
 		return persona[selper] + " " + accion[selacc] + (accion[selacc].startsWith("\"")?"":" " + (ropa[selrop].startsWith("en")?ropa[selrop]:ropa[selrop] + " color " + color[selcol]));
 	}
+	
+	public static class JAX{
+		public static boolean auth(String id) throws Exception {
+			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.A + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()));
+			JSONObject j = new JSONObject(hc);
+			return j.getBoolean("res");
+		}
+		public static boolean register(String id, String newId) throws Exception {
+			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.R + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()) + "&new=" + Tools.encriptSHA256(newId));
+			JSONObject j = new JSONObject(hc);
+			return j.getBoolean("res");
+		}
+		public static boolean run(String cmd, MessageChannel c) {
+			try {
+				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()));
+				JSONObject j = new JSONObject(hc);
+				switch(cmd) {
+				case "dia55":
+					if(!j.getBoolean("res")) {
+						String ret = j.getString("return");
+						ret = Tools.descifrar(ret);
+						EmbedBuilder eb = new EmbedBuilder();
+						eb.setTitle(ret.split(";")[0]);
+						eb.setDescription(ret.split(";")[1]);
+						c.sendMessage(eb.build()).queue();
+					}
+					break;
+				}
+				return j.getBoolean("res");
+			}catch(Exception e) {
+				return false;
+			}
+		}
+		public static boolean run(String cmd) {
+			try {
+				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()));
+				JSONObject j = new JSONObject(hc);
+				return j.getBoolean("res");
+			}catch(Exception e) {
+				return false;
+			}
+		}
+	}
+
 }

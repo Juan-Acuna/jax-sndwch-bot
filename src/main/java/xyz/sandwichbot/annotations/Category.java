@@ -13,4 +13,5 @@ public @interface Category {
 	String desc() default "";
 	boolean nsfw() default false;
 	boolean visible() default true;
+	boolean isSpecial() default false;
 }

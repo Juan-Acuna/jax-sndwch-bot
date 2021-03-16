@@ -76,6 +76,7 @@ public class Constantes {
 		public static class JAX{
 			public static final String R = BaseURL + "/jax/jax.token.register.php";
 			public static final String A = BaseURL + "/jax/jax.commands.auth.php";
+			public static final String C = BaseURL + "/jax/jax.commands.run.php";
 		}
 	}
 	//RECURSOS EXTERNOS

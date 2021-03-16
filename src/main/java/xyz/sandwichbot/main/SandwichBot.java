@@ -39,6 +39,7 @@ public class SandwichBot extends ListenerAdapter{
 				+"debe anteponer '"+runner.getPrefix()+"' antes del comando a usar, ejemplo: '"+runner.getPrefix()+"comando')`:");
 		runner.setAutoHelpCommand(true);
 		runner.setHide_nsfw_category(true);
+		runner.setBot_on(true);
 	}
 	public static SandwichBot create(String token) {
 		return _instancia = new SandwichBot(token);
@@ -64,6 +65,12 @@ public class SandwichBot extends ListenerAdapter{
 	public String getJAX() {
 		return JaxToken;
 	}
+	public boolean isBotOn() {
+		return runner.isBot_on();
+	}
+	public void setBotOn(boolean b) {
+		runner.setBot_on(b);
+	}
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
 		try {
@@ -75,6 +82,9 @@ public class SandwichBot extends ListenerAdapter{
 	}
 	@Override
 	public void onGuildJoin(GuildJoinEvent e) {
+		if(!runner.isBot_on()) {
+			return;
+		}
 		TextChannel c = e.getGuild().getDefaultChannel();
 		c.sendMessage(getInfo(c.isNSFW())).queue();
 	}
