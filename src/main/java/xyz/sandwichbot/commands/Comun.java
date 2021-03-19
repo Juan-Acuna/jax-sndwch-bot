@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -21,6 +22,9 @@ import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.main.util.Tools;
+import xyz.sandwichbot.main.util.Tools.EarrapeSRC;
+import xyz.sandwichbot.main.util.lavaplayer.GuildMusicManager;
+import xyz.sandwichbot.main.util.lavaplayer.PlayerManager;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
 
@@ -462,5 +466,88 @@ public class Comun {
 		}else {
 			e.getChannel().sendMessage(eb.build()).queue();
 		}
+	}
+	
+	@Command(name="Trollear",desc="Comando para trollear, no tiene más ciencia. Para especificar un objetivo, mencionalo al comienzo del comando, de lo contrario el trolleo te lo llevas tu:smirk:",alias={"troll","trolear","trl"})
+	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
+	@Option(name="earrape",desc="Reproduce un audio que hace mierda el oido. Puedes especificarl la url con esta opción o dejarla vacía y yo haré el resto.",alias={"e",})
+	public static void trollear(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+		boolean autodes = false;
+		int autodesTime = 15;
+		boolean anon = false;
+		EarrapeSRC er_src = new EarrapeSRC();
+		boolean er = false;
+		EmbedBuilder eb = new EmbedBuilder();
+		for(InputParameter p : parametros) {
+			if(p.getType() == InputParamType.Standar) {
+				if(p.getKey().equalsIgnoreCase("autodestruir")){
+					autodes=true;
+					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+						autodesTime = p.getValueAsInt();
+					}
+				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
+					anon=true;
+				}else if(p.getKey().equalsIgnoreCase("earrape")) {
+					er=true;
+					if(!p.getValueAsString().equals("none")) {
+						er_src.url = p.getValueAsString().split("\\s")[0];
+						if(p.getValueAsString().split("\\s")[1].matches("[0-9]{1,6}")) {
+							er_src.duracion = Integer.parseInt(p.getValueAsString().split("\\s")[1]);
+						}
+					}
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+					AutoHelpCommand.sendHelp(e.getChannel(), "Trollear");
+					return;
+				}
+			}
+		}
+		if(anon) {
+			e.getChannel().purgeMessagesById(e.getMessageId());
+		}
+		final TextChannel tChannel = e.getTextChannel();
+		final Guild guild = e.getGuild();
+		final Member member;
+		final Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		if(e.getMessage().getMentionedMembers().size()>0) {
+			member = e.getMessage().getMentionedMembers().get(0);
+		}else {
+			member = guild.getMember(e.getAuthor());
+		}
+		final GuildVoiceState memberVoiceState = member.getVoiceState();
+		if(!memberVoiceState.inVoiceChannel()) {
+			return;
+		}
+		VoiceChannel vchannel = memberVoiceState.getChannel();
+		AudioManager audioManager = guild.getAudioManager();
+		audioManager.openAudioConnection(vchannel);
+		if(er) {
+			if(er_src.url==null) {
+				er_src = Tools.getRandomEarrapeSource();
+			}
+			PlayerManager.getInstance().loadAndPlay(tChannel, Tools.toValidHttpUrl(er_src.url));
+			
+			if(er_src.duracion!=0) {
+				System.out.println("ENTRANDO");
+				/*if(er_src.inicio>0) {
+					PlayerManager.getInstance().getMusicManager(guild).scheduler.player.setVolume(0);
+					System.out.println("BAJANDO VOLUMEN");
+					Thread.sleep(er_src.inicio);
+					PlayerManager.getInstance().getMusicManager(guild).scheduler.player.setVolume(150);
+					System.out.println("SUBIENDO VOLUMEN");
+				}*/
+				Thread.sleep(er_src.duracion+er_src.inicio);
+				PlayerManager.getInstance().getMusicManager(guild).scheduler.player.stopTrack();
+				System.out.println("PAUSANDO");
+				audioManager.closeAudioConnection();
+				System.out.println("SALIENDO");
+			}
+		}
+		/*
+		if(autodes) {
+			SandwichBot.SendAndDestroy(e.getChannel(),"",autodesTime);
+		}else {
+			e.getChannel().sendMessage("").queue();
+		}*/
 	}
 }

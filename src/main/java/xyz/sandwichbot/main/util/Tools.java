@@ -322,6 +322,21 @@ public class Tools {
 		
 		return persona[selper] + " " + accion[selacc] + (accion[selacc].startsWith("\"")?"":" " + (ropa[selrop].startsWith("en")?ropa[selrop]:ropa[selrop] + " color " + color[selcol]));
 	}
+	public static EarrapeSRC getRandomEarrapeSource() {
+		Random r = new Random(System.currentTimeMillis());
+		EarrapeSRC[] src = {
+					new EarrapeSRC("Ozuna Farsante","https://youtu.be/O_iwe46pRXc?t=49",49000,10000),
+					new EarrapeSRC("bebesitabebelin","https://youtu.be/sJVqyQ6ou6s?t=22",22000,28000),
+					new EarrapeSRC("Monsters Inc. Theme","https://www.youtube.com/watch?v=EXexOTRaAz4",20000),
+					new EarrapeSRC("Baila Conmigo","https://youtu.be/l9aEHzSUVAg?t=26",26000,12000),
+					new EarrapeSRC("Wii Sports Theme(short)","https://www.youtube.com/watch?v=JzGTxHrFG84",4000),
+					new EarrapeSRC("Wii Sports Theme(long)","https://www.youtube.com/watch?v=JzGTxHrFG84",29000),
+					new EarrapeSRC("Thomas the train theme","https://www.youtube.com/watch?v=rBjkkHmb_oY&t=5s",5000,15000)
+				};
+		EarrapeSRC esrc = src[r.nextInt(src.length)];
+		System.out.println("src: " + esrc.nombre + " | " + esrc.url + " | " + esrc.duracion);
+		return esrc;
+	}
 	
 	public static class JAX{
 		public static boolean auth(String id) throws Exception {
@@ -365,5 +380,27 @@ public class Tools {
 			}
 		}
 	}
-
+	public static class EarrapeSRC{
+		public String nombre = "?";
+		public String url = null;
+		public int inicio = 0;
+		public int duracion = 0;
+		
+		public EarrapeSRC() {}
+		public EarrapeSRC(String url, int duracion) {
+			this.url=url;
+			this.duracion=duracion;
+		}
+		public EarrapeSRC(String nombre, String url, int duracion) {
+			this.nombre=nombre;
+			this.url=url;
+			this.duracion=duracion;
+		}
+		public EarrapeSRC(String nombre, String url, int inicio, int duracion) {
+			this.nombre=nombre;
+			this.url=url;
+			this.inicio=inicio;
+			this.duracion=duracion;
+		}
+	}
 }

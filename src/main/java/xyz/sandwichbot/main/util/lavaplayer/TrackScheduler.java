@@ -26,11 +26,9 @@ public class TrackScheduler extends AudioEventAdapter{
 		this.player.startTrack(this.queue.poll(), false);
 	}
 	public void queue(AudioTrack track) {
-		System.out.println("VA A AGREGAR");
+		
 		if(!this.player.startTrack(track, false)) {
-			System.out.println("AGREGADO A LA COLA");
 			this.queue.offer(track);
 		}
-		System.out.println("fuera del if");
 	}
 }

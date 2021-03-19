@@ -46,14 +46,13 @@ public class PlayerManager {
 
 			@Override
 			public void trackLoaded(AudioTrack track) {
-				System.out.println("uniendo a la cola");
 				musicManager.scheduler.queue(track);
-				System.out.println("ya se unio a la cola");
-				channel.sendMessage("Reproduciendo: *")
+				System.out.println("track: "+track.getInfo().title);
+				/*channel.sendMessage("Reproduciendo: *")
 				.append(track.getInfo().title)
 				.append("* de *")
 				.append(track.getInfo().author + "*")
-				.queue();
+				.queue();*/
 			}
 
 			@Override
@@ -63,11 +62,11 @@ public class PlayerManager {
 					trackLoaded(tracks.get(0));
 					return;
 				}
-				channel.sendMessage("AGREGANDO A LA COLA: *")
+				/*channel.sendMessage("AGREGANDO A LA COLA: *")
 				.append(String.valueOf(tracks.size()))
 				.append("* canciones de la lista *")
 				.append(playlist.getName() + "*")
-				.queue();
+				.queue();*/
 				for(final AudioTrack track : tracks) {
 					musicManager.scheduler.queue(track);
 				}
