@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.Constantes.JaxSandwich;
 
@@ -325,21 +326,30 @@ public class Tools {
 	public static EarrapeSRC getRandomEarrapeSource() {
 		Random r = new Random(System.currentTimeMillis());
 		EarrapeSRC[] src = {
-					new EarrapeSRC("Ozuna Farsante","https://youtu.be/O_iwe46pRXc?t=49",49000,10000),
-					new EarrapeSRC("bebesitabebelin","https://youtu.be/sJVqyQ6ou6s?t=22",22000,28000),
-					new EarrapeSRC("Monsters Inc. Theme","https://www.youtube.com/watch?v=EXexOTRaAz4",20000),
+					new EarrapeSRC("Ozuna Farsante","https://youtu.be/O_iwe46pRXc?t=49",50000,9000),
+					new EarrapeSRC("bebesitabebelin","https://youtu.be/sJVqyQ6ou6s?t=22",22000,10000),
+					new EarrapeSRC("Monsters Inc. Theme","https://www.youtube.com/watch?v=EXexOTRaAz4",6000,10000),
 					new EarrapeSRC("Baila Conmigo","https://youtu.be/l9aEHzSUVAg?t=26",26000,12000),
-					new EarrapeSRC("Wii Sports Theme(short)","https://www.youtube.com/watch?v=JzGTxHrFG84",4000),
-					new EarrapeSRC("Wii Sports Theme(long)","https://www.youtube.com/watch?v=JzGTxHrFG84",29000),
-					new EarrapeSRC("Ibai Farsante","https://www.youtube.com/watch?v=7SwzsSVYG4k",25000),
-					new EarrapeSRC("","",0),
-					new EarrapeSRC("Thomas the train theme","https://www.youtube.com/watch?v=rBjkkHmb_oY&t=5s",5000,15000)
+					new EarrapeSRC("Wii Sports Theme(short)","https://www.youtube.com/watch?v=JzGTxHrFG84",5000),
+					//new EarrapeSRC("Wii Sports Theme(long)","https://www.youtube.com/watch?v=JzGTxHrFG84",35000),
+					new EarrapeSRC("Ibai Farsante","https://www.youtube.com/watch?v=7SwzsSVYG4k",10000, 15000),
+					new EarrapeSRC("Thomas the train theme","https://www.youtube.com/watch?v=rBjkkHmb_oY&t=5s",6000,10000)
 				};
 		EarrapeSRC esrc = src[r.nextInt(src.length)];
-		System.out.println("src: " + esrc.nombre + " | " + esrc.url + " | " + esrc.duracion);
+		System.out.println("src: " + esrc.nombre + " | " + esrc.url + " | " + esrc.duracion/1000);
 		return esrc;
 	}
-	
+	public static MessageEmbed stringToEmb(String texto) {
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.addField(null, texto, false);
+		return eb.build();
+	}
+	public static MessageEmbed stringToEmb(String texto,String color) {
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.addField(null, texto, false);
+		eb.setColor(Tools.stringColorCast(color));
+		return eb.build();
+	}
 	public static class JAX{
 		public static boolean auth(String id) throws Exception {
 			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.A + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()));

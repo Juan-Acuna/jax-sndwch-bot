@@ -469,9 +469,9 @@ public class Comun {
 	}
 	
 	@Command(name="Trollear",desc="Comando para trollear, no tiene más ciencia. Para especificar un objetivo, mencionalo al comienzo del comando, de lo contrario el trolleo te lo llevas tu:smirk:",alias={"troll","trolear","trl"})
-	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"},enabled=false,visible=false)
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	@Option(name="earrape",desc="Reproduce un audio que hace mierda el oido. Puedes especificarl la url con esta opción o dejarla vacía y yo haré el resto.",alias={"e",})
+	@Option(name="earrape",desc="Reproduce un audio que hace mierda el oido. Puedes especificarl la url con esta opción o dejarla vacía y yo haré el resto.",alias={"e","ear","errape"})
 	public static void trollear(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		boolean autodes = false;
 		int autodesTime = 15;
@@ -505,16 +505,16 @@ public class Comun {
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
-		final TextChannel tChannel = e.getTextChannel();
-		final Guild guild = e.getGuild();
-		final Member member;
-		final Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		TextChannel tChannel = e.getTextChannel();
+		Guild guild = e.getGuild();
+		Member member;
+		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
 		if(e.getMessage().getMentionedMembers().size()>0) {
 			member = e.getMessage().getMentionedMembers().get(0);
 		}else {
 			member = guild.getMember(e.getAuthor());
 		}
-		final GuildVoiceState memberVoiceState = member.getVoiceState();
+		GuildVoiceState memberVoiceState = member.getVoiceState();
 		if(!memberVoiceState.inVoiceChannel()) {
 			return;
 		}
@@ -525,29 +525,13 @@ public class Comun {
 			if(er_src.url==null) {
 				er_src = Tools.getRandomEarrapeSource();
 			}
-			PlayerManager.getInstance().loadAndPlay(tChannel, Tools.toValidHttpUrl(er_src.url));
+			PlayerManager.getInstance().playUrl(guild, Tools.toValidHttpUrl(er_src.url),er_src.inicio);
 			
 			if(er_src.duracion!=0) {
-				System.out.println("ENTRANDO");
-				/*if(er_src.inicio>0) {
-					PlayerManager.getInstance().getMusicManager(guild).scheduler.player.setVolume(0);
-					System.out.println("BAJANDO VOLUMEN");
-					Thread.sleep(er_src.inicio);
-					PlayerManager.getInstance().getMusicManager(guild).scheduler.player.setVolume(150);
-					System.out.println("SUBIENDO VOLUMEN");
-				}*/
-				Thread.sleep(er_src.duracion+er_src.inicio);
+				Thread.sleep(er_src.duracion);
 				PlayerManager.getInstance().getMusicManager(guild).scheduler.player.stopTrack();
-				System.out.println("PAUSANDO");
 				audioManager.closeAudioConnection();
-				System.out.println("SALIENDO");
 			}
 		}
-		/*
-		if(autodes) {
-			SandwichBot.SendAndDestroy(e.getChannel(),"",autodesTime);
-		}else {
-			e.getChannel().sendMessage("").queue();
-		}*/
 	}
 }

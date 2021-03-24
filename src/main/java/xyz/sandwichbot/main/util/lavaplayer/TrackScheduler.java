@@ -9,8 +9,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
 public class TrackScheduler extends AudioEventAdapter{
-	public final AudioPlayer player;
-	public final BlockingQueue<AudioTrack> queue;
+	public AudioPlayer player;
+	public BlockingQueue<AudioTrack> queue;
 	public TrackScheduler(AudioPlayer player) {
 		this.player=player;
 		this.queue=new LinkedBlockingQueue<>();
@@ -22,13 +22,16 @@ public class TrackScheduler extends AudioEventAdapter{
 		}
 	}
 	
-	public void nextTrack() {
-		this.player.startTrack(this.queue.poll(), false);
+	public AudioTrack nextTrack() {
+		AudioTrack a = this.queue.poll();
+		this.player.startTrack(a, false);
+		return a;
 	}
-	public void queue(AudioTrack track) {
-		
-		if(!this.player.startTrack(track, false)) {
+	public boolean queue(AudioTrack track) {
+		if(!this.player.startTrack(track, true)) {
 			this.queue.offer(track);
+			return false;
 		}
+		return true;
 	}
 }

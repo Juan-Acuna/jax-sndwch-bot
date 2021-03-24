@@ -5,8 +5,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
 public class GuildMusicManager {
 	public volatile AudioPlayer audioPlayer;
-	public final TrackScheduler scheduler;
-	private final AudioPlayerSendHandler sendHandler;
+	public TrackScheduler scheduler;
+	private AudioPlayerSendHandler sendHandler;
 	
 	public GuildMusicManager(AudioPlayerManager manager) {
 		this.audioPlayer = manager.createPlayer();

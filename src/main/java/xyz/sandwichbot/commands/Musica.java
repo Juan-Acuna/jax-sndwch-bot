@@ -2,6 +2,10 @@ package xyz.sandwichbot.commands;
 
 import java.util.ArrayList;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -10,6 +14,7 @@ import xyz.sandwichbot.annotations.Command;
 import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.Comparador;
+import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichbot.main.util.lavaplayer.*;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
@@ -18,7 +23,7 @@ import xyz.sandwichbot.models.InputParameter.InputParamType;
 public class Musica {
 	public static boolean enUso = false;
 	
-	@Command(name="Play",desc="Reproduce música obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"},enabled=false)
+	@Command(name="Play",desc="Reproduce música obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"},visible=false,enabled=true)
 	public static void reproducir(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		boolean autodes=false;
 		int autodesTime =15;
@@ -42,15 +47,15 @@ public class Musica {
 			e.getChannel().sendMessage("Debe ingresar una busqueda.").queue();
 			return;
 		}
-		final TextChannel tChannel = e.getTextChannel();
-		final Guild guild = e.getGuild();
-		final Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
-		final GuildVoiceState selfVoiceState = self.getVoiceState();
+		TextChannel tChannel = e.getTextChannel();
+		Guild guild = e.getGuild();
+		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		GuildVoiceState selfVoiceState = self.getVoiceState();
 		
 		
 		
-		final Member member = guild.getMember(e.getAuthor());
-		final GuildVoiceState memberVoiceState = member.getVoiceState();
+		Member member = guild.getMember(e.getAuthor());
+		GuildVoiceState memberVoiceState = member.getVoiceState();
 		if(!memberVoiceState.inVoiceChannel()) {
 			tChannel.sendMessage("primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@").queue();
 			return;
@@ -87,7 +92,7 @@ public class Musica {
 	public static void pausar() {
 		
 	}
-	/*
+	
 	@Command(name="Siguiente",desc="Salta a la siguiente canción en la cola actual. Si no quedan canciones, la reproducción se termina.",alias={"sk","saltar","skip"})
 	public static void siguiente(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		final TextChannel tChannel = e.getTextChannel();
@@ -119,7 +124,10 @@ public class Musica {
 			return;
 		}
 		tChannel.sendMessage("Saltando...").queue();
-		musicManager.scheduler.nextTrack();
+		AudioTrack a = musicManager.scheduler.nextTrack();
+		if(a!=null) {
+			tChannel.sendMessage(Tools.stringToEmb("Reproduciendo: " + a.getInfo().title));
+		}
 	}
 	
 	@Command(name="Detener",desc="Detiene la reproducción actual.",alias={"stop","det"})
@@ -153,18 +161,18 @@ public class Musica {
 	
 	@Command(name="Actual",desc="Indica la canción que se esta reproduciendo actualmente.",alias= {"np","playing","cancion"})
 	public static void actual(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
-		final TextChannel tChannel = e.getTextChannel();
-		final Guild guild = e.getGuild();
-		final Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
-		final GuildVoiceState selfVoiceState = self.getVoiceState();
+		TextChannel tChannel = e.getTextChannel();
+		Guild guild = e.getGuild();
+		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		GuildVoiceState selfVoiceState = self.getVoiceState();
 		
 		
 		if(!selfVoiceState.inVoiceChannel()) {
 			tChannel.sendMessage("No estoy en tu canal de voz").queue();
 			return;
 		}
-		final Member member = guild.getMember(e.getAuthor());
-		final GuildVoiceState memberVoiceState = member.getVoiceState();
+		Member member = guild.getMember(e.getAuthor());
+		GuildVoiceState memberVoiceState = member.getVoiceState();
 		
 		if(!memberVoiceState.inVoiceChannel()) {
 			tChannel.sendMessage("conectate a un canal de voz poh sacowea").queue();
@@ -174,16 +182,16 @@ public class Musica {
 			tChannel.sendMessage("tienes que estar conmigo en el canal de voz para pedirme musica (y otras cosas:smirk:)").queue();
 			return;
 		}
-		final GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
-		final AudioPlayer player = musicManager.audioPlayer;
-		final AudioTrack track = player.getPlayingTrack();
+		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
+		AudioPlayer player = musicManager.audioPlayer;
+		AudioTrack track = player.getPlayingTrack();
 		if(track == null) {
 			tChannel.sendMessage("No se esta reproduciendo ninguna canción.").queue();
 			return;
 		}
 		final AudioTrackInfo info = track.getInfo();
 		tChannel.sendMessageFormat("Canción actual: %s de %s (%s)",info.title,info.author,info.uri).queue();
-	}*/
+	}
 	
 	public static void buscar() {
 		
@@ -197,4 +205,5 @@ public class Musica {
 		String a = Comparador.Encontrar("http[s]{0,1}://[a-zA-Z0-9%+_-]{1,60}.[a-zA-Z0-9]{2,3}/", txt);
 		return a!=null;
 	}
+	public static boolean USADO = false;
 }

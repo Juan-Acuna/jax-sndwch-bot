@@ -17,8 +17,8 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 public class PlayerManager {
 	private static PlayerManager _instance;
-	private final Map<Long, GuildMusicManager> musicManagers;
-	private final AudioPlayerManager audioPlayerManager;
+	private Map<String, GuildMusicManager> musicManagers;
+	private AudioPlayerManager audioPlayerManager;
 	
 	public PlayerManager() {
 		this.musicManagers = new HashMap<>();
@@ -27,16 +27,28 @@ public class PlayerManager {
 		AudioSourceManagers.registerLocalSource(audioPlayerManager);
 	}
 	public GuildMusicManager getMusicManager(Guild guild) {
-		return this.musicManagers.computeIfAbsent(guild.getIdLong(), (guildId) -> {
-			final GuildMusicManager guildMusicManager = new GuildMusicManager(this.audioPlayerManager);
+		/*return this.musicManagers.computeIfAbsent(guild.getId(), (guildId) -> {
+			GuildMusicManager guildMusicManager = new GuildMusicManager(this.audioPlayerManager);
 			guild.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());
 			
 			return guildMusicManager;
-		});
+		});*/
+		/*System.out.println("GUILDS REGISTRADOS:");
+		for(String s : musicManagers.keySet()) {
+			System.out.println(s + " | " + s.equals(guild.getId()) + " | " + musicManagers.containsKey(guild.getId()));
+		}*/
+		if(musicManagers.containsKey(guild.getId())) {
+			return musicManagers.get(guild.getId());
+		}else {
+			GuildMusicManager guildMusicManager = new GuildMusicManager(this.audioPlayerManager);
+			guild.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());
+			musicManagers.put(guild.getId(), guildMusicManager);
+			return musicManagers.get(guild.getId());
+		}
 	}
 	public static PlayerManager getInstance() {
 		if(_instance==null) {
-			return new PlayerManager();
+			return _instance = new PlayerManager();
 		}
 		return _instance;
 	}
@@ -46,28 +58,109 @@ public class PlayerManager {
 
 			@Override
 			public void trackLoaded(AudioTrack track) {
-				musicManager.scheduler.queue(track);
+				boolean b = musicManager.scheduler.queue(track);
 				System.out.println("track: "+track.getInfo().title);
-				/*channel.sendMessage("Reproduciendo: *")
-				.append(track.getInfo().title)
-				.append("* de *")
-				.append(track.getInfo().author + "*")
-				.queue();*/
+				if(b) {
+					channel.sendMessage("Reproduciendo: *")
+					.append(track.getInfo().title)
+					.append("* de *")
+					.append(track.getInfo().author + "*")
+					.queue();
+				}else {
+					channel.sendMessage("Agregando a la cola: *")
+					.append(track.getInfo().title)
+					.append("* de *")
+					.append(track.getInfo().author + "*")
+					.queue();
+				}
 			}
 
 			@Override
 			public void playlistLoaded(AudioPlaylist playlist) {
-				final List<AudioTrack> tracks = playlist.getTracks();
+				List<AudioTrack> tracks = playlist.getTracks();
 				if(playlist.isSearchResult()) {
 					trackLoaded(tracks.get(0));
 					return;
 				}
-				/*channel.sendMessage("AGREGANDO A LA COLA: *")
+				channel.sendMessage("Agregando cola de reproducción: *")
 				.append(String.valueOf(tracks.size()))
 				.append("* canciones de la lista *")
 				.append(playlist.getName() + "*")
-				.queue();*/
-				for(final AudioTrack track : tracks) {
+				.queue();
+				for(AudioTrack track : tracks) {
+					musicManager.scheduler.queue(track);
+				}
+			}
+
+			@Override
+			public void noMatches() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void loadFailed(FriendlyException exception) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+	}
+	public void playUrl(Guild guild, String trackUrl){
+		final GuildMusicManager musicManager = this.getMusicManager(guild);
+		this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+
+			@Override
+			public void trackLoaded(AudioTrack track) {
+				musicManager.scheduler.queue(track);
+				System.out.println("track: "+track.getInfo().title);
+			}
+
+			@Override
+			public void playlistLoaded(AudioPlaylist playlist) {
+				List<AudioTrack> tracks = playlist.getTracks();
+				if(playlist.isSearchResult()) {
+					trackLoaded(tracks.get(0));
+					return;
+				}
+				for(AudioTrack track : tracks) {
+					musicManager.scheduler.queue(track);
+				}
+			}
+
+			@Override
+			public void noMatches() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void loadFailed(FriendlyException exception) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+	}
+	public void playUrl(Guild guild, String trackUrl,int starts){
+		final GuildMusicManager musicManager = this.getMusicManager(guild);
+		this.audioPlayerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+
+			@Override
+			public void trackLoaded(AudioTrack track) {
+				track.setPosition(starts);
+				musicManager.scheduler.queue(track);
+				System.out.println("track: "+track.getInfo().title);
+			}
+
+			@Override
+			public void playlistLoaded(AudioPlaylist playlist) {
+				List<AudioTrack> tracks = playlist.getTracks();
+				if(playlist.isSearchResult()) {
+					trackLoaded(tracks.get(0));
+					return;
+				}
+				for(AudioTrack track : tracks) {
 					musicManager.scheduler.queue(track);
 				}
 			}
