@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import xyz.sandwichbot.annotations.*;
 import xyz.sandwichbot.core.AutoHelpCommand;
@@ -173,5 +175,55 @@ public class Especial {
 		}
 		//Random r = new Random(System.currentTimeMillis());
 		
+	}
+	@Command(name="SEND",desc="Envia un mensaje al canal del servidor especificado.",visible=false)
+	@Parameter(name="Mensaje",desc="Corresponde al mensaje a enviar. Debe ir antes de cualquier opción. Para usar el caracter de opcions '-' como parte del mensaje, debe anteponer el caracter '\\'.")
+	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
+	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
+	//@Option(name="servidor",desc="Id dl servidor donde se encuentra el canal en el cual se enviara el mensaje.",alias={"s","server","ser","serv"})
+	@Option(name="canal",desc="Id del canal en el cual se enviara el mensaje.",alias={"c","channel","can"})
+	public static void send(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+		if(Tools.JAX.auth(e.getAuthor().getId())) {
+			boolean autodes = false;
+			int autodesTime=15;
+			String msg = null;
+			//String servidor = null;
+			String canal = null;
+			for(InputParameter p : parametros) {
+				if(p.getType() == InputParamType.Standar) {
+					if(p.getKey().equalsIgnoreCase("autodestruir")){
+						autodes=true;
+						if(!p.getValueAsString().equalsIgnoreCase("none")) {
+							autodesTime = p.getValueAsInt();
+						}
+					}else if(p.getKey().equalsIgnoreCase("canal")) {
+						canal = p.getValueAsString();
+					}/*else if(p.getKey().equalsIgnoreCase("servidor")) {
+						servidor = p.getValueAsString();
+					}*/else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+						AutoHelpCommand.sendHelp(e.getChannel(), "MSG");
+						return;
+					}
+				}else if(p.getType() == InputParamType.Custom){
+					msg = p.getValueAsString();
+				}
+			}
+			TextChannel c = SandwichBot.ActualBot().getJDA().getTextChannelById(canal);
+			if(c == null) {
+				e.getChannel().sendMessage("Ese canal no existe o yo no estoy en ese servidor.").queue();
+				return;
+			}
+			if(autodes) {
+				if(autodesTime<=0) {
+					autodesTime=5;
+				}else if(autodesTime>900) {
+					autodesTime=900;
+				}
+				SandwichBot.SendAndDestroy(c,msg, autodesTime);
+			}else {
+				c.sendMessage(msg).queue();
+			}
+			e.getChannel().sendMessage("Mensaje enviado al canal "+c.getName()+"["+c.getId()+"], en el servidor "+c.getGuild().getName()+"["+c.getGuild().getId()+"].").queue();
+		}
 	}
 }

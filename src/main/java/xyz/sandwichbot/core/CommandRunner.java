@@ -12,7 +12,6 @@ class CommandRunner implements Runnable{
 	private Method method;
 	private ArrayList<InputParameter> parameters;
 	private MessageReceivedEvent msg;
-	private PrivateMessageReceivedEvent privmsg;
 	
 	public CommandRunner(Method method, ArrayList<InputParameter> parameters,MessageReceivedEvent event) {
 		super();
@@ -25,29 +24,16 @@ class CommandRunner implements Runnable{
 		super();
 		this.method = method;
 		this.parameters = parameters;
-		this.privmsg=event;
+		this.msg = new MessageReceivedEvent(event.getJDA(), event.getResponseNumber(), event.getMessage());
 	}
 
 	@Override
 	public void run() {
-		if(msg==null) {
-			try {
-				method.invoke(null, privmsg, parameters);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else {
-			try {
-				method.invoke(null, msg, parameters);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		try {
+			method.invoke(null, msg, parameters);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
 	}
-	
-	
-
 }

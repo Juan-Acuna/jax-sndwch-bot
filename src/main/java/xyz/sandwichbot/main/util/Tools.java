@@ -331,6 +331,8 @@ public class Tools {
 					new EarrapeSRC("Baila Conmigo","https://youtu.be/l9aEHzSUVAg?t=26",26000,12000),
 					new EarrapeSRC("Wii Sports Theme(short)","https://www.youtube.com/watch?v=JzGTxHrFG84",4000),
 					new EarrapeSRC("Wii Sports Theme(long)","https://www.youtube.com/watch?v=JzGTxHrFG84",29000),
+					new EarrapeSRC("Ibai Farsante","https://www.youtube.com/watch?v=7SwzsSVYG4k",25000),
+					new EarrapeSRC("","",0),
 					new EarrapeSRC("Thomas the train theme","https://www.youtube.com/watch?v=rBjkkHmb_oY&t=5s",5000,15000)
 				};
 		EarrapeSRC esrc = src[r.nextInt(src.length)];
