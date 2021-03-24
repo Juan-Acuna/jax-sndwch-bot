@@ -19,11 +19,11 @@ import xyz.sandwichbot.main.util.lavaplayer.*;
 import xyz.sandwichbot.models.InputParameter;
 import xyz.sandwichbot.models.InputParameter.InputParamType;
 
-@Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?",visible=false)
+@Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
 public class Musica {
 	public static boolean enUso = false;
 	
-	@Command(name="Play",desc="Reproduce música obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"},visible=false,enabled=true)
+	@Command(name="Play",desc="Reproduce música obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"})
 	public static void reproducir(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		boolean autodes=false;
 		int autodesTime =15;
