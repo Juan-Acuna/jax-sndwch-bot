@@ -25,6 +25,9 @@ public class SandwichBot extends ListenerAdapter{
 	private String prefijo;
 	private String prefijoOpcion;
 	private String JaxToken;
+	
+	public boolean presentarse = true;
+	
 	private SandwichBot(String token) {
 		JaxToken = System.getenv().get("JAX_TOKEN");
 		builder = JDABuilder.createDefault(token);

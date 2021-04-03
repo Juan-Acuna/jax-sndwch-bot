@@ -341,14 +341,53 @@ public class Tools {
 	}
 	public static MessageEmbed stringToEmb(String texto) {
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.addField(null, texto, false);
+		eb.setTitle(texto);
 		return eb.build();
 	}
 	public static MessageEmbed stringToEmb(String texto,String color) {
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.addField(null, texto, false);
+		eb.setTitle(texto);
 		eb.setColor(Tools.stringColorCast(color));
 		return eb.build();
+	}
+	public static MessageEmbed stringFieldToEmb(String texto, String desc) {
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.addField(texto,desc,false);
+		return eb.build();
+	}
+	public static MessageEmbed stringFieldToEmb(String texto, String desc,String color) {
+		EmbedBuilder eb = new EmbedBuilder();
+		eb.addField(texto,desc,false);
+		eb.setColor(Tools.stringColorCast(color));
+		return eb.build();
+	}
+	public static String milliToTime(int milis) {
+		long minutos = (milis / 1000)  / 60;
+		long horas = minutos / 60;
+		minutos = minutos % 60;
+		int segundos = (int)((milis / 1000) % 60);
+		return ((horas+"").length()>1?""+horas:"0"+horas) + ":" + ((minutos+"").length()>1?""+minutos:"0"+minutos) + ":" + ((segundos+"").length()>1?""+segundos:"0"+segundos);
+	}
+	public static String milliToTime(long milis) {
+		long minutos = (milis / 1000)  / 60;
+		long horas = minutos / 60;
+		minutos = minutos % 60;
+		int segundos = (int)((milis / 1000) % 60);
+		return ((horas+"").length()>1?""+horas:"0"+horas) + ":" + ((minutos+"").length()>1?""+minutos:"0"+minutos) + ":" + ((segundos+"").length()>1?""+segundos:"0"+segundos);
+	}
+	public static String milliToTimeNoHours(int milis) {
+		long minutos = (milis / 1000)  / 60;
+		long horas = minutos / 60;
+		minutos = minutos % 60;
+		int segundos = (int)((milis / 1000) % 60);
+		return (horas>0?((horas+"").length()>1?""+horas+":":"0"+horas+":"):"") + ((minutos+"").length()>1?""+minutos:"0"+minutos) + ":" + ((segundos+"").length()>1?""+segundos:"0"+segundos);
+	}
+	public static String milliToTimeNoHours(long milis) {
+		long minutos = (milis / 1000)  / 60;
+		long horas = minutos / 60;
+		minutos = minutos % 60;
+		int segundos = (int)((milis / 1000) % 60);
+		return (horas>0?((horas+"").length()>1?""+horas+":":"0"+horas+":"):"") + ((minutos+"").length()>1?""+minutos:"0"+minutos) + ":" + ((segundos+"").length()>1?""+segundos:"0"+segundos);
 	}
 	public static class JAX{
 		public static boolean auth(String id) throws Exception {

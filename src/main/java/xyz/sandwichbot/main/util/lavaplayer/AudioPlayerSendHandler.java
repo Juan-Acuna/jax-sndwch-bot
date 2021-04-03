@@ -19,14 +19,6 @@ public class AudioPlayerSendHandler implements AudioSendHandler{
 	
 	public AudioPlayerSendHandler(AudioPlayer audioPlayer) {
 		super();
-		try {
-			if(Musica.USADO) {
-				throw new Exception();
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		Musica.USADO=true;
 		this.audioPlayer = audioPlayer;
 		this.buffer = ByteBuffer.allocate(1024);
 		this.frame = new MutableAudioFrame();

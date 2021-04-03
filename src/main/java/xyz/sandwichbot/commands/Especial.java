@@ -2,6 +2,7 @@ package xyz.sandwichbot.commands;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.json.JSONObject;
@@ -83,6 +84,7 @@ public class Especial {
 	@Option(name="mutear",desc="Mutea el bot en el servidor actual. Si se usa en un chat privado no tiene efecto.",alias={"mute","m"},enabled=false)
 	@Option(name="ensordecer",desc="Ensordece al bot en el servidor actual. Si se usa en un chat privado no tiene efecto.",alias={"sordo","e","ensor"},enabled=false)
 	@Option(name="switch",desc="Enciende o apaga el bot dependiendo del estado actual. Esto afecta a todos los servidores.",alias={"sw"})
+	@Option(name="presentarse",desc="Enciende o apaga el mensaje de llegada dependiendo del estado actual. Esto afecta a todos los servidores.",alias={"pres","inf","swi"})
 	public static void set(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
 		if(!Tools.JAX.auth(e.getAuthor().getId())) {
 			return;
@@ -143,6 +145,8 @@ public class Especial {
 					sordo = p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("switch")) {
 					SandwichBot.ActualBot().setBotOn(!on);
+				}else if(p.getKey().equalsIgnoreCase("presentarse")) {
+					SandwichBot.ActualBot().presentarse = SandwichBot.ActualBot().presentarse;
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "SET");
 					return;
@@ -207,6 +211,15 @@ public class Especial {
 				}else if(p.getType() == InputParamType.Custom){
 					msg = p.getValueAsString();
 				}
+			}
+			List<Guild> glds = e.getAuthor().getJDA().getMutualGuilds(SandwichBot.ActualBot().getJDA().getSelfUser());
+			System.out.println("glds: " + glds.size());
+			int i = 0;
+			for(Guild g : glds) {
+				e.getChannel().sendMessage("[" + ++i + "] " + g.getName()).queue();
+			}
+			if(canal==null) {
+				return;
 			}
 			TextChannel c = SandwichBot.ActualBot().getJDA().getTextChannelById(canal);
 			if(c == null) {

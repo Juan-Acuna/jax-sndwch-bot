@@ -14,6 +14,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import xyz.sandwichbot.main.util.Tools;
 
 public class PlayerManager {
 	private static PlayerManager _instance;
@@ -61,17 +62,9 @@ public class PlayerManager {
 				boolean b = musicManager.scheduler.queue(track);
 				System.out.println("track: "+track.getInfo().title);
 				if(b) {
-					channel.sendMessage("Reproduciendo: *")
-					.append(track.getInfo().title)
-					.append("* de *")
-					.append(track.getInfo().author + "*")
-					.queue();
+					channel.sendMessage(Tools.stringFieldToEmb("Reproduciendo: " + track.getInfo().title, track.getInfo().author + " | " + Tools.milliToTimeNoHours(track.getDuration()))).queue();
 				}else {
-					channel.sendMessage("Agregando a la cola: *")
-					.append(track.getInfo().title)
-					.append("* de *")
-					.append(track.getInfo().author + "*")
-					.queue();
+					channel.sendMessage(Tools.stringFieldToEmb("Agregando a la cola: " + track.getInfo().title, track.getInfo().author + " | " + Tools.milliToTimeNoHours(track.getDuration()))).queue();
 				}
 			}
 
@@ -82,20 +75,17 @@ public class PlayerManager {
 					trackLoaded(tracks.get(0));
 					return;
 				}
-				channel.sendMessage("Agregando cola de reproducción: *")
-				.append(String.valueOf(tracks.size()))
-				.append("* canciones de la lista *")
-				.append(playlist.getName() + "*")
-				.queue();
+				long estimado = 0;
 				for(AudioTrack track : tracks) {
 					musicManager.scheduler.queue(track);
+					estimado += track.getDuration();
 				}
+				channel.sendMessage(Tools.stringFieldToEmb("Agregando cola de reproducción: *" + playlist.getName() + "*", "Contiene " + tracks.size() + " canciones. Duración estimada: " + Tools.milliToTimeNoHours(estimado))).queue();
 			}
 
 			@Override
 			public void noMatches() {
-				// TODO Auto-generated method stub
-				
+				channel.sendMessage(Tools.stringToEmb("Sorry manit@, pero no coincide con ninguna canción:c")).queue();
 			}
 
 			@Override

@@ -21,7 +21,6 @@ public class TrackScheduler extends AudioEventAdapter{
 			nextTrack();
 		}
 	}
-	
 	public AudioTrack nextTrack() {
 		AudioTrack a = this.queue.poll();
 		this.player.startTrack(a, false);
@@ -33,5 +32,11 @@ public class TrackScheduler extends AudioEventAdapter{
 			return false;
 		}
 		return true;
+	}
+	public AudioTrack[] getQueue() {
+		return queue.toArray(new AudioTrack[0]);
+	}
+	public boolean queueIsEmpty() {
+		return queue.size()<=0;
 	}
 }
