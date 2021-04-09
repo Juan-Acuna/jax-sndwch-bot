@@ -140,7 +140,7 @@ public class ControladorImagenes implements Runnable{
 			int sel = random.nextInt(lnks.size());
 			if(sel>=lnks.size()) {
 				sel=lnks.size()-1;
-			}else if(sel<=0) {
+			}else if(sel<0) {
 				sel=1;
 			}
 			String qry = lnks.get(sel).replaceAll("href=\"", "");
