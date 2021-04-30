@@ -1,1 +1,1 @@
-worker: java $JAVA_OPTS -jar target/the-sandwich-bot-0.2.2-SNAPSHOT.jar
+worker: java $JAVA_OPTS -jar target/the-sandwich-bot-0.3.0-SNAPSHOT.jar

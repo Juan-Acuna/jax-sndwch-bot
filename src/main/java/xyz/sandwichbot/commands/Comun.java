@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
-import xyz.sandwichbot.annotations.*;
-import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
@@ -25,8 +23,10 @@ import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichbot.main.util.Tools.EarrapeSRC;
 import xyz.sandwichbot.main.util.lavaplayer.GuildMusicManager;
 import xyz.sandwichbot.main.util.lavaplayer.PlayerManager;
-import xyz.sandwichbot.models.InputParameter;
-import xyz.sandwichbot.models.InputParameter.InputParamType;
+import xyz.sandwichframework.annotations.*;
+import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.models.InputParameter;
+import xyz.sandwichframework.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos frecuentes con propósitos variados.")
 public class Comun {

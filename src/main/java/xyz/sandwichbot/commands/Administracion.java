@@ -3,8 +3,8 @@ package xyz.sandwichbot.commands;
 import java.util.ArrayList;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import xyz.sandwichbot.annotations.*;
-import xyz.sandwichbot.models.InputParameter;
+import xyz.sandwichframework.annotations.*;
+import xyz.sandwichframework.models.InputParameter;
 
 @Category(desc="Comandos de administración (requieren permisos de administrador, obvio)")
 public class Administracion {
@@ -22,7 +22,7 @@ public class Administracion {
 		
 	}
 	
-	@Command(name="LimpiarChat",desc="Elimina mensajes del chat donde se usó el comando.",alias= {"ban","pajuera"},enabled=false)
+	@Command(name="LimpiarChat",desc="Elimina mensajes del chat donde se usó el comando.",alias= {"cls","limpiar"},enabled=false)
 	@Parameter(name="Cantidad de mensajes",desc="Numero de mensajes a borrar del canal de texto. Debe ser un valor numerico valido entre 1 y 100, de lo contrario solo borraré el ultimo mnsaje(sin contar el del comando).")
 	public static void cleanchat(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		

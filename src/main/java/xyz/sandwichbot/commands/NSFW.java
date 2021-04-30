@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import xyz.sandwichbot.annotations.*;
-import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
@@ -17,8 +15,10 @@ import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.main.util.ControladorImagenes;
 import xyz.sandwichbot.main.util.FuenteImagen;
 import xyz.sandwichbot.main.util.Tools;
-import xyz.sandwichbot.models.InputParameter;
-import xyz.sandwichbot.models.InputParameter.InputParamType;
+import xyz.sandwichframework.annotations.*;
+import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.models.InputParameter;
+import xyz.sandwichframework.models.InputParameter.InputParamType;
 
 @Category(desc="Una fina colección de los mejores comandos de este servidor."
 +" Comandos vitales para una sociedad civilizada y culta.",nsfw=true)

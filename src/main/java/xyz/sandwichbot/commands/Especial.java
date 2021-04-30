@@ -13,15 +13,15 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import xyz.sandwichbot.annotations.*;
-import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.Constantes.JaxSandwich;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Tools;
-import xyz.sandwichbot.models.*;
-import xyz.sandwichbot.models.InputParameter.InputParamType;
+import xyz.sandwichframework.annotations.*;
+import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.models.*;
+import xyz.sandwichframework.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos especiales, ocultos y al que solo tienen acceso muy pocos usuarios. Controlan el comportamiento de Jax Sanswich.",visible=false)
 public class Especial {

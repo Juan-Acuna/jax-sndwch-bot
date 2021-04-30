@@ -5,14 +5,14 @@ import java.util.ArrayList;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import xyz.sandwichbot.annotations.*;
-import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
-import xyz.sandwichbot.models.InputParameter;
-import xyz.sandwichbot.models.InputParameter.InputParamType;
+import xyz.sandwichframework.annotations.*;
+import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.models.InputParameter;
+import xyz.sandwichframework.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos dedicados a videojuegos en general.")
 public class VideoJuegos {

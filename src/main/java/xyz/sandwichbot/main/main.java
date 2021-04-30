@@ -3,6 +3,8 @@ package xyz.sandwichbot.main;
 
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import xyz.sandwichframework.core.BotGuildsManager;
+import xyz.sandwichframework.models.Language;
 
 public class main {
 	
@@ -14,6 +16,8 @@ public class main {
 		Bot.run();
 		Bot.getJDA().getPresence().setActivity(Activity.playing("Trollear"));
 		Bot.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
+		BotGuildsManager.getManager().registerGuild("618241899089887254", "La Bratva", Language.ES);
+		BotGuildsManager.getManager().registerGuild("621488799196774413", "Wakanda Knuckles", Language.ES);
 	}
 
 }

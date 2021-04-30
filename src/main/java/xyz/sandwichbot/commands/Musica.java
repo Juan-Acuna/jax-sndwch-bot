@@ -10,16 +10,16 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
-import xyz.sandwichbot.annotations.Category;
-import xyz.sandwichbot.annotations.Command;
-import xyz.sandwichbot.annotations.Option;
-import xyz.sandwichbot.core.AutoHelpCommand;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichbot.main.util.lavaplayer.*;
-import xyz.sandwichbot.models.InputParameter;
-import xyz.sandwichbot.models.InputParameter.InputParamType;
+import xyz.sandwichframework.annotations.Category;
+import xyz.sandwichframework.annotations.Command;
+import xyz.sandwichframework.annotations.Option;
+import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.models.InputParameter;
+import xyz.sandwichframework.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
 public class Musica {

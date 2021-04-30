@@ -154,7 +154,7 @@ public class ControladorImagenes implements Runnable{
 			hc = ClienteHttp.peticionHttp(qry);
 			//System.out.println("qry: "+qry);
 			//System.out.println("ptrnimg:"+fuente.getImgPattern());
-			System.out.println("HC:"+hc.substring(2000));
+			//System.out.println("HC:"+hc.substring(2000));
 			String rtn = Comparador.Encontrar(fuente.getImgPattern(), hc);
 			//System.out.println(rtn);
 			return rtn.replaceAll("src=\"", "").replaceAll("\"", "");

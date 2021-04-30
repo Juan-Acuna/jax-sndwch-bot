@@ -13,8 +13,9 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import xyz.sandwichbot.core.BotRunner;
 import xyz.sandwichbot.main.util.Tools;
+import xyz.sandwichframework.core.BotRunner;
+import xyz.sandwichframework.models.Language;
 
 public class SandwichBot extends ListenerAdapter{
 	
@@ -32,7 +33,7 @@ public class SandwichBot extends ListenerAdapter{
 		JaxToken = System.getenv().get("JAX_TOKEN");
 		builder = JDABuilder.createDefault(token);
 		builder.addEventListeners(this);
-		runner = BotRunner.init("xyz.sandwichbot.commands");
+		runner = BotRunner.init(Language.ES_MX);
 		prefijo = "s.";
 		runner.setPrefix(prefijo);
 		runner.setOptionsPrefix("-");
