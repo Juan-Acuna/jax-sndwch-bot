@@ -2,7 +2,7 @@ package xyz.sandwichbot.main;
 
 import xyz.sandwichframework.annotations.Configuration;
 import xyz.sandwichframework.annotations.configure.*;
-import xyz.sandwichframework.models.Language;
+import xyz.sandwichframework.core.util.Language;
 
 @Configuration(Language.EN)
 public class Configuracion_en {

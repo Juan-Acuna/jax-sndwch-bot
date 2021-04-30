@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichframework.core.BotRunner;
-import xyz.sandwichframework.models.Language;
+import xyz.sandwichframework.core.util.Language;
 
 public class SandwichBot extends ListenerAdapter{
 	

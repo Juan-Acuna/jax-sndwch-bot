@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import net.dv8tion.jda.api.entities.Guild;
-import xyz.sandwichframework.models.Language;
+import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.models.discord.ModelGuild;
 
 public class BotGuildsManager {

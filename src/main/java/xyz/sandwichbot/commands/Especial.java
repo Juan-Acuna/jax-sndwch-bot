@@ -43,7 +43,7 @@ public class Especial {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "REG");
 					return;
 				}
@@ -147,7 +147,7 @@ public class Especial {
 					SandwichBot.ActualBot().setBotOn(!on);
 				}else if(p.getKey().equalsIgnoreCase("presentarse")) {
 					SandwichBot.ActualBot().presentarse = SandwichBot.ActualBot().presentarse;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "SET");
 					return;
 				}
@@ -204,7 +204,7 @@ public class Especial {
 						canal = p.getValueAsString();
 					}/*else if(p.getKey().equalsIgnoreCase("servidor")) {
 						servidor = p.getValueAsString();
-					}*/else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+					}*/else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 						AutoHelpCommand.sendHelp(e.getChannel(), "MSG");
 						return;
 					}

@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.annotations.configure.*;
+import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.ModelCategory;
 import xyz.sandwichframework.models.ModelCommand;
@@ -22,7 +23,6 @@ import xyz.sandwichframework.models.ModelExtraCommand;
 import xyz.sandwichframework.models.ModelOption;
 import xyz.sandwichframework.models.discord.ModelGuild;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
-import xyz.sandwichframework.models.Language;
 
 public class BotRunner {
 	//settings
@@ -173,12 +173,12 @@ public class BotRunner {
 							botcmd.setVisible(cmdanno.visible());
 							Parameter par = m.getDeclaredAnnotation(Parameter.class);
 							if(par!=null) {
-								botcmd.setParameter(par.name());
-								botcmd.setParameterDesc(par.desc());
+								botcmd.setParameter(def_lang, par.name());
+								botcmd.setParameterDesc(def_lang, par.desc());
 							}
 							Option[] op = m.getDeclaredAnnotationsByType(Option.class);
 							for(Option o : op) {
-								botcmd.addOption(new ModelOption(o.name(), o.desc(), o.alias(),o.enabled(),o.visible()));
+								botcmd.addOption(new ModelOption(def_lang, o.name(), o.desc(), o.alias(),o.enabled(),o.visible()));
 							}
 							botcmd.sortOptions();
 							commands.add(botcmd);
@@ -209,9 +209,7 @@ public class BotRunner {
 									mc.setDesc(lang, (String)f.get(null));
 								}
 								if(f.getDeclaredAnnotation(TranslatedName.class)!=null) {
-									System.out.println("ID: "+mc.getId()+" |CAT: "+mc.getName(Language.ES)+" -> "+f.getDeclaredAnnotation(TranslatedName.class).value()+" >> "+lang.toString());
 									mc.setName(lang, f.getDeclaredAnnotation(TranslatedName.class).value());
-									System.out.println("ID: "+mc.getId()+" |CAT: "+mc.getName(Language.ES)+" -> "+f.getDeclaredAnnotation(TranslatedName.class).value()+" >> "+lang.toString());
 								}
 							}
 						}
@@ -219,9 +217,26 @@ public class BotRunner {
 						for(ModelCommand mc : commands) {
 							if(mc.getId().equals(f.getDeclaredAnnotation(CommandID.class).value())) {
 								if(f.getDeclaredAnnotation(OptionID.class)!=null) {
-									//mc.getOptions()
-								}else if(f.getDeclaredAnnotation(ParameterID.class)!=null) {
-									
+									for(ModelOption mo : mc.getOptions()) {
+										if(mo.getId().equals(f.getDeclaredAnnotation(OptionID.class).value())) {
+											if(f.getDeclaredAnnotation(OptionDescription.class)!=null) {
+												mo.setDesc(lang, (String)f.get(null));
+											}else if(f.getDeclaredAnnotation(OptionAliases.class)!=null) {
+												mo.setAlias(lang, (String[])f.get(null));
+											}
+											if(f.getDeclaredAnnotation(TranslatedName.class)!=null) {
+												mo.setName(lang, f.getDeclaredAnnotation(TranslatedName.class).value());
+											}
+											break;
+										}
+									}
+								}else if(f.getDeclaredAnnotation(CommandParameter.class)!=null) {
+									if(f.getDeclaredAnnotation(ParameterDescription.class)!=null) {
+										mc.setParameterDesc(lang, (String)f.get(null));
+									}
+									if(f.getDeclaredAnnotation(TranslatedName.class)!=null) {
+										mc.setParameter(lang, f.getDeclaredAnnotation(TranslatedName.class).value());
+									}
 								}else {
 									if(f.getDeclaredAnnotation(CommandDescription.class)!=null) {
 										mc.setDesc(lang, (String)f.get(null));
@@ -234,8 +249,44 @@ public class BotRunner {
 								}
 							}
 						}
+					}else if(f.getDeclaredAnnotation(MultiCommandIDOption.class)!=null) {
+						for(String id : f.getDeclaredAnnotation(MultiCommandIDOption.class).value()) {
+							for(ModelCommand mc : commands) {
+								if(mc.getId().equals(id)) {
+									if(f.getDeclaredAnnotation(OptionID.class)!=null) {
+										for(ModelOption mo : mc.getOptions()) {
+											if(mo.getId().equals(f.getDeclaredAnnotation(OptionID.class).value())) {
+												if(f.getDeclaredAnnotation(OptionDescription.class)!=null) {
+													mo.setDesc(lang, (String)f.get(null));
+												}else if(f.getDeclaredAnnotation(OptionAliases.class)!=null) {
+													mo.setAlias(lang, (String[])f.get(null));
+												}
+												if(f.getDeclaredAnnotation(TranslatedName.class)!=null) {
+													mo.setName(lang, f.getDeclaredAnnotation(TranslatedName.class).value());
+												}
+												break;
+											}
+										}
+									}
+									break;
+								}
+							}
+						}
+					}else if(f.getDeclaredAnnotation(MultiCommandIDParameter.class)!=null) {
+						for(String id : f.getDeclaredAnnotation(MultiCommandIDParameter.class).value()) {
+							for(ModelCommand mc : commands) {
+								if(mc.getId().equals(id)) {
+									if(f.getDeclaredAnnotation(ParameterDescription.class)!=null) {
+										mc.setParameterDesc(lang, (String)f.get(null));
+									}
+									if(f.getDeclaredAnnotation(TranslatedName.class)!=null) {
+										mc.setParameter(lang, f.getDeclaredAnnotation(TranslatedName.class).value());
+									}
+									break;
+								}
+							}
+						}
 					}
-					
 				}
 			}
 		}
@@ -247,7 +298,7 @@ public class BotRunner {
 			ModelGuild actualGuild = guildsManager.getGuild(e.getGuild().getId());
 			String r = (message.split(" ")[0]).trim();
 			if(autoHelpCommand) {
-				for(String cs : AutoHelpCommand.HELP_OPTIONS) {//REPARAR AUTOAYUDA PARA VARIAR POR IDIOMA
+				for(String cs : AutoHelpCommand.getHelpOptions(actualGuild.getLanguage())) {//REPARAR AUTOAYUDA PARA VARIAR POR IDIOMA
 					if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cs.toLowerCase())) {
 						if(!bot_on) {
 							e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
@@ -264,7 +315,7 @@ public class BotRunner {
 			}
 			for(ModelCommand cmd : commands) {
 				if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cmd.getName(actualGuild.getLanguage()).toLowerCase())){
-					ArrayList<InputParameter> pars = findParametros(message,cmd);
+					ArrayList<InputParameter> pars = findParametros(actualGuild.getLanguage(),message,cmd);
 					if(!cmd.isEnabled()) {
 						if(!cmd.isVisible()) {
 							return;
@@ -285,7 +336,7 @@ public class BotRunner {
 				}else {
 					for(String a : cmd.getAlias(actualGuild.getLanguage())) {
 						if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + a.toLowerCase())) {
-							ArrayList<InputParameter> pars = findParametros(message,cmd);
+							ArrayList<InputParameter> pars = findParametros(actualGuild.getLanguage(),message,cmd);
 							if(!cmd.isEnabled()) {
 								if(!cmd.isVisible()) {
 									return;
@@ -317,7 +368,7 @@ public class BotRunner {
 			r = r.substring(commandsPrefix.length());
 		}
 		if(autoHelpCommand) {
-			for(String cs : AutoHelpCommand.HELP_OPTIONS) {
+			for(String cs : AutoHelpCommand.getHelpOptions(actualGuild.getLanguage())) {
 				if(r.toLowerCase().equalsIgnoreCase(cs.toLowerCase())) {
 					if(!bot_on) {
 						e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
@@ -334,7 +385,7 @@ public class BotRunner {
 		}
 		for(ModelCommand cmd : commands) {
 			if(r.toLowerCase().equalsIgnoreCase(cmd.getName(actualGuild.getLanguage()).toLowerCase())){
-				ArrayList<InputParameter> pars = findParametros(message,cmd);
+				ArrayList<InputParameter> pars = findParametros(actualGuild.getLanguage(),message,cmd);
 				if(!cmd.isEnabled()) {
 					if(!cmd.isVisible()) {
 						return;
@@ -355,7 +406,7 @@ public class BotRunner {
 			}else {
 				for(String a : cmd.getAlias(actualGuild.getLanguage())) {
 					if(r.toLowerCase().equalsIgnoreCase(a.toLowerCase())) {
-						ArrayList<InputParameter> pars = findParametros(message,cmd);
+						ArrayList<InputParameter> pars = findParametros(actualGuild.getLanguage(),message,cmd);
 						if(!cmd.isEnabled()) {
 							if(!cmd.isVisible()) {
 								return;
@@ -378,7 +429,7 @@ public class BotRunner {
 			}
 		}
 	}
-	private ArrayList<InputParameter> findParametros(String input,ModelCommand command){
+	private ArrayList<InputParameter> findParametros(Language lang, String input,ModelCommand command){
 		String[] s = input.split(" ");
 		ArrayList<InputParameter> lista = new ArrayList<InputParameter>();
 		InputParameter p = new InputParameter();
@@ -387,14 +438,14 @@ public class BotRunner {
 				p=null;
 				p = new InputParameter();
 				for(ModelOption mo : command.getOptions()) {
-					if(s[i].toLowerCase().equalsIgnoreCase(optionsPrefix + mo.getName())) {
-						p.setKey(mo.getName());
+					if(s[i].toLowerCase().equalsIgnoreCase(optionsPrefix + mo.getName(lang))) {
+						p.setKey(mo.getName(lang));
 						p.setType(InputParamType.Standar);
 						break;
 					}else {
-						for(String a : mo.getAlias()) {
+						for(String a : mo.getAlias(lang)) {
 							if(s[i].toLowerCase().equalsIgnoreCase(optionsPrefix+a)) {
-								p.setKey(mo.getName());
+								p.setKey(mo.getName(lang));
 								p.setType(InputParamType.Standar);
 								break;
 							}
@@ -402,9 +453,9 @@ public class BotRunner {
 					}
 				}
 				if(p.getType() == InputParamType.Custom) {
-					for(String hs : AutoHelpCommand.HELP_OPTIONS) {
+					for(String hs : AutoHelpCommand.getHelpOptions(lang)) {
 						if(s[i].equalsIgnoreCase(optionsPrefix+hs)) {
-							p.setKey(AutoHelpCommand.HELP_OPTIONS[0]);
+							p.setKey(AutoHelpCommand.AUTO_HELP_KEY);
 							p.setType(InputParamType.Standar);
 							break;
 						}

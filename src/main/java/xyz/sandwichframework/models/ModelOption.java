@@ -1,35 +1,74 @@
 package xyz.sandwichframework.models;
 
+import java.util.HashMap;
+
+import xyz.sandwichframework.core.LanguageHandler;
+import xyz.sandwichframework.core.util.Language;
+
 public class ModelOption implements Comparable<ModelOption>{
-	private String name;
-	private String desc;
-	private String[] alias;
+	private String id;
+	private HashMap<Language, String> name;
+	private HashMap<Language, String> desc;
+	private HashMap<Language, String[]> alias;
 	private boolean enabled = true;
 	private boolean visible;
-	public ModelOption(String name, String desc, String[] alias, boolean enabled, boolean visible) {
-		this.name = name;
-		this.desc = desc;
-		this.alias=alias;
+	public ModelOption(Language lang, String id, boolean enabled, boolean visible) {
+		this.name = new HashMap<Language, String>();
+		this.desc= new HashMap<Language, String>();
+		this.alias = new HashMap<Language, String[]>();
+		this.name.put(lang, id);
 		this.enabled = enabled;
 		this.visible=visible;
 	}
-	public String getName() {
-		return name;
+	public ModelOption(Language lang, String id, String desc, String[] alias, boolean enabled, boolean visible) {
+		this.name = new HashMap<Language, String>();
+		this.desc= new HashMap<Language, String>();
+		this.alias = new HashMap<Language, String[]>();
+		this.name.put(lang, id);
+		this.desc.put(lang, desc);
+		this.alias.put(lang, alias);
+		this.enabled = enabled;
+		this.visible=visible;
 	}
-	public void setName(String name) {
-		this.name = name;
+	
+	public String getId() {
+		return id;
 	}
-	public String getDesc() {
-		return desc;
+	public String getName(Language lang) {
+		if(name.containsKey(lang)) {
+			return name.get(lang);
+		}
+		if(name.containsKey(LanguageHandler.getLenguageParent(lang))) {
+			return name.get(LanguageHandler.getLenguageParent(lang));
+		}
+		return name.get(name.keySet().toArray()[0]);
 	}
-	public void setDesc(String desc) {
-		this.desc = desc;
+	public void setName(Language lang, String name) {
+		this.name.put(lang, name);
 	}
-	public String[] getAlias() {
-		return alias;
+	public String getDesc(Language lang) {
+		if(desc.containsKey(lang)) {
+			return desc.get(lang);
+		}
+		if(desc.containsKey(LanguageHandler.getLenguageParent(lang))) {
+			return desc.get(LanguageHandler.getLenguageParent(lang));
+		}
+		return desc.get(desc.keySet().toArray()[0]);
 	}
-	public void setAlias(String[] alias) {
-		this.alias = alias;
+	public void setDesc(Language lang, String desc) {
+		this.desc.put(lang, desc);
+	}
+	public String[] getAlias(Language lang) {
+		if(alias.containsKey(lang)) {
+			return alias.get(lang);
+		}
+		if(alias.containsKey(LanguageHandler.getLenguageParent(lang))) {
+			return alias.get(LanguageHandler.getLenguageParent(lang));
+		}
+		return alias.get(alias.keySet().toArray()[0]);
+	}
+	public void setAlias(Language lang, String[] alias) {
+		this.alias.put(lang, alias);
 	}
 	public boolean isEnabled() {
 		return enabled;
@@ -45,6 +84,6 @@ public class ModelOption implements Comparable<ModelOption>{
 	}
 	@Override
 	public int compareTo(ModelOption o) {
-		return name.compareTo(o.name);
+		return id.compareTo(o.id);
 	}
 }

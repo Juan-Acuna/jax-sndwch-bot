@@ -4,7 +4,7 @@ package xyz.sandwichbot.main;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import xyz.sandwichframework.core.BotGuildsManager;
-import xyz.sandwichframework.models.Language;
+import xyz.sandwichframework.core.util.Language;
 
 public class main {
 	

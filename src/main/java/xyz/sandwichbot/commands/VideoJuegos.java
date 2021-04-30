@@ -33,7 +33,7 @@ public class VideoJuegos {
 		boolean anon = false;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
-				if(p.getKey().equals(AutoHelpCommand.HELP_OPTIONS[0])) {
+				if(p.getKey().equals(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Pokedex");
 					return;
 				}else if(p.getKey().equalsIgnoreCase("autodestruir")){

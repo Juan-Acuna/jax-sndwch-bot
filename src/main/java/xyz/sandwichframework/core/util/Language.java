@@ -1,4 +1,4 @@
-package xyz.sandwichframework.models;
+package xyz.sandwichframework.core.util;
 
 public enum Language {
 	EN,

@@ -1,6 +1,6 @@
 package xyz.sandwichframework.models.discord;
 
-import xyz.sandwichframework.models.Language;
+import xyz.sandwichframework.core.util.Language;
 
 public class ModelGuild {
 	private String id;

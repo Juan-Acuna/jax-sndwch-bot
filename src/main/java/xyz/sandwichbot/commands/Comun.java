@@ -48,7 +48,7 @@ public class Comun {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Saludar");
 					return;
 				}
@@ -95,7 +95,7 @@ public class Comun {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "YouTube");
 					return;
 				}
@@ -157,7 +157,7 @@ public class Comun {
 					}
 				}if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Presentacion");
 					return;
 				}
@@ -211,7 +211,7 @@ public class Comun {
 					}
 				}if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Presentacion");
 					return;
 				}
@@ -288,7 +288,7 @@ public class Comun {
 					color = p.getValueAsString();
 				}else if(p.getKey().equalsIgnoreCase("autor")) {
 					autor = p.getValueAsString();
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Embed");
 					return;
 				}
@@ -409,7 +409,7 @@ public class Comun {
 					}
 				}else if(p.getKey().equalsIgnoreCase("autor")) {
 					autor = p.getValueAsString();
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Funar");
 					return;
 				}
@@ -496,7 +496,7 @@ public class Comun {
 							er_src.duracion = Integer.parseInt(p.getValueAsString().split("\\s")[1]);
 						}
 					}
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Trollear");
 					return;
 				}

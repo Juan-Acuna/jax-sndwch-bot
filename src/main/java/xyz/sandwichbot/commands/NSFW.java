@@ -63,7 +63,7 @@ public class NSFW {
 					gif=false;
 				}else if(p.getKey().equalsIgnoreCase("random")) {
 					random = true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "NSFW");
 					return;
 				}
@@ -137,7 +137,7 @@ public class NSFW {
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Xvideos");
 					return;
 				}
@@ -207,7 +207,7 @@ public class NSFW {
 					fuente = p.getValueAsString();
 				}else if(p.getKey().equalsIgnoreCase("tags")) {
 					tags = p.getValueAsString().replaceAll("\\s",",").split(",");
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "OtakuNSFW");
 					return;
 				}
@@ -313,7 +313,7 @@ public class NSFW {
 					gif=false;
 				}else if(p.getKey().equalsIgnoreCase("random")) {
 					random = true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Rule34");
 					return;
 				}

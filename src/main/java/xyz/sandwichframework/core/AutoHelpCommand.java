@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.models.*;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 import xyz.sandwichframework.models.discord.ModelGuild;
@@ -13,7 +14,20 @@ import xyz.sandwichframework.models.discord.ModelGuild;
 //import xyz.sandwichbot.annotations.*;
 
 public class AutoHelpCommand {
-	public static final String[] HELP_OPTIONS = {"ayuda","h","help","aiuda","jelp"};
+	public static final String AUTO_HELP_KEY = "help";
+	public static String[] getHelpOptions(Language lang) {
+		switch(LanguageHandler.getLenguageParent(lang)) {
+			case ES:
+				String[] s = {"ayuda","ay"};
+				return s;
+			case EN:
+				String[] s1 = {"help","h"};
+				return s1;
+			default:
+				String[] s2 = {};
+				return s2;
+		}
+	}
 	public static void help(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		ModelGuild actualGuild = BotGuildsManager.getManager().getGuild(e.getGuild().getId());
 		String categoryQuery = null;
@@ -82,8 +96,8 @@ public class AutoHelpCommand {
 				eb.setTitle(cmd.getName(actualGuild.getLanguage()) + als + " | Categoría: " + cmd.getCategory().getName(actualGuild.getLanguage()));
 				eb.setDescription(cmd.getDesc(actualGuild.getLanguage()));
 				eb.addField("","PARAMETROS/OPCIONES:",false);
-				if(cmd.getParameter()!=null) {
-					eb.addField("> Parametro: " + cmd.getParameter(),">>> " + cmd.getParameterDesc(), false);
+				if(cmd.getParameter(actualGuild.getLanguage())!=null) {
+					eb.addField("> Parametro: " + cmd.getParameter(actualGuild.getLanguage()),">>> " + cmd.getParameterDesc(actualGuild.getLanguage()), false);
 				}
 				if(cmd.getOptions().size()>0) {
 					for(ModelOption option : cmd.getOptions()) {
@@ -92,13 +106,13 @@ public class AutoHelpCommand {
 						}
 						String als2 = "";
 						
-						if(option.getAlias().length>0) {
-							for(String a : option.getAlias()) {
+						if(option.getAlias(actualGuild.getLanguage()).length>0) {
+							for(String a : option.getAlias(actualGuild.getLanguage())) {
 								als2 += ", " + runner.optionsPrefix + a;
 							}
 							als2=" _`[Alias: " + als2.substring(1) + "]`_";
 						}
-						eb.addField("> " + (option.isEnabled()?"":"*(No disponible)* ~") + runner.optionsPrefix + option.getName() + als2  + (option.isEnabled()?"":"~"), ">>> " + option.getDesc(), false);
+						eb.addField("> " + (option.isEnabled()?"":"*(No disponible)* ~") + runner.optionsPrefix + option.getName(actualGuild.getLanguage()) + als2  + (option.isEnabled()?"":"~"), ">>> " + option.getDesc(actualGuild.getLanguage()), false);
 					}
 				}
 				break;

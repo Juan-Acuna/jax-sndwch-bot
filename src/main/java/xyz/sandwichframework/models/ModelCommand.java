@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import xyz.sandwichframework.core.LanguageHandler;
+import xyz.sandwichframework.core.util.Language;
 
 public class ModelCommand implements Comparable<ModelCommand>{
 	private String id;
@@ -13,8 +14,8 @@ public class ModelCommand implements Comparable<ModelCommand>{
 	private HashMap<Language, String> desc;
 	private HashMap<Language, String[]> alias;
 	private boolean enabled;
-	private String parameter;
-	private String parameterDesc;
+	private HashMap<Language, String> parameter;
+	private HashMap<Language, String> parameterDesc;
 	private boolean visible;
 	private ArrayList<ModelOption> options;
 	private ModelCategory category;
@@ -24,12 +25,16 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		this.desc=new HashMap<Language, String>();
 		this.alias=new HashMap<Language, String[]>();
 		this.options = new ArrayList<ModelOption>();
+		this.parameter = new HashMap<Language, String>();
+		this.parameterDesc = new HashMap<Language, String>();
 		//optionsDesc = new ArrayList<String>();
 	}
 	public ModelCommand(Language lang, String id, ModelCategory category, Method source) {
 		this.name=new HashMap<Language, String>();
 		this.desc=new HashMap<Language, String>();
 		this.alias=new HashMap<Language, String[]>();
+		this.parameter = new HashMap<Language, String>();
+		this.parameterDesc = new HashMap<Language, String>();
 		this.id=id;
 		this.name.put(lang, id);
 		this.category = category;
@@ -41,6 +46,8 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		this.name=new HashMap<Language, String>();
 		this.desc=new HashMap<Language, String>();
 		this.alias=new HashMap<Language, String[]>();
+		this.parameter = new HashMap<Language, String>();
+		this.parameterDesc = new HashMap<Language, String>();
 		this.id=id;
 		this.name.put(lang, id);
 		this.desc.put(lang, desc);
@@ -98,17 +105,29 @@ public class ModelCommand implements Comparable<ModelCommand>{
 	public void setAlias(Language lang, String[] alias) {
 		this.alias.put(lang, alias);
 	}
-	public String getParameter() {
-		return parameter;
+	public String getParameter(Language lang) {
+		if(parameter.containsKey(lang)) {
+			return parameter.get(lang);
+		}
+		if(parameter.containsKey(LanguageHandler.getLenguageParent(lang))) {
+			return parameter.get(LanguageHandler.getLenguageParent(lang));
+		}
+		return parameter.get(parameter.keySet().toArray()[0]);
 	}
-	public void setParameter(String parameter) {
-		this.parameter = parameter;
+	public void setParameter(Language lang, String parameter) {
+		this.parameter.put(lang, parameter);
 	}
-	public String getParameterDesc() {
-		return parameterDesc;
+	public String getParameterDesc(Language lang) {
+		if(parameterDesc.containsKey(lang)) {
+			return parameterDesc.get(lang);
+		}
+		if(parameterDesc.containsKey(LanguageHandler.getLenguageParent(lang))) {
+			return parameterDesc.get(LanguageHandler.getLenguageParent(lang));
+		}
+		return parameterDesc.get(parameterDesc.keySet().toArray()[0]);
 	}
-	public void setParameterDesc(String parameterDesc) {
-		this.parameterDesc = parameterDesc;
+	public void setParameterDesc(Language lang, String parameterDesc) {
+		this.parameterDesc.put(lang, parameterDesc);
 	}
 	public boolean isVisible() {
 		return visible;

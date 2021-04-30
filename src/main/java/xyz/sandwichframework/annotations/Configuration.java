@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import xyz.sandwichframework.models.Language;
+import xyz.sandwichframework.core.util.Language;
 
 @Target(TYPE)
 @Retention(RetentionPolicy.RUNTIME)

@@ -1,6 +1,6 @@
 package xyz.sandwichframework.core;
 
-import xyz.sandwichframework.models.Language;
+import xyz.sandwichframework.core.util.Language;
 
 public class LanguageHandler {
 	public static Language getLenguageParent(Language lang) {

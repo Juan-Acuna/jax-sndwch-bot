@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import xyz.sandwichframework.core.LanguageHandler;
+import xyz.sandwichframework.core.util.Language;
 
 public class ModelCategory implements Comparable<ModelCategory>{
 	private String id;

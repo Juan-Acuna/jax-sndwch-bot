@@ -35,7 +35,7 @@ public class Musica {
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Play");
 					return;
 				}
@@ -223,7 +223,7 @@ public class Musica {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.HELP_OPTIONS[0])) {
+				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "Cola");
 					return;
 				}
