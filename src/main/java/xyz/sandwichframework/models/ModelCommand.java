@@ -73,8 +73,8 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(name.containsKey(lang)) {
 			return name.get(lang);
 		}
-		if(name.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return name.get(LanguageHandler.getLenguageParent(lang));
+		if(name.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return name.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return name.get(name.keySet().toArray()[0]);
 	}
@@ -85,8 +85,8 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(desc.containsKey(lang)) {
 			return desc.get(lang);
 		}
-		if(desc.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return desc.get(LanguageHandler.getLenguageParent(lang));
+		if(desc.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return desc.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return desc.get(desc.keySet().toArray()[0]);
 	}
@@ -97,8 +97,8 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(alias.containsKey(lang)) {
 			return alias.get(lang);
 		}
-		if(alias.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return alias.get(LanguageHandler.getLenguageParent(lang));
+		if(alias.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return alias.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return alias.get(alias.keySet().toArray()[0]);
 	}
@@ -109,8 +109,8 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(parameter.containsKey(lang)) {
 			return parameter.get(lang);
 		}
-		if(parameter.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return parameter.get(LanguageHandler.getLenguageParent(lang));
+		if(parameter.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return parameter.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return parameter.get(parameter.keySet().toArray()[0]);
 	}
@@ -121,8 +121,8 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(parameterDesc.containsKey(lang)) {
 			return parameterDesc.get(lang);
 		}
-		if(parameterDesc.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return parameterDesc.get(LanguageHandler.getLenguageParent(lang));
+		if(parameterDesc.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return parameterDesc.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return parameterDesc.get(parameterDesc.keySet().toArray()[0]);
 	}

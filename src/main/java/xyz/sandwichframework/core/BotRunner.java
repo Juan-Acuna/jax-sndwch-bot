@@ -31,7 +31,7 @@ public class BotRunner {
 	protected boolean autoHelpCommand = false;
 	protected String help_title;
 	protected String help_description;
-	private String commands_package;
+	//private String commands_package;
 	protected boolean hide_nsfw_category=false;
 	private boolean bot_on;
 	protected Language def_lang = Language.EN;
@@ -199,7 +199,6 @@ public class BotRunner {
 		if(configs.size()>0 && commands.size()>0) {
 			for(Class<?> c : configs) {
 				Language lang = c.getDeclaredAnnotation(Configuration.class).value();
-				//Language lang = Enum.valueOf(Language.class, c.getDeclaredAnnotation(Configuration.class).value().toUpperCase().replaceAll("\\s","_").replaceAll("\\-","_"));
 				Field[] fs = c.getDeclaredFields();
 				for(Field f : fs) {
 					if(f.getDeclaredAnnotation(CategoryID.class)!=null) {
@@ -298,10 +297,10 @@ public class BotRunner {
 			ModelGuild actualGuild = guildsManager.getGuild(e.getGuild().getId());
 			String r = (message.split(" ")[0]).trim();
 			if(autoHelpCommand) {
-				for(String cs : AutoHelpCommand.getHelpOptions(actualGuild.getLanguage())) {//REPARAR AUTOAYUDA PARA VARIAR POR IDIOMA
+				for(String cs : AutoHelpCommand.getHelpOptions(actualGuild.getLanguage())) {
 					if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cs.toLowerCase())) {
 						if(!bot_on) {
-							e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+							e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
 						}
 						Thread runner;
 						Method ayudacmd = AutoHelpCommand.class.getDeclaredMethod("help", MessageReceivedEvent.class, ArrayList.class);
@@ -321,12 +320,12 @@ public class BotRunner {
 							return;
 						}
 						EmbedBuilder eb = new EmbedBuilder();
-						eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
+						eb.setTitle(LanguageHandler.commandDisabledMessage(actualGuild.getLanguage()));
 						e.getChannel().sendMessage(eb.build()).queue();
 						return;
 					}
 					if(!bot_on && !cmd.getCategory().isSpecial()) {
-						e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+						e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
 					}
 					Thread runner;
 					CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
@@ -342,12 +341,12 @@ public class BotRunner {
 									return;
 								}
 								EmbedBuilder eb = new EmbedBuilder();
-								eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
+								eb.setTitle(LanguageHandler.commandDisabledMessage(actualGuild.getLanguage()));
 								e.getChannel().sendMessage(eb.build()).queue();
 								return;
 							}
 							if(!bot_on && !cmd.getCategory().isSpecial()) {
-								e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+								e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
 							}
 							Thread runner;
 							CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
@@ -371,7 +370,7 @@ public class BotRunner {
 			for(String cs : AutoHelpCommand.getHelpOptions(actualGuild.getLanguage())) {
 				if(r.toLowerCase().equalsIgnoreCase(cs.toLowerCase())) {
 					if(!bot_on) {
-						e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+						e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
 					}
 					Thread runner;
 					Method ayudacmd = AutoHelpCommand.class.getDeclaredMethod("help", MessageReceivedEvent.class, ArrayList.class);
@@ -391,12 +390,12 @@ public class BotRunner {
 						return;
 					}
 					EmbedBuilder eb = new EmbedBuilder();
-					eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
+					eb.setTitle(LanguageHandler.commandDisabledMessage(actualGuild.getLanguage()));
 					e.getChannel().sendMessage(eb.build()).queue();
 					return;
 				}
 				if(!bot_on && !cmd.getCategory().isSpecial()) {
-					e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+					e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
 				}
 				Thread runner;
 				CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
@@ -412,12 +411,12 @@ public class BotRunner {
 								return;
 							}
 							EmbedBuilder eb = new EmbedBuilder();
-							eb.setTitle("Este comando no se encuentra habilitado. :pensive:");
+							eb.setTitle(LanguageHandler.commandDisabledMessage(actualGuild.getLanguage()));
 							e.getChannel().sendMessage(eb.build()).queue();
 							return;
 						}
 						if(!bot_on && !cmd.getCategory().isSpecial()) {
-							e.getChannel().sendMessage("No estoy trabajando por ahora, vaya a wear a otro lado.").queue();
+							e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
 						}
 						Thread runner;
 						CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);

@@ -16,7 +16,7 @@ import xyz.sandwichframework.models.discord.ModelGuild;
 public class AutoHelpCommand {
 	public static final String AUTO_HELP_KEY = "help";
 	public static String[] getHelpOptions(Language lang) {
-		switch(LanguageHandler.getLenguageParent(lang)) {
+		switch(LanguageHandler.getLanguageParent(lang)) {
 			case ES:
 				String[] s = {"ayuda","ay"};
 				return s;
@@ -36,15 +36,15 @@ public class AutoHelpCommand {
 				categoryQuery = ip.getValueAsString();
 			}
 		}
-		String extra = "\nPara saber más sobre este comando, escriba %s%s %sayuda.";
+		String extra = LanguageHandler.helpHint(actualGuild.getLanguage());
 		EmbedBuilder eb = new EmbedBuilder();
 		BotRunner runner = BotRunner._self;
 		if(categoryQuery!=null) {
 			for(ModelCategory category : runner.categories) {
 				if(category.getName(actualGuild.getLanguage()).equalsIgnoreCase(categoryQuery)) {
-					eb.setTitle("Categoria: "+category.getName(actualGuild.getLanguage()));
+					eb.setTitle(LanguageHandler.specialWords(actualGuild.getLanguage(), "category") + ": "+category.getName(actualGuild.getLanguage()));
 					eb.setDescription(category.getDesc(actualGuild.getLanguage()));
-					eb.addField("","*Comandos*",false);
+					eb.addField("","*"+ LanguageHandler.specialWords(actualGuild.getLanguage(), "commands") + "*",false);
 					for(ModelCommand command : category.getCommands()) {
 						if(!command.isVisible()) {
 							continue;
@@ -57,7 +57,7 @@ public class AutoHelpCommand {
 							als=" _`[Alias: " + als.substring(1) + "]`_";
 						}
 						
-						eb.addField("> " + (command.isEnabled()?"":"*(No disponible)* ") + command.getName(actualGuild.getLanguage()) + als, ">>> " + command.getDesc(actualGuild.getLanguage()) + (command.isEnabled()?String.format(extra,runner.commandsPrefix, command.getName(actualGuild.getLanguage()).toLowerCase(),runner.optionsPrefix):""),false);
+						eb.addField("> " + (command.isEnabled()?"":"*("+LanguageHandler.notAvailable(actualGuild.getLanguage())+")* ") + command.getName(actualGuild.getLanguage()) + als, ">>> " + command.getDesc(actualGuild.getLanguage()) + (command.isEnabled()?String.format(extra,runner.commandsPrefix, command.getName(actualGuild.getLanguage()).toLowerCase(),runner.optionsPrefix):""),false);
 					}
 					break;
 				}
@@ -65,7 +65,7 @@ public class AutoHelpCommand {
 		}else {
 			eb.setTitle(runner.help_title);
 			eb.setDescription(runner.help_description);
-			eb.addField("", "Categorias", false);
+			eb.addField("", LanguageHandler.specialWords(actualGuild.getLanguage(), "categories"), false);
 			for(ModelCategory category : runner.categories) {
 				if(runner.hide_nsfw_category && category.isNsfw() && !e.getTextChannel().isNSFW()) {
 					continue;
@@ -74,7 +74,7 @@ public class AutoHelpCommand {
 					continue;
 				}
 				eb.addField(category.getName(actualGuild.getLanguage()),category.getDesc(actualGuild.getLanguage()), false);
-				eb.addField("> Comandos en esta categoría","> " + category.getCommands().size(),false);
+				eb.addField("> N° " + LanguageHandler.specialWords(actualGuild.getLanguage(), "commands"),"> " + category.getCommands().size(),false);
 			}
 		}
 		e.getChannel().sendMessage(eb.build()).queue();
@@ -93,11 +93,11 @@ public class AutoHelpCommand {
 					}
 					als=" _`[Alias: " + als.substring(1) + "]`_";
 				}
-				eb.setTitle(cmd.getName(actualGuild.getLanguage()) + als + " | Categoría: " + cmd.getCategory().getName(actualGuild.getLanguage()));
+				eb.setTitle(cmd.getName(actualGuild.getLanguage()) + als + " | "+LanguageHandler.specialWords(actualGuild.getLanguage(), "category")+": " + cmd.getCategory().getName(actualGuild.getLanguage()));
 				eb.setDescription(cmd.getDesc(actualGuild.getLanguage()));
-				eb.addField("","PARAMETROS/OPCIONES:",false);
+				eb.addField("",LanguageHandler.specialWordsUppercased(actualGuild.getLanguage(), "parameters")+"/"+LanguageHandler.specialWordsUppercased(actualGuild.getLanguage(), "options")+":",false);
 				if(cmd.getParameter(actualGuild.getLanguage())!=null) {
-					eb.addField("> Parametro: " + cmd.getParameter(actualGuild.getLanguage()),">>> " + cmd.getParameterDesc(actualGuild.getLanguage()), false);
+					eb.addField("> "+LanguageHandler.specialWords(actualGuild.getLanguage(), "parameter")+": " + cmd.getParameter(actualGuild.getLanguage()),">>> " + cmd.getParameterDesc(actualGuild.getLanguage()), false);
 				}
 				if(cmd.getOptions().size()>0) {
 					for(ModelOption option : cmd.getOptions()) {
@@ -112,7 +112,7 @@ public class AutoHelpCommand {
 							}
 							als2=" _`[Alias: " + als2.substring(1) + "]`_";
 						}
-						eb.addField("> " + (option.isEnabled()?"":"*(No disponible)* ~") + runner.optionsPrefix + option.getName(actualGuild.getLanguage()) + als2  + (option.isEnabled()?"":"~"), ">>> " + option.getDesc(actualGuild.getLanguage()), false);
+						eb.addField("> " + (option.isEnabled()?"":"*("+LanguageHandler.notAvailable(actualGuild.getLanguage())+")* ~") + runner.optionsPrefix + option.getName(actualGuild.getLanguage()) + als2  + (option.isEnabled()?"":"~"), ">>> " + option.getDesc(actualGuild.getLanguage()), false);
 					}
 				}
 				break;

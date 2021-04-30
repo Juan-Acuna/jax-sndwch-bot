@@ -41,8 +41,8 @@ public class ModelCategory implements Comparable<ModelCategory>{
 		if(name.containsKey(lang)) {
 			return name.get(lang);
 		}
-		if(name.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return name.get(LanguageHandler.getLenguageParent(lang));
+		if(name.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return name.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return name.get(name.keySet().toArray()[0]);
 	}
@@ -53,8 +53,8 @@ public class ModelCategory implements Comparable<ModelCategory>{
 		if(desc.containsKey(lang)) {
 			return desc.get(lang);
 		}
-		if(desc.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return desc.get(LanguageHandler.getLenguageParent(lang));
+		if(desc.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return desc.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return desc.get(desc.keySet().toArray()[0]);
 	}

@@ -16,6 +16,7 @@ public class ModelOption implements Comparable<ModelOption>{
 		this.name = new HashMap<Language, String>();
 		this.desc= new HashMap<Language, String>();
 		this.alias = new HashMap<Language, String[]>();
+		this.id=id;
 		this.name.put(lang, id);
 		this.enabled = enabled;
 		this.visible=visible;
@@ -24,6 +25,7 @@ public class ModelOption implements Comparable<ModelOption>{
 		this.name = new HashMap<Language, String>();
 		this.desc= new HashMap<Language, String>();
 		this.alias = new HashMap<Language, String[]>();
+		this.id=id;
 		this.name.put(lang, id);
 		this.desc.put(lang, desc);
 		this.alias.put(lang, alias);
@@ -38,8 +40,8 @@ public class ModelOption implements Comparable<ModelOption>{
 		if(name.containsKey(lang)) {
 			return name.get(lang);
 		}
-		if(name.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return name.get(LanguageHandler.getLenguageParent(lang));
+		if(name.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return name.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return name.get(name.keySet().toArray()[0]);
 	}
@@ -50,8 +52,8 @@ public class ModelOption implements Comparable<ModelOption>{
 		if(desc.containsKey(lang)) {
 			return desc.get(lang);
 		}
-		if(desc.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return desc.get(LanguageHandler.getLenguageParent(lang));
+		if(desc.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return desc.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return desc.get(desc.keySet().toArray()[0]);
 	}
@@ -62,8 +64,8 @@ public class ModelOption implements Comparable<ModelOption>{
 		if(alias.containsKey(lang)) {
 			return alias.get(lang);
 		}
-		if(alias.containsKey(LanguageHandler.getLenguageParent(lang))) {
-			return alias.get(LanguageHandler.getLenguageParent(lang));
+		if(alias.containsKey(LanguageHandler.getLanguageParent(lang))) {
+			return alias.get(LanguageHandler.getLanguageParent(lang));
 		}
 		return alias.get(alias.keySet().toArray()[0]);
 	}
