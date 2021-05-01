@@ -30,7 +30,7 @@ import xyz.sandwichframework.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos frecuentes con propósitos variados.")
 public class Comun {
-	@Command(name="Saludar",desc="Da un cálido saludo a un amigo(aún no funciona con menciones:pensive:)",alias={"s","saluda","putea","putear"},enabled=false)
+	@Command(name="Saludar",enabled=false)
 	@Parameter(name="Nombre del objetivo",desc="Nombre del objetivo(ejemplo: Tulencio).\nSe permiten espacios. Todo texto que comience con un '-' no formará parte del nombre.")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
@@ -77,7 +77,7 @@ public class Comun {
 		e.getChannel().sendMessage(eb.build()).queue();
 		e.getChannel().sendMessage("Debe especificar un nombre.").queue();
 	}
-	@Command(name="YouTube",desc="Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(Aún no soy capaz de reproducirlos, denme tiempo:pensive:).",alias={"yt","y","yutu","video","videos","llutu"})
+	@Command(name="YouTube")
 	@Parameter(name="Nombre del objetivo",desc="Texto con el cual se realizará la busqueda en Youtube (ejemplo: s.youtube '[creampie](https://preppykitchen.com/cream-pie/)'... chucha, creo me equivoqué de página xD).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
@@ -141,7 +141,7 @@ public class Comun {
 		}
 		
 	}
-	@Command(name="Invocar",desc="Comano extraño pero útil. Hace que me conecte a los canales de texto y voz del invocador",alias= {"invoke","llamar","ven"})
+	@Command(name="Invocar")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void invocar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
@@ -195,7 +195,7 @@ public class Comun {
 		
 		audioManager.openAudioConnection(vchannel);
 	}
-	@Command(name="Presentacion",desc="Comando para saber más de mi (no es lo mismo que el de ayuda).",alias= {"informacion","info","inf"})//,enabled=false,visible=false)
+	@Command(name="Presentacion")//,enabled=false,visible=false)
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void info(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
@@ -227,13 +227,13 @@ public class Comun {
 		}
 	}
 	
-	@Command(name="VoteBan",desc="Inicia una votacion para banear a un usuario del servidor(temporalmente). *ESTE COMANDO REQUIERE SER ACTIVADO PREVIAMENTE POR UN ADMINISTRADOR DEL SERVIDOR.*",alias= {"vb","vban"},enabled=false)
+	@Command(name="VoteBan",enabled=false)
 	@Parameter(name="Nombre Objetivo(mención)",desc="Nombre(mención) del usuario a Banear. Se permiten mas de uno.")
 	public static void voteban(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		
 	}
 	
-	@Command(name="Embed",desc="Devuelve el mensaje introducido por el usuario en forma de 'Embed' (mensaje decorado con un estilo especial de discord). para usar el caracter '-'(caracter de opciones) se debe anteponer \\ para reconocerlo como texto. Para generar enlaces ([como este](http://google.com)), escriba el título del enlace entre las etiquetas `{%link%}`, seguido de la url entre las etiquetas `{%href%}` (ejemplo:`{%link%}Google{%link%}{%href%}google.com{%href%}`). Los links solo funcionan en la descripción del embed y en las descripciones de los campos.",alias= {"emb"},enabled=true)
+	@Command(name="Embed")
 	@Parameter(name="Mensaje(opcional)",desc="Convierte el mensaje en un campo. Los campos estan conformados por un titulo y una descripción. Para indicar donde acaba un tituo y empieza una descripcion, escriba `{%}`. Este parametro es opcional y puede usarse junto con otras opciones.")
 	@Option(name="titulo",desc="Corresponde al titulo del embed.",alias={"t","tit","title"})
 	@Option(name="descripcion",desc="Corresponde a la descripción del embed.",alias={"d","desc"})
@@ -358,7 +358,7 @@ public class Comun {
 		}
 	}
 	
-	@Command(name="Funar",desc="Funa a un usuario.",alias= {"funa","fn"},enabled=true)
+	@Command(name="Funar")
 	@Parameter(name="Nombre del objetivo",desc="nombre del usuario a ser funado (Puede ser una mención).")
 	@Option(name="razon",desc="Corresponde a la razón de la funa. Si no se especifica, la razón sera 'por put@'.",alias={"r","reason"})
 	@Option(name="recompensa",desc="Recompensa de la funa (en tokens:smirk:).",alias={"tokens","t"})
@@ -468,7 +468,7 @@ public class Comun {
 		}
 	}
 	
-	@Command(name="Trollear",desc="Comando para trollear, no tiene más ciencia. Para especificar un objetivo, mencionalo al comienzo del comando, de lo contrario el trolleo te lo llevas tu:smirk:",alias={"troll","trolear","trl"})
+	@Command(name="Trollear")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"},enabled=false,visible=false)
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	@Option(name="earrape",desc="Reproduce un audio que hace mierda el oido. Puedes especificarl la url con esta opción o dejarla vacía y yo haré el resto.",alias={"e","ear","errape"})

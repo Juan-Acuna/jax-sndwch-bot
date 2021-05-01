@@ -1,76 +1,70 @@
-package xyz.sandwichbot.main;
+package xyz.sandwichbot.commands.configuracion;
 
 import xyz.sandwichframework.annotations.Configuration;
 import xyz.sandwichframework.annotations.configure.*;
 import xyz.sandwichframework.core.util.Language;
 
-@Configuration(Language.EN)
-public class Configuracion_en {
+@Configuration(Language.ES)
+public class ConfigComandos {
 	
 	/*    CATEGORIA : ADMINISTRACION    */
 	@CategoryID("Administracion")
-	@TranslatedName("Administration")
 	@CategoryDescription
-	public static final String ADMIN_DESC = "Administration commands (administrator permissions are required, obviously).";
+	public static final String ADMIN_DESC = "Comandos de administración (requieren permisos de administrador, obvio).";
 	
 	@CommandID("Banear")
-	@TranslatedName("Ban")
 	@CommandDescription
-	public static final String BANEAR_DESC = "Allows to ban a member of the guild for a determined time.";
+	public static final String BANEAR_DESC = "Permite banear a un miembro del servidor por un tiempo determinado.";
 	
 	@CommandID("Banear")
 	@CommandAliases
-	public static final String[] BANEAR_ALIAS = {"gofuk"};
+	public static final String[] BANEAR_ALIAS = {"ban","pajuera"};
 	
 	@CommandID("LimpiarChat")
-	@TranslatedName("ClearChat")
 	@CommandDescription
-	public static final String LIMPIAR_DESC = "Delete messages sent in the actual text channel";
+	public static final String LIMPIAR_DESC = "Elimina mensajes del canal de texto donde se usó el comando.";
 	
 	@CommandID("LimpiarChat")
 	@CommandAliases
-	public static final String[] LIMPIAR_ALIAS = {"cls","clear"};
+	public static final String[] LIMPIAR_ALIAS = {"cls","limpiar","clear"};
 	
 	@CommandID("Configurar")
-	@TranslatedName("Settings")
 	@CommandDescription
-	public static final String CONF_DESC = "With this one you can configure me... you know, the voteban command and somo other sh*ts. Use without parameters to return the actual settings.";
+	public static final String CONF_DESC = "Comando con el que me puedes configurar... ya sabes, rol de funados, el voteban y quien sabe que otra verga. Si no se especifican parametros a configurar, devuelve la configuración actual.";
 	
 	@CommandID("Configurar")
 	@CommandAliases
-	public static final String[] CONF_ALIAS = {"conf","config","configuration"};
+	public static final String[] CONF_ALIAS = {"conf","config","configuracion"};
 	
 
 	/*   CATEGORIA : COMUN   */
 	@CategoryID("Comun")
-	@TranslatedName("Common")
 	@CategoryDescription
-	public static final String COMUN_DESC = "Useful commands with varied purposes.";
+	public static final String COMUN_DESC = "Comandos frecuentes con propósitos variados.";
 	
 	@CommandID("Saludar")
-	@TranslatedName("Greetings")
 	@CommandDescription
-	public static final String SALUDAR_DESC = "Gives a lovely 'helo' to a friend (not working with mentions yet:pensive:)";
+	public static final String SALUDAR_DESC = "Da un cálido saludo a un amigo(aún no funciona con menciones:pensive:)";
 	
 	@CommandID("Saludar")
 	@CommandAliases
-	public static final String[] SALUDAR_ALIAS = {"hello","hi"};
+	public static final String[] SALUDAR_ALIAS = {"s","saluda","putea","putear"};
 	
 	@CommandID("YouTube")
 	@CommandDescription
-	public static final String YOUTUBE_DESC = "Search videos on YouTube, then shows the results (I can't play them yet, I need more time:pensive:).";
+	public static final String YOUTUBE_DESC = "Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(Aún no soy capaz de reproducirlos, denme tiempo:pensive:).";
 	
 	@CommandID("YouTube")
 	@CommandAliases
-	public static final String[] YOUTUBE_ALIAS = {"yt","y","yutu","video","videos"};
+	public static final String[] YOUTUBE_ALIAS = {"yt","y","yutu","video","videos","llutu"};
 	
 	@CommandID("Invocar")
 	@CommandDescription
-	public static final String INVOCAR_DESC = "Comano extraño e inutil. Hace que me conecte a los canales de texto y voz del invocador";
+	public static final String INVOCAR_DESC = "Comando extraño e inútil. Hace que me conecte a los canales de texto y voz del invocador";
 	
 	@CommandID("Invocar")
 	@CommandAliases
-	public static final String[] INVOCAR_ALIAS = {"invoke","llamar","ven"};
+	public static final String[] INVOCAR_ALIAS = {"inv","llamar","ven"};
 	
 	@CommandID("Presentacion")
 	@CommandDescription
@@ -137,6 +131,54 @@ public class Configuracion_en {
 	@CategoryID("Musica")
 	@CategoryDescription
 	public static final String MUSICA_DESC = "Comandos de música. ¿Que?¿Acaso esperabas otra descripción?";
+	
+	@CommandID("Reproducir")
+	@CommandDescription
+	public static final String REP_DESC = "Reproduce música obtenida desde una fuente de internet (por defecto YouTube.com)";
+	
+	@CommandID("Reproducir")
+	@CommandAliases
+	public static final String[] REP_ALIAS = {"p","r","play","pl"};
+	
+	@CommandID("Pausar")
+	@CommandDescription
+	public static final String PAUSAR_DESC = "Pausa la reproducción actual.";
+	
+	@CommandID("Pausar")
+	@CommandAliases
+	public static final String[] PAUSAR_ALIAS = {"pausa","pause","espera","pp"};
+
+	@CommandID("Siguiente")
+	@CommandDescription
+	public static final String SIG_DESC = "Salta a la siguiente canción en la cola actual. Si no quedan canciones, la reproducción se termina.";
+	
+	@CommandID("Siguiente")
+	@CommandAliases
+	public static final String[] SIG_ALIAS = {"sig","saltar","skip","sk"};
+
+	@CommandID("Detener")
+	@CommandDescription
+	public static final String DET_DESC = "Detiene la reproducción actual.";
+	
+	@CommandID("Detener")
+	@CommandAliases
+	public static final String[] DET_ALIAS = {"stop","det","callate"};
+
+	@CommandID("Actual")
+	@CommandDescription
+	public static final String ACT_DESC = "Indica la canción que se esta reproduciendo actualmente.";
+	
+	@CommandID("Actual")
+	@CommandAliases
+	public static final String[] ACT_ALIAS = {"act","sonando","reproduciendo","np"};
+
+	@CommandID("Cola")
+	@CommandDescription
+	public static final String _DESC = "Muestra la lista de canciones en la cola.";
+	
+	@CommandID("Cola")
+	@CommandAliases
+	public static final String[] _ALIAS = {"col","canciones","lista","fila"};
 	
 	
 	/*    CATEGORIA : NSFW    */

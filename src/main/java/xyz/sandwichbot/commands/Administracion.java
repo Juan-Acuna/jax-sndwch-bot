@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.models.InputParameter;
 
-@Category(desc="Comandos de administración (requieren permisos de administrador, obvio)")
+@Category()
 public class Administracion {
 	
 	/*
@@ -16,19 +16,19 @@ public class Administracion {
 		
 	}*/
 	
-	@Command(name="Banear",desc="Permite banear a un miembro del servidor por un tiempo determinado.",alias= {"ban","pajuera"},enabled=false)
+	@Command(name="Banear",enabled=false)
 	@Parameter(name="Nombre Objetivo(mención)",desc="Nombre(mención) del usuario a banear. Se permiten mas de uno.")
 	public static void banear(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		
 	}
 	
-	@Command(name="LimpiarChat",desc="Elimina mensajes del chat donde se usó el comando.",alias= {"cls","limpiar"},enabled=false)
+	@Command(name="LimpiarChat",enabled=false)
 	@Parameter(name="Cantidad de mensajes",desc="Numero de mensajes a borrar del canal de texto. Debe ser un valor numerico valido entre 1 y 100, de lo contrario solo borraré el ultimo mnsaje(sin contar el del comando).")
 	public static void cleanchat(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		
 	}
 	
-	@Command(name="Configurar",desc="Comando con el que me puedes configurar... ya sabes, rol de funados, el voteban y quien sabe que otra verga. Si no se especifican parametros a configurar, devuelve la configuración actual.",alias= {"conf","config","configuracion"},enabled=false)
+	@Command(name="Configurar",enabled=false)
 	public static void config(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		
 	}

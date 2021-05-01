@@ -23,7 +23,7 @@ import xyz.sandwichframework.models.InputParameter.InputParamType;
 
 @Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
 public class Musica {
-	@Command(name="Play",desc="Reproduce música obtenida desde una fuente de internet (por defecto YouTube.com)",alias= {"p","r","reproducir","pl"})
+	@Command(name="Reproducir")
 	public static void reproducir(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		boolean autodes=false;
 		int autodesTime =15;
@@ -36,7 +36,7 @@ public class Musica {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Play");
+					AutoHelpCommand.sendHelp(e.getChannel(), "Reproducir");
 					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
@@ -80,7 +80,7 @@ public class Musica {
 		PlayerManager.getInstance().loadAndPlay(tChannel, busqueda);
 	}
 	
-	@Command(name="Pausar",desc="Pausa la reproducción actual.",alias={"pausa","pause","espera","pp"})
+	@Command(name="Pausar")
 	public static void pausar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
@@ -110,7 +110,7 @@ public class Musica {
 
 	}
 	
-	@Command(name="Siguiente",desc="Salta a la siguiente canción en la cola actual. Si no quedan canciones, la reproducción se termina.",alias={"sk","saltar","skip"})
+	@Command(name="Siguiente")
 	public static void siguiente(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
@@ -147,7 +147,7 @@ public class Musica {
 		}
 	}
 	
-	@Command(name="Detener",desc="Detiene la reproducción actual.",alias={"stop","det","callate"})
+	@Command(name="Detener")
 	public static void detener(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
@@ -175,7 +175,7 @@ public class Musica {
 		tChannel.sendMessage(Tools.stringFieldToEmb("Canción detenida","(y lista de reproduccion eliminada.)")).queue();
 	}
 	
-	@Command(name="Actual",desc="Indica la canción que se esta reproduciendo actualmente.",alias= {"np","playing","cancion"})
+	@Command(name="Actual")
 	public static void actual(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
@@ -207,7 +207,7 @@ public class Musica {
 		AudioTrackInfo info = track.getInfo();
 		tChannel.sendMessage(Tools.stringFieldToEmb("Canción actual: " + info.title, info.author +" | "+Tools.milliToTimeNoHours(info.length))).queue();
 	}
-	@Command(name="Cola",desc="Muestra la lista de canciones en la cola.",alias={"queue","col","canciones"})
+	@Command(name="Cola")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void cola(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
