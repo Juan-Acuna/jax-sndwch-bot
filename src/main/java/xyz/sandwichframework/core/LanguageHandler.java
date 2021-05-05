@@ -15,6 +15,16 @@ public class LanguageHandler {
 				return lang;
 		}
 	}
+	public static Language findBestLanguage(Language expected, Language[] availables) {
+		
+		expected = getLanguageParent(expected);
+		for(Language lang : availables) {
+			if(getLanguageParent(lang)==expected) {
+				return lang;
+			}
+		}
+		return availables[0];
+	}
 	public static String DescriptionNotFound(Language lang) {
 		switch(getLanguageParent(lang)) {
 			case ES:

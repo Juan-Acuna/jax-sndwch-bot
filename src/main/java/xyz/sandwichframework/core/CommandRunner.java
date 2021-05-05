@@ -13,14 +13,14 @@ class CommandRunner implements Runnable{
 	private ArrayList<InputParameter> parameters;
 	private MessageReceivedEvent msg;
 	
-	public CommandRunner(Method method, ArrayList<InputParameter> parameters,MessageReceivedEvent event) {
+	protected CommandRunner(Method method, ArrayList<InputParameter> parameters,MessageReceivedEvent event) {
 		super();
 		this.method = method;
 		this.parameters = parameters;
 		this.msg=event;
 	}
 	
-	public CommandRunner(Method method, ArrayList<InputParameter> parameters,PrivateMessageReceivedEvent event) {
+	protected CommandRunner(Method method, ArrayList<InputParameter> parameters,PrivateMessageReceivedEvent event) {
 		super();
 		this.method = method;
 		this.parameters = parameters;
@@ -32,7 +32,6 @@ class CommandRunner implements Runnable{
 		try {
 			method.invoke(null, msg, parameters);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

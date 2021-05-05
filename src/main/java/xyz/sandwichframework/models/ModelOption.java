@@ -43,7 +43,7 @@ public class ModelOption implements Comparable<ModelOption>{
 		if(name.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return name.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return name.get(name.keySet().toArray()[0]);
+		return name.get(LanguageHandler.findBestLanguage(lang, (Language[])name.keySet().toArray()));
 	}
 	public void setName(Language lang, String name) {
 		this.name.put(lang, name);
@@ -55,7 +55,7 @@ public class ModelOption implements Comparable<ModelOption>{
 		if(desc.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return desc.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return desc.get(desc.keySet().toArray()[0]);
+		return desc.get(LanguageHandler.findBestLanguage(lang, (Language[])desc.keySet().toArray()));
 	}
 	public void setDesc(Language lang, String desc) {
 		this.desc.put(lang, desc);
@@ -67,7 +67,7 @@ public class ModelOption implements Comparable<ModelOption>{
 		if(alias.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return alias.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return alias.get(alias.keySet().toArray()[0]);
+		return alias.get(LanguageHandler.findBestLanguage(lang, (Language[])alias.keySet().toArray()));
 	}
 	public void setAlias(Language lang, String[] alias) {
 		this.alias.put(lang, alias);
@@ -87,5 +87,28 @@ public class ModelOption implements Comparable<ModelOption>{
 	@Override
 	public int compareTo(ModelOption o) {
 		return id.compareTo(o.id);
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ModelOption other = (ModelOption) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 }

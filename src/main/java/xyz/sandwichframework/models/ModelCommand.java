@@ -76,7 +76,7 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(name.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return name.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return name.get(name.keySet().toArray()[0]);
+		return name.get(LanguageHandler.findBestLanguage(lang, (Language[])name.keySet().toArray()));
 	}
 	public void setName(Language lang, String name) {
 		this.name.put(lang, name);
@@ -88,7 +88,7 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(desc.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return desc.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return desc.get(desc.keySet().toArray()[0]);
+		return desc.get(LanguageHandler.findBestLanguage(lang, (Language[])desc.keySet().toArray()));
 	}
 	public void setDesc(Language lang, String desc) {
 		this.desc.put(lang, desc);
@@ -100,7 +100,7 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(alias.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return alias.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return alias.get(alias.keySet().toArray()[0]);
+		return alias.get(LanguageHandler.findBestLanguage(lang, (Language[])alias.keySet().toArray()));
 	}
 	public void setAlias(Language lang, String[] alias) {
 		this.alias.put(lang, alias);
@@ -112,7 +112,7 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(parameter.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return parameter.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return parameter.get(parameter.keySet().toArray()[0]);
+		return parameter.get(LanguageHandler.findBestLanguage(lang, (Language[])parameter.keySet().toArray()));
 	}
 	public void setParameter(Language lang, String parameter) {
 		this.parameter.put(lang, parameter);
@@ -124,7 +124,7 @@ public class ModelCommand implements Comparable<ModelCommand>{
 		if(parameterDesc.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return parameterDesc.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return parameterDesc.get(parameterDesc.keySet().toArray()[0]);
+		return parameterDesc.get(LanguageHandler.findBestLanguage(lang, (Language[])parameterDesc.keySet().toArray()));
 	}
 	public void setParameterDesc(Language lang, String parameterDesc) {
 		this.parameterDesc.put(lang, parameterDesc);
