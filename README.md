@@ -3,7 +3,7 @@ Discord Bot desarrollado en Java usando [JDA 4](https://github.com/DV8FromTheWor
 ##### Este bot se encuentra en fase de desarrollo, implementado en un servidor de pruebas. Por favor no abuse de su uso (sobre todo en comandos que requieran obtener recursos de internet).
 
 ## Bot multiuso
-Jax Sandwich esta programado con comandos para tareas varias.
+Jax Sandwich esta programado con comandos para tareas variadas.
 
 ## Invitar
 Para invitar a Jax Sandwich a tu servidor de Discord, usa [este link](https://discord.com/api/oauth2/authorize?client_id=804147434455564288&permissions=8&scope=bot).
