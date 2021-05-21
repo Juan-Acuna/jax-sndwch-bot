@@ -95,6 +95,9 @@ public class ExtraCmdManager {
 					e.printStackTrace();
 				}
 			}
+			if(b) {
+				die();
+			}
 			//System.out.println("EJECUCION TERMINADA:\nTIEMPO: "+s+"/"+maxSeg+", MENSAJES: "+msgs+"/"+maxMsg+", EJECUTADO: "+ (b?"No":"Si"));
 			threads.remove(channel);
 		}
@@ -124,6 +127,9 @@ public class ExtraCmdManager {
 			cmd = null;
 			return false;
 		}
+	}
+	protected void die() {
+		
 	}
 	private ModelExtraCommand pickExtraCommand(String name) {
 		return BotRunner._self.xcommands.get(name);

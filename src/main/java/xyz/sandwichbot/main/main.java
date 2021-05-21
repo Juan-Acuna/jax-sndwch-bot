@@ -15,7 +15,7 @@ public class main {
 		SandwichBot Bot = SandwichBot.create(System.getenv().get("DISCORD_TOKEN"));
 		Bot.run();
 		Bot.getJDA().getPresence().setActivity(Activity.playing("Trollear"));
-		Bot.getJDA().getPresence().setStatus(OnlineStatus.OFFLINE);
+		Bot.getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
 		BotGuildsManager.getManager().registerGuild("618241899089887254", "La Bratva", Language.ES);
 		BotGuildsManager.getManager().registerGuild("621488799196774413", "Wakanda Knuckles", Language.ES);
 	}

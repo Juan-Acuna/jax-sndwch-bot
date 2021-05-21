@@ -70,7 +70,8 @@ public class ControladorImagenes implements Runnable{
 				if(lnk.endsWith(".mp4") || lnk.endsWith(".mpeg4") || lnk.endsWith(".webm") || lnk.endsWith(".avi") || lnk.endsWith(".wmv") || lnk.endsWith(".3gp")) {
 					channel.sendMessage(lnk).queue();
 					return;
-				}channel.sendMessage(builder.build()).queue();
+				}
+				channel.sendMessage(builder.build()).queue();
 			}
 		} catch (Exception e) {
 			//System.out.println("**ERROR****************");
@@ -117,7 +118,7 @@ public class ControladorImagenes implements Runnable{
 				hc = ClienteHttp.peticionHttp(teststr);//SUSTITUIR POR LINK
 				//System.out.println("ptrn:"+fuente.getSelectionPattern());
 				//System.out.println("name:"+fuente.getName());
-				System.out.println("HC:"+hc.substring(1000));
+				//System.out.println("HC:"+hc.substring(1000));
 				lnks = Comparador.EncontrarTodos(fuente.getSelectionPattern(), hc);
 				nn--;
 				if(nn<=0) {

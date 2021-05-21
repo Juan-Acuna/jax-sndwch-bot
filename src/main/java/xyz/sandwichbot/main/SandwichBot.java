@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichframework.core.BotRunner;
+import xyz.sandwichframework.core.ExtraCmdManager;
 import xyz.sandwichframework.core.util.Language;
 
 public class SandwichBot extends ListenerAdapter{
@@ -77,7 +78,7 @@ public class SandwichBot extends ListenerAdapter{
 	}
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
-		if(SandwichBot.ActualBot().getJDA().equals(e.getAuthor().getJDA())) {
+		if(SandwichBot.ActualBot().getJDA().getSelfUser().equals(e.getAuthor())) {
 			return;
 		}
 		try {
@@ -95,10 +96,13 @@ public class SandwichBot extends ListenerAdapter{
 		runner.getGuildsManager().registerGuild(e.getGuild(),Language.ES);
 		TextChannel c = e.getGuild().getDefaultChannel();
 		c.sendMessage(getInfo(c.isNSFW())).queue();
+		//c.sendMessage(Tools.stringFieldToEmb("Select language / Selecciona idioma", "[1] Español\n[2] English")).queue();
+		//String[] str = {"1","2","es","en"};
+		//ExtraCmdManager.getManager().registerExtraCmd("setlang", c,this.jda.getSelfUser().getId(),str, -1, -1);
 	}
 	@Override
 	public void onPrivateMessageReceived(PrivateMessageReceivedEvent e) {
-		if(SandwichBot.ActualBot().getJDA().equals(e.getAuthor().getJDA())) {
+		if(SandwichBot.ActualBot().getJDA().getSelfUser().equals(e.getAuthor())) {
 			return;
 		}
 		try {
