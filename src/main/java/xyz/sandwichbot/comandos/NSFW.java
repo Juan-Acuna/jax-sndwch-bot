@@ -1,4 +1,4 @@
-package xyz.sandwichbot.commands;
+package xyz.sandwichbot.comandos;
 
 import java.awt.Color;
 import java.net.URLEncoder;

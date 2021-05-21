@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +15,7 @@ import org.reflections.Reflections;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.annotations.configure.*;
 import xyz.sandwichframework.core.util.Language;
@@ -31,7 +34,6 @@ public class BotRunner {
 	protected boolean autoHelpCommand = false;
 	protected String help_title;
 	protected String help_description;
-	//private String commands_package;
 	protected boolean hide_nsfw_category=false;
 	private boolean bot_on;
 	protected Language def_lang = Language.EN;
@@ -40,7 +42,7 @@ public class BotRunner {
 	protected List<ModelCategory> categories;
 	protected List<ModelCommand> commands;
 	private Set<ModelCategory> hcategories;
-	//private HashSet<ModelCommand> hcommands;
+	protected Map<String, ModelExtraCommand> xcommands;
 	private Set<Class<?>> configs;
 	protected Reflections reflections;
 	protected static BotRunner _self = null;
@@ -99,17 +101,13 @@ public class BotRunner {
 	}
 	private BotRunner(Language def_lang) {
 		this.def_lang= def_lang; 
-		//commands_package=commandsPackage;
-		//reflections = new Reflections(commands_package);
 		commands = (List<ModelCommand>)Collections.synchronizedList(new ArrayList<ModelCommand>());
 		hcategories = (Set<ModelCategory>)Collections.synchronizedSet(new HashSet<ModelCategory>());
-		//hcommands = new HashSet<ModelCommand>();
-		//extraCmds = new ArrayList<ModelExtraCommand>();
+		xcommands = (Map<String, ModelExtraCommand>) Collections.synchronizedMap(new HashMap<String, ModelExtraCommand>());
 		this.guildsManager = BotGuildsManager.getManager();
 		try {
 			initialize();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -120,16 +118,6 @@ public class BotRunner {
 	public static BotRunner init() {
 		return _self = new BotRunner(Language.EN);
 	}
-	/*private void registerExtras() {
-		Class<?> extras = (Class<?>)((Set<Class<?>>) reflections.getTypesAnnotatedWith(ExtraCommandsContainer.class)).toArray()[0]; 
-		for(Method m : extras.getDeclaredMethods()) {
-			ExtraCommand ec = m.getDeclaredAnnotation(ExtraCommand.class);
-			if(ec==null) {
-				continue;
-			}
-			extraCmds.add(new ModelExtraCommand(ec.name(), m));
-		}
-	}*/
 	private void initialize() throws Exception {
 		Package[] pkgs = Package.getPackages();
 		for(Package p : pkgs) {
@@ -139,12 +127,27 @@ public class BotRunner {
 					|| p.getName().startsWith("jdk.") || p.getName().startsWith("org.slf4j."))) { //PACKAGES QUE SE OCUPAN DENTRO DEL FRAMEWORK
 				// AQUI VA LO QUE SE DEBE HACER CON CADA PACKAGE
 				String[] str = p.getName().split("\\.");
-				//System.out.println("PKG: " + p.getName() + "; str"+str.length);
 				Reflections r = new Reflections(str[0] + "." + str[1]);
 				// ESCANEO DE CATEGORIAS
 				Set<Class<?>> cats = r.getTypesAnnotatedWith(Category.class);
-				//System.out.println("PKG: " + str[0] + "." + str[1]);
-				//System.out.println("CATS: " + cats.size());
+				Set<Class<?>> xcs = r.getTypesAnnotatedWith(ExtraCommandContainer.class);
+				if(xcs.size()>0) {
+					for(Class<?> c : xcs) {
+						Method[] xcmds = c.getDeclaredMethods();
+						if(xcmds.length>0) {
+							ModelExtraCommand mxc;
+							for(Method m : xcmds) {
+								ExtraCommandName xn = m.getAnnotation(ExtraCommandName.class);
+								String n = m.getName();
+								if(xn!=null) {
+									n = xn.value();
+								}
+								mxc = new ModelExtraCommand(n,m);
+								xcommands.put(n, mxc);
+							}
+						}
+					}
+				}
 				if(cats.size()>0) {
 					ModelCategory cmdcategory;
 					ModelCommand botcmd;
@@ -152,7 +155,6 @@ public class BotRunner {
 						// AQUI VA LO QUE SE DEBE HACER CON CADA CLASE
 						Method[] ms = c.getDeclaredMethods();
 						Category catanno = c.getDeclaredAnnotation(Category.class);
-						//cmdcategory = new ModelCategory(c.getSimpleName(), catanno.desc());
 						cmdcategory = new ModelCategory(def_lang, (catanno.name().equals("NoID")?c.getSimpleName():catanno.name()));
 						if(!catanno.desc().equals("NoDesc")) {
 							cmdcategory.setDesc(def_lang, catanno.desc());
@@ -165,7 +167,6 @@ public class BotRunner {
 							if(cmdanno==null) {
 								continue;
 							}
-							//botcmd = new ModelCommand(cmdanno.name(),cmdanno.desc(),cmdcategory,m);
 							botcmd = new ModelCommand(def_lang, cmdanno.name(), cmdcategory, m);
 							botcmd.setAlias(def_lang, cmdanno.alias());
 							botcmd.setDesc(def_lang, cmdanno.desc());
@@ -189,7 +190,6 @@ public class BotRunner {
 					
 				}
 				configs = r.getTypesAnnotatedWith(Configuration.class);
-				
 				//break;
 			}
 		}
@@ -290,9 +290,9 @@ public class BotRunner {
 			}
 		}
 	}
-	
 	public void listenForCommand(MessageReceivedEvent e) throws Exception {
 		String message = e.getMessage().getContentRaw();
+		ExtraCmdManager.getManager().CheckExtras(e.getMessage());
 		if(message.toLowerCase().startsWith(commandsPrefix)) {
 			ModelGuild actualGuild = guildsManager.getGuild(e.getGuild().getId());
 			String r = (message.split(" ")[0]).trim();
@@ -360,7 +360,7 @@ public class BotRunner {
 		}
 	}
 	public void listenForPrivateCommand(PrivateMessageReceivedEvent e) throws Exception {
-		ModelGuild actualGuild = guildsManager.getGuild(e.getAuthor().getMutualGuilds().get(0).getId());
+		ModelGuild actualGuild = guildsManager.getGuild(e.getAuthor().getJDA().getMutualGuilds(SandwichBot.ActualBot().getJDA().getSelfUser()).get(0).getId());
 		String message = e.getMessage().getContentRaw();
 		String r = (message.split(" ")[0]).trim();
 		if(r.toLowerCase().startsWith(commandsPrefix)) {

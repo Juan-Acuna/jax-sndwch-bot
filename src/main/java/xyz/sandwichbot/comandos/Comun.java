@@ -1,4 +1,4 @@
-package xyz.sandwichbot.commands;
+package xyz.sandwichbot.comandos;
 
 import java.awt.Color;
 import java.net.URLEncoder;
@@ -25,6 +25,7 @@ import xyz.sandwichbot.main.util.lavaplayer.GuildMusicManager;
 import xyz.sandwichbot.main.util.lavaplayer.PlayerManager;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.core.ExtraCmdManager;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 

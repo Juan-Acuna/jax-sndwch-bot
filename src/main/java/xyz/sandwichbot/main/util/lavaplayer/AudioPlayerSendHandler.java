@@ -8,7 +8,7 @@ import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;
 
 import net.dv8tion.jda.api.audio.AudioSendHandler;
-import xyz.sandwichbot.commands.Musica;
+import xyz.sandwichbot.comandos.Musica;
 
 public class AudioPlayerSendHandler implements AudioSendHandler{
 	private AudioPlayer audioPlayer;

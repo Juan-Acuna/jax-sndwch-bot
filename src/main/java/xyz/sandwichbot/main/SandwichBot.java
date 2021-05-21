@@ -77,6 +77,9 @@ public class SandwichBot extends ListenerAdapter{
 	}
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
+		if(SandwichBot.ActualBot().getJDA().equals(e.getAuthor().getJDA())) {
+			return;
+		}
 		try {
 			runner.listenForCommand(e);
 		} catch (Exception e1) {
@@ -89,11 +92,15 @@ public class SandwichBot extends ListenerAdapter{
 		if(!runner.isBot_on()) {
 			return;
 		}
+		runner.getGuildsManager().registerGuild(e.getGuild(),Language.ES);
 		TextChannel c = e.getGuild().getDefaultChannel();
 		c.sendMessage(getInfo(c.isNSFW())).queue();
 	}
 	@Override
 	public void onPrivateMessageReceived(PrivateMessageReceivedEvent e) {
+		if(SandwichBot.ActualBot().getJDA().equals(e.getAuthor().getJDA())) {
+			return;
+		}
 		try {
 			runner.listenForPrivateCommand(e);
 		} catch (Exception e1) {
@@ -101,8 +108,6 @@ public class SandwichBot extends ListenerAdapter{
 			e1.printStackTrace();
 		}
 	}
-	
-	
 	public static void SendAndDestroy(MessageChannel c, MessageEmbed emb, int time) {
 		c.sendMessage(emb).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));
 	}

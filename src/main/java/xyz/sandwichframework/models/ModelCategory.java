@@ -44,7 +44,9 @@ public class ModelCategory implements Comparable<ModelCategory>{
 		if(name.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return name.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return name.get(LanguageHandler.findBestLanguage(lang, (Language[])name.keySet().toArray()));
+		Language[] langs = new Language[name.size()];
+		name.keySet().toArray(langs);
+		return name.get(LanguageHandler.findBestLanguage(lang, langs));
 	}
 	public void setName(Language lang, String name) {
 		this.name.put(lang, name);
@@ -56,7 +58,9 @@ public class ModelCategory implements Comparable<ModelCategory>{
 		if(desc.containsKey(LanguageHandler.getLanguageParent(lang))) {
 			return desc.get(LanguageHandler.getLanguageParent(lang));
 		}
-		return desc.get(LanguageHandler.findBestLanguage(lang, (Language[])desc.keySet().toArray()));
+		Language[] langs = new Language[desc.size()];
+		desc.keySet().toArray(langs);
+		return desc.get(LanguageHandler.findBestLanguage(lang, langs));
 	}
 	public void setDesc(Language lang, String desc) {
 		this.desc.put(lang, desc);

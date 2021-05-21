@@ -30,8 +30,8 @@ public class BotGuildsManager {
 		}
 		return false;
 	}
-	public void registerGuild(Guild guild) {
-		ModelGuild g = new ModelGuild(guild.getId(),guild.getName(),BotRunner._self.def_lang);
+	public void registerGuild(Guild guild, Language lang) {
+		ModelGuild g = new ModelGuild(guild.getId(),guild.getName(), lang);
 		guilds.add(g);
 	}
 	public boolean registerGuild(String id, String lastKnownName, Language lang) {
@@ -54,18 +54,8 @@ public class BotGuildsManager {
 			registerGuild(g);
 		}
 	}
-	public void loadData(Set<Guild> data) {
-		for(Guild g : data) {
-			registerGuild(g);
-		}
-	}
 	public void loadData(ModelGuild[] data) {
 		for(ModelGuild g : data) {
-			registerGuild(g);
-		}
-	}
-	public void loadData(Guild[] data) {
-		for(Guild g : data) {
 			registerGuild(g);
 		}
 	}

@@ -4,6 +4,9 @@ import xyz.sandwichframework.core.util.Language;
 
 public class LanguageHandler {
 	public static Language getLanguageParent(Language lang) {
+		if(lang==null) {
+			return null;
+		}
 		switch(lang) {
 			case ES_MX:
 			case ES_ES:

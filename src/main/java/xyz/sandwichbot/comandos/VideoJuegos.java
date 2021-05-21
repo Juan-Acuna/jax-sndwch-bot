@@ -1,4 +1,4 @@
-package xyz.sandwichbot.commands;
+package xyz.sandwichbot.comandos;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
