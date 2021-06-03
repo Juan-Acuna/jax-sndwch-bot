@@ -46,7 +46,7 @@ public class Imagen {
 			cantidad = 1;
 		}
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setFooter("Meow:3",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter("Meow:3",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
 		eb.setColor(Color.green);
 		if(cantidad>=8) {
 			gi = new ControladorImagenes(e.getChannel(), FuenteImagen.RandomCat, eb ,true);
@@ -63,7 +63,7 @@ public class Imagen {
 	}
 	@Command(name="Otaku",desc="Devuelve imagenes de esta temática, sin incluir contenido pornografico. Nombre provisorio.",alias={"oku","otk"},enabled=false,visible=false)
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
-	@Option(name="cantidad",desc="Indica la cantidad de mininos requeridos.\\nDEBE SER UN VALOR NUMERICO ENTRE 1 Y 100. Si ingresas mal este parametro no habrán gatos para ti.",alias={"c","cant","num"})
+	@Option(name="cantidad",desc="Indica la cantidad de mininos requeridos.\\nDEBE SER UN VALOR NUMERICO ENTRE 1 Y 100. Si ingresas mal este parametro tendrás que ir a bañarte.",alias={"c","cant","num"})
 	public static void otaku(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		ControladorImagenes gi;
 		int cantidad =1;
@@ -90,7 +90,7 @@ public class Imagen {
 			cantidad = 1;
 		}
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setFooter("シャワーを浴びないでください",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter("シャワーを浴びないでください",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
 		eb.setColor(Tools.stringColorCast("naranjo"));
 		if(cantidad>=8) {
 			gi = new ControladorImagenes(e.getChannel(), FuenteImagen.RandomCat, eb ,true);

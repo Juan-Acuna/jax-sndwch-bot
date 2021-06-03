@@ -2,8 +2,8 @@ package xyz.sandwichframework.models;
 
 import java.util.HashMap;
 
-import xyz.sandwichframework.core.LanguageHandler;
 import xyz.sandwichframework.core.util.Language;
+import xyz.sandwichframework.core.util.LanguageHandler;
 
 public class ModelOption implements Comparable<ModelOption>{
 	private String id;

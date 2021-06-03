@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.SandwichBot;
+import xyz.sandwichframework.core.util.MessageUtils;
 
 public class ControladorImagenes implements Runnable{
 
@@ -51,7 +52,7 @@ public class ControladorImagenes implements Runnable{
 				if(lnk==null) {
 					EmbedBuilder eb = new EmbedBuilder();
 					eb.setFooter("No se encontró contenido (#PichulaTriste), intentalo nuevamente",Constantes.JaxSandwich.Imagenes.nonsfw);
-					SandwichBot.SendAndDestroy(channel, eb.build(), 15);
+					MessageUtils.SendAndDestroy(channel, eb.build(), 15);
 					return;
 				}
 			}else{
@@ -62,10 +63,10 @@ public class ControladorImagenes implements Runnable{
 			lock.unlock();
 			if(autodes) {
 				if(lnk.endsWith(".mp4") || lnk.endsWith(".mpeg4") || lnk.endsWith(".webm") || lnk.endsWith(".avi") || lnk.endsWith(".wmv") || lnk.endsWith(".3gp")) {
-					SandwichBot.SendAndDestroy(channel, lnk, autodesTime);
+					MessageUtils.SendAndDestroy(channel, lnk, autodesTime);
 					return;
 				}
-				SandwichBot.SendAndDestroy(channel, builder.build(), autodesTime);
+				MessageUtils.SendAndDestroy(channel, builder.build(), autodesTime);
 			}else {
 				if(lnk.endsWith(".mp4") || lnk.endsWith(".mpeg4") || lnk.endsWith(".webm") || lnk.endsWith(".avi") || lnk.endsWith(".wmv") || lnk.endsWith(".3gp")) {
 					channel.sendMessage(lnk).queue();
@@ -178,7 +179,7 @@ public class ControladorImagenes implements Runnable{
 	public void enviarRestriccion() {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.addField("¡Deja esa cosa horrorosa o verás!....", "Este canal no permite este tipo de contenido :smirk:", true);
-		eb.setFooter("Busca un canal con la etiqueta \"NSFW\" y yo mism@ te quito la ropa 🍑🍆😈👉👌😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter("Busca un canal con la etiqueta \"NSFW\" y yo mism@ te quito la ropa 🍑🍆😈👉👌😏",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
 		eb.setThumbnail(Constantes.JaxSandwich.Imagenes.nonsfw);
 		eb.setColor(Color.red);
 		channel.sendMessage(eb.build()).queue();

@@ -1,6 +1,4 @@
-package xyz.sandwichframework.core;
-
-import xyz.sandwichframework.core.util.Language;
+package xyz.sandwichframework.core.util;
 
 public class LanguageHandler {
 	public static Language getLanguageParent(Language lang) {

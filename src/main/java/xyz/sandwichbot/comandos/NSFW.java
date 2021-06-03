@@ -17,6 +17,8 @@ import xyz.sandwichbot.main.util.FuenteImagen;
 import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.core.ExtraCmdManager;
+import xyz.sandwichframework.core.util.MessageUtils;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 
@@ -77,7 +79,7 @@ public class NSFW {
 		ControladorImagenes gi;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
-		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ")+"🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ")+"🙊😏😏",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
 		if(cantidad>=8) {
 			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.RealBooru,eb,true);
 		}else {
@@ -111,7 +113,7 @@ public class NSFW {
 			eb2.setColor(Color.red);
 			eb2.addField("A petición de " + e.getAuthor().getName(), cantidad + str + (tags==null?".":" con las siguientes etiquetas: `" + Tools.arrayToString(tags) +"`."), false);
 			if(autodes) {
-				SandwichBot.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
+				MessageUtils.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
 			}else {
 				e.getChannel().sendMessage(eb2.build()).queue();
 			}
@@ -126,7 +128,7 @@ public class NSFW {
 	@Parameter(name="Busqueda",desc="Texto con el cual se realizará la busqueda en xvideos (ejemplo: 'creampie'... esta vez no me equivoqué de página :smirk:).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	public static void xvideos(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
-		e.getChannel().purgeMessagesById(e.getMessageId());
+		e.getChannel().purgeMessagesById(e.getMessageId());//<span class="duration">23 min
 		String busqueda = null;
 		boolean autodes = false;
 		int autodesTime=15;
@@ -151,13 +153,17 @@ public class NSFW {
 			ArrayList<String> ids = Comparador.EncontrarTodos(Comparador.Patrones.XV_Link, hc);
 			//ArrayList<String> tit = new ArrayList<String>();
 			String tit="";
+			Object[] ss = new String[13];
+			int ii = 0;
 			if(ids.size()>0) {
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setTitle("Resultados de la busqueda:");
 				eb.setColor(Color.DARK_GRAY);
 				for(int i=0;i<ids.size() && i < 24;i=i+2) {
-					tit=ids.get(i).substring(15).replace("_", "");
-					eb.addField("", ">>> [" + tit +"](" + Constantes.RecursoExterno.NSFW.LINK_XV_BASE + ids.get(i) + ")", true);
+					tit=ids.get(i).substring(15).replace("_", " ");
+					tit = (tit.length()>34?tit.substring(0,32)+"...":tit);
+					ss[ii++] = Constantes.RecursoExterno.NSFW.LINK_XV_BASE + ids.get(i);
+					eb.addField("[Opción "+ii+"]", ">>> [" + tit +"](" + Constantes.RecursoExterno.NSFW.LINK_XV_BASE + ids.get(i) + ")", true);
 				}
 				if(autodes) {
 					if(autodesTime<=0) {
@@ -165,10 +171,11 @@ public class NSFW {
 					}else if(autodesTime>900) {
 						autodesTime=900;
 					}
-					SandwichBot.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
+					MessageUtils.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
 				}else {
 					e.getChannel().sendMessage(eb.build()).queue();
 				}
+				ExtraCmdManager.getManager().registerExtraCmd("xv", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD,50, 5, ss);
 				return;
 			}
 			e.getChannel().sendMessage("No se encontraron resultados:pensive:").queue();
@@ -239,7 +246,7 @@ public class NSFW {
 		ControladorImagenes gi;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
-		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ") + "🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ") + "🙊😏😏",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
 		if(cantidad>=8) {
 			gi = new ControladorImagenes(e.getChannel(),fi,eb,true);
 		}else {
@@ -255,7 +262,7 @@ public class NSFW {
 			eb2.addField("A petición de " + e.getAuthor().getName(), cantidad + str + (tags==null?".":" con las siguientes etiquetas: `" + Tools.arrayToString(tags) +"`."), false);
 			eb2.addField("Fuente de la" + (cantidad>1?"s":"") + " imagen" + (cantidad>1?"es":"") + ": " + fi.getName(),".",false);
 			if(autodes) {
-				SandwichBot.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
+				MessageUtils.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
 			}else {
 				e.getChannel().sendMessage(eb2.build()).queue();
 			}
@@ -327,7 +334,7 @@ public class NSFW {
 		ControladorImagenes gi;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
-		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ")+"🙊😏😏",SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ")+"🙊😏😏",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
 		if(cantidad>=8) {
 			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.R34,eb,true);
 		}else {
@@ -361,7 +368,7 @@ public class NSFW {
 			eb2.setColor(Color.red);
 			eb2.addField("A petición de " + e.getAuthor().getName(), cantidad + str + (tags==null?".":" con las siguientes etiquetas: `" + Tools.arrayToString(tags) +"`."), false);
 			if(autodes) {
-				SandwichBot.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
+				MessageUtils.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
 			}else {
 				e.getChannel().sendMessage(eb2.build()).queue();
 			}

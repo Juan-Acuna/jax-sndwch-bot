@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import xyz.sandwichframework.core.LanguageHandler;
 import xyz.sandwichframework.core.util.Language;
+import xyz.sandwichframework.core.util.LanguageHandler;
 
 public class ModelCommand implements Comparable<ModelCommand>{
 	private String id;

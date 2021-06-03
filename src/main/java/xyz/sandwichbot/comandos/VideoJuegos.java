@@ -11,6 +11,7 @@ import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.core.util.MessageUtils;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 
@@ -146,7 +147,7 @@ public class VideoJuegos {
 			eb.setThumbnail(imagen.substring(0, imagen.length()-4)+"_f"+(fuente.length-1)+".png");
 		}*/
 		if(autodes) {
-			SandwichBot.SendAndDestroy(e.getChannel(), eb.build(), autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(), eb.build(), autodesTime);
 		}else {
 			e.getChannel().sendMessage(eb.build()).queue();
 		}

@@ -22,6 +22,7 @@ import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.core.AutoHelpCommand;
 import xyz.sandwichframework.core.ExtraCmdManager;
+import xyz.sandwichframework.core.util.MessageUtils;
 import xyz.sandwichframework.models.*;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 
@@ -57,11 +58,11 @@ public class Especial {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(e.getMessage().getMentionedUsers().size()<=0) {
-			SandwichBot.SendAndDestroy(e.getChannel(),"Debe mencionar a un usuario para registrarlo.", autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),"Debe mencionar a un usuario para registrarlo.", autodesTime);
 			return;
 		}
 		if(!Tools.JAX.register(e.getAuthor().getId(), e.getMessage().getMentionedUsers().get(0).getId())) {
-			SandwichBot.SendAndDestroy(e.getChannel(),"No se pudo registrar", autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),"No se pudo registrar", autodesTime);
 			return;
 		}
 		if(autodes) {
@@ -70,7 +71,7 @@ public class Especial {
 			}else if(autodesTime>900) {
 				autodesTime=900;
 			}
-			SandwichBot.SendAndDestroy(e.getChannel(),"Registrado.", autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),"Registrado.", autodesTime);
 		}else {
 			e.getChannel().sendMessage("Registrado.").queue();
 		}
@@ -98,7 +99,7 @@ public class Especial {
 		String img = null;
 		boolean muteado = false;
 		boolean sordo = false;
-		boolean on = SandwichBot.ActualBot().isBotOn();
+		boolean on = SandwichBot.actualBot().isBotOn();
 		
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
@@ -117,38 +118,38 @@ public class Especial {
 					if(e.getChannelType() == ChannelType.PRIVATE) {
 						continue;
 					}
-					e.getGuild().getMember(SandwichBot.ActualBot().getJDA().getSelfUser()).modifyNickname(p.getValueAsString());
+					e.getGuild().getMember(SandwichBot.actualBot().getJDA().getSelfUser()).modifyNickname(p.getValueAsString());
 				}else if(p.getKey().equalsIgnoreCase("avatar")) {
 					
 					img = p.getValueAsString();
 				}else if(p.getKey().equalsIgnoreCase("conexion")) {
 					switch(p.getValueAsInt()) {
 					case 0:
-						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.OFFLINE);
+						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.OFFLINE);
 						break;
 					case 1:
-						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
+						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
 						break;
 					case 2:
-						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.IDLE);
+						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.IDLE);
 						break;
 					case 3:
-						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
+						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
 						break;
 					case 4:
-						SandwichBot.ActualBot().getJDA().getPresence().setStatus(OnlineStatus.INVISIBLE);
+						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.INVISIBLE);
 						break;
 					}
 				}else if(p.getKey().equalsIgnoreCase("actividad")) {
-					SandwichBot.ActualBot().getJDA().getPresence().setActivity(Activity.playing(p.getValueAsString()));
+					SandwichBot.actualBot().getJDA().getPresence().setActivity(Activity.playing(p.getValueAsString()));
 				}else if(p.getKey().equalsIgnoreCase("mutear")) {
 					muteado = p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("ensordecer")) {
 					sordo = p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("switch")) {
-					SandwichBot.ActualBot().setBotOn(!on);
+					SandwichBot.actualBot().setBotOn(!on);
 				}else if(p.getKey().equalsIgnoreCase("presentarse")) {
-					SandwichBot.ActualBot().presentarse = SandwichBot.ActualBot().presentarse;
+					SandwichBot.actualBot().presentarse = SandwichBot.actualBot().presentarse;
 				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
 					AutoHelpCommand.sendHelp(e.getChannel(), "SET");
 					return;
@@ -164,7 +165,7 @@ public class Especial {
 			}else if(autodesTime>900) {
 				autodesTime=900;
 			}
-			SandwichBot.SendAndDestroy(e.getChannel(),"msg", autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),"msg", autodesTime);
 		}else {
 			e.getChannel().sendMessage("msg").queue();
 		}
@@ -209,7 +210,7 @@ public class Especial {
 					msg = p.getValueAsString();
 				}
 			}
-			List<Guild> glds = e.getAuthor().getJDA().getMutualGuilds(SandwichBot.ActualBot().getJDA().getSelfUser());
+			List<Guild> glds = e.getAuthor().getJDA().getMutualGuilds(SandwichBot.actualBot().getJDA().getSelfUser());
 			if(glds.size()>0) {
 				EmbedBuilder eb = new EmbedBuilder();
 				if(glds.size()==1) {

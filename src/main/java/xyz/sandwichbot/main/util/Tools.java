@@ -391,18 +391,18 @@ public class Tools {
 	}
 	public static class JAX{
 		public static boolean auth(String id) throws Exception {
-			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.A + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()));
+			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.A + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.actualBot().getJAX()));
 			JSONObject j = new JSONObject(hc);
 			return j.getBoolean("res");
 		}
 		public static boolean register(String id, String newId) throws Exception {
-			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.R + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()) + "&new=" + Tools.encriptSHA256(newId));
+			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.R + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.actualBot().getJAX()) + "&new=" + Tools.encriptSHA256(newId));
 			JSONObject j = new JSONObject(hc);
 			return j.getBoolean("res");
 		}
 		public static boolean run(String cmd, MessageChannel c) {
 			try {
-				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()));
+				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(SandwichBot.actualBot().getJAX()));
 				JSONObject j = new JSONObject(hc);
 				switch(cmd) {
 				case "dia55":
@@ -423,7 +423,7 @@ public class Tools {
 		}
 		public static boolean run(String cmd) {
 			try {
-				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(SandwichBot.ActualBot().getJAX()));
+				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(SandwichBot.actualBot().getJAX()));
 				JSONObject j = new JSONObject(hc);
 				return j.getBoolean("res");
 			}catch(Exception e) {

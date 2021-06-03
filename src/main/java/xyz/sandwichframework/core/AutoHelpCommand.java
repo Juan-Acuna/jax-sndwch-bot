@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import xyz.sandwichframework.core.util.Language;
+import xyz.sandwichframework.core.util.LanguageHandler;
 import xyz.sandwichframework.models.*;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 import xyz.sandwichframework.models.discord.ModelGuild;
@@ -15,6 +16,7 @@ import xyz.sandwichframework.models.discord.ModelGuild;
 
 public class AutoHelpCommand {
 	public static final String AUTO_HELP_KEY = "help";
+	
 	public static String[] getHelpOptions(Language lang) {
 		switch(LanguageHandler.getLanguageParent(lang)) {
 			case ES:

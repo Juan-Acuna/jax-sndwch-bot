@@ -18,6 +18,7 @@ import xyz.sandwichframework.annotations.Category;
 import xyz.sandwichframework.annotations.Command;
 import xyz.sandwichframework.annotations.Option;
 import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.core.util.MessageUtils;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 
@@ -46,7 +47,7 @@ public class Musica {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
 		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
-		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Member member = guild.getMember(e.getAuthor());
 		GuildVoiceState memberVoiceState = member.getVoiceState();
@@ -84,7 +85,7 @@ public class Musica {
 	public static void pausar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
-		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		
 		
@@ -114,7 +115,7 @@ public class Musica {
 	public static void siguiente(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
-		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		
 		
@@ -151,7 +152,7 @@ public class Musica {
 	public static void detener(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
-		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		
 		
@@ -179,7 +180,7 @@ public class Musica {
 	public static void actual(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
-		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		
 		
@@ -231,7 +232,7 @@ public class Musica {
 		}
 		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(e.getGuild());
 		if(musicManager.scheduler.queueIsEmpty()) {
-			SandwichBot.SendAndDestroy(e.getChannel(), Tools.stringToEmb("La cola esta vacía."), 15);
+			MessageUtils.SendAndDestroy(e.getChannel(), Tools.stringToEmb("La cola esta vacía."), 15);
 			return;
 		}
 		long estimado = musicManager.scheduler.player.getPlayingTrack().getDuration() - musicManager.scheduler.player.getPlayingTrack().getPosition();
@@ -255,7 +256,7 @@ public class Musica {
 			}else if(autodesTime>900) {
 				autodesTime=900;
 			}
-			SandwichBot.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
 		}else {
 			e.getChannel().sendMessage(eb.build()).queue();
 		}

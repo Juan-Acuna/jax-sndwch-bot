@@ -30,17 +30,25 @@ public class BotGuildsManager {
 		}
 		return false;
 	}
-	public void registerGuild(Guild guild, Language lang) {
+	public ModelGuild registerGuild(Guild guild, Language lang) {
 		ModelGuild g = new ModelGuild(guild.getId(),guild.getName(), lang);
-		guilds.add(g);
-	}
-	public boolean registerGuild(String id, String lastKnownName, Language lang) {
-		ModelGuild g = new ModelGuild(id,lastKnownName,lang);
-		if(guilds.indexOf(g)<0) {
+		int i = guilds.indexOf(g);
+		if(i<0) {
 			guilds.add(g);
-			return true;
+			return g;
+		}else {
+			return guilds.get(i);
 		}
-		return false;
+	}
+	public ModelGuild registerGuild(String id, String lastKnownName, Language lang) {
+		ModelGuild g = new ModelGuild(id,lastKnownName,lang);
+		int i = guilds.indexOf(g);
+		if(i<0) {
+			guilds.add(g);
+			return g;
+		}else {
+			return guilds.get(i);
+		}
 	}
 	public ModelGuild getGuild(String id) {
 		int idx = guilds.indexOf(new ModelGuild(id));

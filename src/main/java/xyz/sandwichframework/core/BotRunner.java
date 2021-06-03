@@ -3,6 +3,7 @@ package xyz.sandwichframework.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,12 +14,16 @@ import java.util.Set;
 import org.reflections.Reflections;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.annotations.configure.*;
+import xyz.sandwichframework.annotations.text.Values;
 import xyz.sandwichframework.core.util.Language;
+import xyz.sandwichframework.core.util.LanguageHandler;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.ModelCategory;
 import xyz.sandwichframework.models.ModelCommand;
@@ -29,11 +34,12 @@ import xyz.sandwichframework.models.InputParameter.InputParamType;
 
 public class BotRunner {
 	//settings
+	protected JDA jda = null;
 	protected String commandsPrefix = ">";
 	protected String optionsPrefix = "-";
 	protected boolean autoHelpCommand = false;
-	protected String help_title;
-	protected String help_description;
+	protected String help_title;		//CORREGIR
+	protected String help_description;	//CORREGIR
 	protected boolean hide_nsfw_category=false;
 	private boolean bot_on;
 	protected Language def_lang = Language.EN;
@@ -42,17 +48,21 @@ public class BotRunner {
 	protected List<ModelCategory> categories;
 	protected List<ModelCommand> commands;
 	private Set<ModelCategory> hcategories;
-	protected Map<String, ModelExtraCommand> xcommands;
 	private Set<Class<?>> configs;
 	protected Reflections reflections;
 	protected static BotRunner _self = null;
-	protected ArrayList<ModelExtraCommand> extraCmds;
 	protected BotGuildsManager guildsManager;
 	public String getPrefix() {
 		return commandsPrefix;
 	}
 	public void setPrefix(String prefix) {
 		this.commandsPrefix = prefix;
+	}
+	public void setJDA(JDA jda) {
+		this.jda=jda;
+	}
+	public JDA getJDA() {
+		return this.jda;
 	}
 	public boolean isAutoHelpCommand() {
 		return autoHelpCommand;
@@ -103,7 +113,6 @@ public class BotRunner {
 		this.def_lang= def_lang; 
 		commands = (List<ModelCommand>)Collections.synchronizedList(new ArrayList<ModelCommand>());
 		hcategories = (Set<ModelCategory>)Collections.synchronizedSet(new HashSet<ModelCategory>());
-		xcommands = (Map<String, ModelExtraCommand>) Collections.synchronizedMap(new HashMap<String, ModelExtraCommand>());
 		this.guildsManager = BotGuildsManager.getManager();
 		try {
 			initialize();
@@ -129,22 +138,53 @@ public class BotRunner {
 				String[] str = p.getName().split("\\.");
 				Reflections r = new Reflections(str[0] + "." + str[1]);
 				// ESCANEO DE CATEGORIAS
-				Set<Class<?>> cats = r.getTypesAnnotatedWith(Category.class);
+				Set<Class<?>> vals = r.getTypesAnnotatedWith(Values.class);
 				Set<Class<?>> xcs = r.getTypesAnnotatedWith(ExtraCommandContainer.class);
+				Set<Class<?>> cats = r.getTypesAnnotatedWith(Category.class);
+				if(vals.size()>0) {
+					for(Class<?> c : vals) {
+						//VALORES
+					}
+				}
 				if(xcs.size()>0) {
 					for(Class<?> c : xcs) {
 						Method[] xcmds = c.getDeclaredMethods();
 						if(xcmds.length>0) {
 							ModelExtraCommand mxc;
 							for(Method m : xcmds) {
-								ExtraCommandName xn = m.getAnnotation(ExtraCommandName.class);
-								String n = m.getName();
-								if(xn!=null) {
-									n = xn.value();
+								ExtraCmdExecutionName xn = m.getAnnotation(ExtraCmdExecutionName.class);
+								ExtraCmdEachExecution xe = m.getAnnotation(ExtraCmdEachExecution.class);
+								ExtraCmdAfterExecution xa = m.getAnnotation(ExtraCmdAfterExecution.class);
+								ExtraCmdNoExecution xne = m.getAnnotation(ExtraCmdNoExecution.class);
+								ExtraCmdFinallyExecution xf = m.getAnnotation(ExtraCmdFinallyExecution.class);
+								mxc = new ModelExtraCommand();
+								String n = null;
+								if(xe!=null) {
+									n = xe.name();
+									mxc.setEach(m);
+								}else if(xa!=null) {
+									n = xa.name();
+									mxc.setAfter(m);
+								}else if(xne!=null) {
+									n = xne.name();
+									mxc.setNoExecuted(m);
+								}else if(xf!=null) {
+									n = xf.name();
+									mxc.setFinally(m);
+								}else if(n==null) {
+									n = m.getName();
+									if(xn!=null)
+										n = xn.value();
+									mxc.setAction(m);
 								}
-								mxc = new ModelExtraCommand(n,m);
-								xcommands.put(n, mxc);
+								mxc.setName(n);
+								ModelExtraCommand.compute(mxc);
 							}
+							/*Collection<ModelExtraCommand> l = ModelExtraCommand.getExtraCommandList();
+							System.out.println("Comandos extra computados: "+l.size()+"\n");
+							for(ModelExtraCommand m : l) {
+								System.out.println("Nombre: "+m.getName());
+							}*/
 						}
 					}
 				}
@@ -291,16 +331,24 @@ public class BotRunner {
 		}
 	}
 	public void listenForCommand(MessageReceivedEvent e) throws Exception {
+		if(e.isWebhookMessage())
+			return;
+		boolean b = e.isFromGuild();
 		String message = e.getMessage().getContentRaw();
 		ExtraCmdManager.getManager().CheckExtras(e.getMessage());
-		if(message.toLowerCase().startsWith(commandsPrefix)) {
-			ModelGuild actualGuild = guildsManager.getGuild(e.getGuild().getId());
+		ModelGuild actualGuild = null;
+		if(message.toLowerCase().startsWith(commandsPrefix) || !b) {
+			Language actualLang = def_lang;
+			if(b) {
+				actualGuild = guildsManager.getGuild(e.getGuild().getId());
+				actualLang = actualGuild.getLanguage();
+			}
 			String r = (message.split(" ")[0]).trim();
 			if(autoHelpCommand) {
-				for(String cs : AutoHelpCommand.getHelpOptions(actualGuild.getLanguage())) {
-					if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cs.toLowerCase())) {
+				for(String cs : AutoHelpCommand.getHelpOptions(actualLang)) {
+					if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cs.toLowerCase()) || r.toLowerCase().equalsIgnoreCase(cs.toLowerCase())) {
 						if(!bot_on) {
-							e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
+							e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualLang)).queue();
 						}
 						Thread runner;
 						Method ayudacmd = AutoHelpCommand.class.getDeclaredMethod("help", MessageReceivedEvent.class, ArrayList.class);
@@ -313,19 +361,41 @@ public class BotRunner {
 				}
 			}
 			for(ModelCommand cmd : commands) {
-				if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cmd.getName(actualGuild.getLanguage()).toLowerCase())){
-					ArrayList<InputParameter> pars = findParametros(actualGuild.getLanguage(),message,cmd);
+				if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + cmd.getName(actualLang).toLowerCase()) || r.toLowerCase().equalsIgnoreCase(cmd.getName(actualLang).toLowerCase())){
+					ArrayList<InputParameter> pars = findParametros(actualLang,message,cmd);
 					if(!cmd.isEnabled()) {
 						if(!cmd.isVisible()) {
 							return;
 						}
 						EmbedBuilder eb = new EmbedBuilder();
-						eb.setTitle(LanguageHandler.commandDisabledMessage(actualGuild.getLanguage()));
+						eb.setTitle(LanguageHandler.commandDisabledMessage(actualLang));
 						e.getChannel().sendMessage(eb.build()).queue();
 						return;
 					}
 					if(!bot_on && !cmd.getCategory().isSpecial()) {
-						e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
+						e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualLang)).queue();
+						return;
+					}
+					if(actualGuild!=null) {
+						if(!actualGuild.isCategoryAllowed(cmd.getCategory().getId())
+								|| !actualGuild.isCommandAllowed(cmd.getId())
+								|| !actualGuild.isRoleAllowed(e.getMember().getRoles().get(0).getId())
+								|| !actualGuild.isChannelAllowed(e.getChannel().getId())
+								|| !actualGuild.isMemberAllowed(e.getMember().getId())) {
+							if(actualGuild.getSpecialRole("admin")==null) {
+								return;
+							}else {
+								boolean rb = false;
+								for(Role role : e.getMember().getRoles()) {
+									if(actualGuild.getSpecialRole("admin").equals(role.getId())) {
+										rb=true;
+										break;
+									}
+								}
+								if(!rb)
+									return;
+							}
+						}
 					}
 					Thread runner;
 					CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
@@ -333,20 +403,47 @@ public class BotRunner {
 					runner.start();
 					return;
 				}else {
-					for(String a : cmd.getAlias(actualGuild.getLanguage())) {
-						if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + a.toLowerCase())) {
-							ArrayList<InputParameter> pars = findParametros(actualGuild.getLanguage(),message,cmd);
+					for(String a : cmd.getAlias(actualLang)) {
+						if(r.toLowerCase().equalsIgnoreCase(commandsPrefix + a.toLowerCase()) || r.toLowerCase().equalsIgnoreCase(a.toLowerCase())) {
+							ArrayList<InputParameter> pars = findParametros(actualLang,message,cmd);
 							if(!cmd.isEnabled()) {
 								if(!cmd.isVisible()) {
 									return;
 								}
 								EmbedBuilder eb = new EmbedBuilder();
-								eb.setTitle(LanguageHandler.commandDisabledMessage(actualGuild.getLanguage()));
+								eb.setTitle(LanguageHandler.commandDisabledMessage(actualLang));
 								e.getChannel().sendMessage(eb.build()).queue();
 								return;
 							}
 							if(!bot_on && !cmd.getCategory().isSpecial()) {
-								e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualGuild.getLanguage())).queue();
+								e.getChannel().sendMessage(LanguageHandler.botOffMessage(actualLang)).queue();
+								return;
+							}
+							if(actualGuild!=null) {
+								List<Role> lr = e.getMember().getRoles();
+								boolean lbr = lr.size()>0;
+								if(lbr) {
+									lbr = !actualGuild.isRoleAllowed(e.getMember().getRoles().get(0).getId());
+								}
+								if(!actualGuild.isCategoryAllowed(cmd.getCategory().getId())
+										|| !actualGuild.isCommandAllowed(cmd.getId())
+										|| lbr
+										|| !actualGuild.isChannelAllowed(e.getChannel().getId())
+										|| !actualGuild.isMemberAllowed(e.getMember().getId())) {
+									if(actualGuild.getSpecialRole("admin")==null) {
+										return;
+									}else {
+										boolean rb = false;
+										for(Role role : e.getMember().getRoles()) {
+											if(actualGuild.getSpecialRole("admin").equals(role.getId())) {
+												rb=true;
+												break;
+											}
+										}
+										if(!rb)
+											return;
+									}
+								}
 							}
 							Thread runner;
 							CommandRunner cr = new CommandRunner(cmd.getSource(), pars, e);
@@ -359,7 +456,7 @@ public class BotRunner {
 			}
 		}
 	}
-	public void listenForPrivateCommand(PrivateMessageReceivedEvent e) throws Exception {
+	public void listenForPrivateCommand(PrivateMessageReceivedEvent e) throws Exception {/*
 		ModelGuild actualGuild = guildsManager.getGuild(e.getAuthor().getJDA().getMutualGuilds(SandwichBot.ActualBot().getJDA().getSelfUser()).get(0).getId());
 		String message = e.getMessage().getContentRaw();
 		String r = (message.split(" ")[0]).trim();
@@ -426,7 +523,7 @@ public class BotRunner {
 					}
 				}
 			}
-		}
+		}*/
 	}
 	private ArrayList<InputParameter> findParametros(Language lang, String input,ModelCommand command){
 		String[] s = input.split(" ");

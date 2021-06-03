@@ -25,9 +25,12 @@ import xyz.sandwichbot.main.util.lavaplayer.GuildMusicManager;
 import xyz.sandwichbot.main.util.lavaplayer.PlayerManager;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.core.BotGuildsManager;
 import xyz.sandwichframework.core.ExtraCmdManager;
+import xyz.sandwichframework.core.util.MessageUtils;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
+import xyz.sandwichframework.models.discord.ModelGuild;
 
 @Category(desc="Comandos frecuentes con propósitos variados.")
 public class Comun {
@@ -67,14 +70,14 @@ public class Comun {
 				}else if(autodesTime>900) {
 					autodesTime=900;
 				}
-				SandwichBot.SendAndDestroy(e.getChannel(),"Wena po "+nombre+" ql!", autodesTime);
+				MessageUtils.SendAndDestroy(e.getChannel(),"Wena po "+nombre+" ql!", autodesTime);
 			}else {
 				e.getChannel().sendMessage("Wena po "+nombre+" ql!").queue();
 			}
 			return;
 		}
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setThumbnail(SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setThumbnail(SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
 		e.getChannel().sendMessage(eb.build()).queue();
 		e.getChannel().sendMessage("Debe especificar un nombre.").queue();
 	}
@@ -129,16 +132,16 @@ public class Comun {
 					}else if(autodesTime>900) {
 						autodesTime=900;
 					}
-					SandwichBot.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
+					MessageUtils.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
 				}else {
 					e.getChannel().sendMessage(eb.build()).queue();
 				}
 				return;
 			}
-			SandwichBot.SendAndDestroy(e.getChannel(),"No se encontraron resultados):", 10);
+			MessageUtils.SendAndDestroy(e.getChannel(),"No se encontraron resultados):", 10);
 			return;
 		}else {
-			SandwichBot.SendAndDestroy(e.getChannel(),"Debe especificar una busqueda.", 10);
+			MessageUtils.SendAndDestroy(e.getChannel(),"Debe especificar una busqueda.", 10);
 		}
 		
 	}
@@ -168,7 +171,7 @@ public class Comun {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		Guild guild = e.getGuild();
-		Member m = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		Member m = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState vs = m.getVoiceState();
 		Member invocador = guild.getMember(e.getAuthor());
 		VoiceChannel vchannel = invocador.getVoiceState().getChannel();
@@ -181,7 +184,7 @@ public class Comun {
 		if(!invocador.getVoiceState().inVoiceChannel()) {
 			//necesita estar en un canal de voz para reproducir musica
 			if(autodes) {
-				SandwichBot.SendAndDestroy(e.getChannel(),"primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@",autodesTime);
+				MessageUtils.SendAndDestroy(e.getChannel(),"primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@",autodesTime);
 			}else {
 				e.getChannel().sendMessage("primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@").queue();
 			}
@@ -189,7 +192,7 @@ public class Comun {
 		}
 		AudioManager audioManager = guild.getAudioManager();
 		if(autodes) {
-			SandwichBot.SendAndDestroy(e.getChannel(),"voy",autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),"voy",autodesTime);
 		}else {
 			e.getChannel().sendMessage("voy").queue();
 		}
@@ -218,13 +221,14 @@ public class Comun {
 				}
 			}
 		}
+		ModelGuild server = BotGuildsManager.getManager().getGuild(e.getTextChannel().getGuild().getId());
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(autodes) {
-			SandwichBot.SendAndDestroy(e.getChannel(),SandwichBot.getInfo(e.getTextChannel().isNSFW()),autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),SandwichBot.getInfo(server.getLanguage()),autodesTime);
 		}else {
-			e.getChannel().sendMessage(SandwichBot.getInfo(e.getTextChannel().isNSFW())).queue();
+			e.getChannel().sendMessage(SandwichBot.getInfo(server.getLanguage())).queue();
 		}
 	}
 	
@@ -328,7 +332,7 @@ public class Comun {
 		eb.setImage(Tools.toValidHttpUrl(img));
 		if(thumb!=null) {
 			if(thumb.equals("none")) {
-				thumb = SandwichBot.ActualBot().getJDA().getSelfUser().getAvatarUrl();
+				thumb = SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl();
 			}
 		}
 		eb.setThumbnail(Tools.toValidHttpUrl(thumb));
@@ -353,7 +357,7 @@ public class Comun {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(autodes) {
-			SandwichBot.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
 		}else {
 			e.getChannel().sendMessage(eb.build()).queue();
 		}
@@ -463,7 +467,7 @@ public class Comun {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(autodes) {
-			SandwichBot.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
 		}else {
 			e.getChannel().sendMessage(eb.build()).queue();
 		}
@@ -509,7 +513,7 @@ public class Comun {
 		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
 		Member member;
-		Member self = guild.getMember(SandwichBot.ActualBot().getJDA().getSelfUser());
+		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		if(e.getMessage().getMentionedMembers().size()>0) {
 			member = e.getMessage().getMentionedMembers().get(0);
 		}else {
@@ -534,5 +538,10 @@ public class Comun {
 				audioManager.closeAudioConnection();
 			}
 		}
+	}
+	@Command(name="Test")
+	public static void test(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+		/*MessageEmbed me = MessageUtils.createVideoEmbed("Este es un embed", "este es un embed de ejemplo", "https://www.youtube.com/embed/RydO8iGhwEY","YouTube","https://www.youtube.com");
+		e.getChannel().sendMessage(me).queue();*/
 	}
 }
