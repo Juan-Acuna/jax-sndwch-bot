@@ -9,7 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
-
+/**
+ * Representa un Comando extra (comandos que se activan por otros comandos a la espera de una respuesta).
+ * Represents an Extra command (commands which are activated by others[commands] and wait for an answer).
+ * @author Juancho
+ * @version 1.0
+ */
 public class ModelExtraCommand {
 	private static Map<String, ModelExtraCommand> xcont = (Map<String, ModelExtraCommand>) Collections.synchronizedMap(new HashMap<String, ModelExtraCommand>());
 	String name;
@@ -41,7 +46,7 @@ public class ModelExtraCommand {
 			xcont.put(xcmd.name, xcmd);
 			m = xcmd;
 		}
-		System.out.println("comando computado: "+m.getName());
+		//System.out.println("comando computado: "+m.getName());
 		if(xcmd.action!=null)
 			m.setAction(xcmd.action);
 		if(xcmd._each!=null)

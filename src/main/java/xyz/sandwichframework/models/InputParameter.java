@@ -1,6 +1,10 @@
 package xyz.sandwichframework.models;
-
-
+/**
+ * Representa la entrada del usuario.
+ * Represents the user's input.
+ * @author Juancho
+ * @version 1.0
+ */
 public class InputParameter {
 	private String key = "none";
 	private String value = "none";

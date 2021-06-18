@@ -94,6 +94,6 @@ public class Constantes {
 			}
 			
 			public static final String LINK_XV_BASE = "https://www.xvideos.com";
-		}//html5player.setVideoUrlHigh('https://cdn77-vid.xvideos-cdn.com/_5Ut49geBzNjiIOq1qm1yw==,1622186773/videos/mp4/2/1/d/xvideos.com_21d0cf7c44b55f0ab4952dbc02b6e6e1.mp4?ui=MTkwLjEwMi4yMzkuMTY2LS92aWRlbzYyOTY0NzM5L3RlZW5fYmxvbmRpZV9udQ==');
+		}
 	}
 }

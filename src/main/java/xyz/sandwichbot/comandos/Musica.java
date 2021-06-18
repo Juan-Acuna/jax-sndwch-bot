@@ -18,9 +18,13 @@ import xyz.sandwichframework.annotations.Category;
 import xyz.sandwichframework.annotations.Command;
 import xyz.sandwichframework.annotations.Option;
 import xyz.sandwichframework.core.AutoHelpCommand;
+import xyz.sandwichframework.core.BotGuildsManager;
+import xyz.sandwichframework.core.Values;
+import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.MessageUtils;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
+import xyz.sandwichframework.models.discord.ModelGuild;
 
 @Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
 public class Musica {
@@ -29,6 +33,13 @@ public class Musica {
 		boolean autodes=false;
 		int autodesTime =15;
 		String busqueda =null;
+		Language lang = Language.ES;
+		ModelGuild servidor;
+		if(e.isFromGuild()) {
+			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
+			if(servidor!=null)
+				lang=servidor.getLanguage();
+		}
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
@@ -36,9 +47,6 @@ public class Musica {
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Reproducir");
-					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
 				busqueda = p.getValueAsString();
@@ -52,7 +60,7 @@ public class Musica {
 		Member member = guild.getMember(e.getAuthor());
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@").queue();
+			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}/*
 		if(!selfVoiceState.inVoiceChannel()) {
@@ -61,7 +69,7 @@ public class Musica {
 		}*/
 		VoiceChannel vchannel = memberVoiceState.getChannel();
 		if(selfVoiceState.inVoiceChannel() && (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel()))) {
-			tChannel.sendMessage("sorry pero espera tu turno, o puedes venir y pedirme musica (y otras cosas:smirk:)").queue();
+			tChannel.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
 			return;
 		}
 		if(busqueda==null) {
@@ -69,7 +77,7 @@ public class Musica {
 				musicManager.scheduler.player.setPaused(false);
 				return;
 			}
-			e.getChannel().sendMessage("Debe ingresar una busqueda.").queue();
+			e.getChannel().sendMessage(Values.value("jax-yt-ingresar-busqueda", lang)).queue();
 			return;
 		}
 		
@@ -87,27 +95,32 @@ public class Musica {
 		Guild guild = e.getGuild();
 		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		
-		
+		Language lang = Language.ES;
+		ModelGuild servidor;
+		if(e.isFromGuild()) {
+			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
+			if(servidor!=null)
+				lang=servidor.getLanguage();
+		}
 		if(!selfVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("No estoy en tu canal de voz").queue();
+			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
 		Member member = guild.getMember(e.getAuthor());
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("conectate a un canal de voz poh sacowea").queue();
+			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-			tChannel.sendMessage("tienes que estar conmigo en el canal de voz para pedirme musica (y otras cosas:smirk:)").queue();
+			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		
 		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
 		boolean b = musicManager.scheduler.player.isPaused();
 		musicManager.scheduler.player.setPaused(!b);
-		tChannel.sendMessage(Tools.stringToEmb(b?"Reproduciendo.":"Cancion pausada.")).queue();
+		tChannel.sendMessage(Tools.stringToEmb(b?Values.value("jax-musica-reproduciendo", lang):Values.value("jax-musica-pausado", lang))).queue();
 
 	}
 	
@@ -117,34 +130,39 @@ public class Musica {
 		Guild guild = e.getGuild();
 		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		
-		
+		Language lang = Language.ES;
+		ModelGuild servidor;
+		if(e.isFromGuild()) {
+			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
+			if(servidor!=null)
+				lang=servidor.getLanguage();
+		}
 		if(!selfVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("No estoy en tu canal de voz").queue();
+			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
 		Member member = guild.getMember(e.getAuthor());
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("conectate a un canal de voz poh sacowea").queue();
+			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-			tChannel.sendMessage("tienes que estar conmigo en el canal de voz para pedirme musica (y otras cosas:smirk:)").queue();
+			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
 		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
 		AudioPlayer player = musicManager.audioPlayer;
 		
 		if(player.getPlayingTrack() == null) {
-			tChannel.sendMessage("No se esta reproduciendo ninguna canción.").queue();
+			tChannel.sendMessage(Values.value("jax-musica-no-reproduciendo", lang)).queue();
 			return;
 		}
-		tChannel.sendMessage(Tools.stringToEmb("Saltando...")).queue();
+		tChannel.sendMessage(Tools.stringToEmb(Values.value("jax-musica-saltando", lang))).queue();
 		AudioTrack a = musicManager.scheduler.nextTrack();
 		if(a!=null) {
-			tChannel.sendMessage(Tools.stringToEmb("Reproduciendo: " + a.getInfo().title));
+			tChannel.sendMessage(Tools.stringToEmb(Values.formatedValue("jax-musica-rep-ahora", lang, a.getInfo().title)));
 		}
 	}
 	
@@ -154,20 +172,25 @@ public class Musica {
 		Guild guild = e.getGuild();
 		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		
-		
+		Language lang = Language.ES;
+		ModelGuild servidor;
+		if(e.isFromGuild()) {
+			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
+			if(servidor!=null)
+				lang=servidor.getLanguage();
+		}
 		if(!selfVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("No estoy en tu canal de voz").queue();
+			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
 		Member member = guild.getMember(e.getAuthor());
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("conectate a un canal de voz poh sacowea").queue();
+			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-			tChannel.sendMessage("tienes que estar conmigo en el canal de voz para pedirme musica (y otras cosas:smirk:)").queue();
+			tChannel.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
 			return;
 		}
 		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
@@ -182,21 +205,26 @@ public class Musica {
 		Guild guild = e.getGuild();
 		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		
-		
+		Language lang = Language.ES;
+		ModelGuild servidor;
+		if(e.isFromGuild()) {
+			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
+			if(servidor!=null)
+				lang=servidor.getLanguage();
+		}
 		if(!selfVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("No estoy en tu canal de voz").queue();
+			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
 		Member member = guild.getMember(e.getAuthor());
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage("conectate a un canal de voz poh sacowea").queue();
+			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-			tChannel.sendMessage("tienes que estar conmigo en el canal de voz para pedirme musica (y otras cosas:smirk:)").queue();
+			tChannel.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
 			return;
 		}
 		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
@@ -224,11 +252,15 @@ public class Musica {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Cola");
-					return;
 				}
 			}
+		}
+		Language lang = Language.ES;
+		ModelGuild servidor;
+		if(e.isFromGuild()) {
+			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
+			if(servidor!=null)
+				lang=servidor.getLanguage();
 		}
 		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(e.getGuild());
 		if(musicManager.scheduler.queueIsEmpty()) {

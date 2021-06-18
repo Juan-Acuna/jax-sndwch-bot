@@ -1,5 +1,10 @@
 package xyz.sandwichframework.models.discord;
-
+/**
+ * Representa un Rol de Discord.
+ * Represents a Discord's Role.
+ * @author Juancho
+ * @version 0.3
+ */
 public class ModelRole {
 	private String id;
 	private String lastKnownName;

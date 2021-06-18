@@ -10,7 +10,12 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageEmbed.AuthorInfo;
 import net.dv8tion.jda.api.entities.MessageEmbed.Provider;
 import net.dv8tion.jda.api.entities.MessageEmbed.VideoInfo;
-
+/**
+ * Funciones útiles para mensajes en Discord.
+ * Useful functions for messages on Discord.
+ * @author Juancho
+ * @version 0.7
+ */
 public class MessageUtils {
 	public static void SendAndDestroy(MessageChannel c, MessageEmbed emb, int time) {
 		c.sendMessage(emb).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));

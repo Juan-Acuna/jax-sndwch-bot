@@ -1,6 +1,5 @@
 package xyz.sandwichframework.core;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,7 +11,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import net.dv8tion.jda.api.entities.*;
 import xyz.sandwichframework.models.ModelExtraCommand;
-
+/**
+ * Manejador de Comandos extra.
+ * Manager of Extra commands.
+ * @author Juancho
+ * @version 1.0
+ */
 public class ExtraCmdManager {
 	private static final String wildcard = "\\*/";
 	private static final String string_wildcard = wildcard +"{s}";
@@ -129,7 +133,6 @@ public class ExtraCmdManager {
 				action.NoRun(channel, noArgs);
 			}
 			action.finallyRun(channel, finallyArgs);
-			//System.out.println("EJECUCION TERMINADA:\nTIEMPO: "+s+"/"+maxSeg+", MENSAJES: "+msgs+"/"+maxMsg+", EJECUTADO: "+ (b?"No":"Si"));
 			threads.get(channel).remove(this);
 		}
 		protected void PutMessage(String message, String authorId) {

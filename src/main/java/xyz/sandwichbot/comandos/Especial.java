@@ -46,9 +46,6 @@ public class Especial {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "REG");
-					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
 				usr = p.getValueAsString();
@@ -150,9 +147,6 @@ public class Especial {
 					SandwichBot.actualBot().setBotOn(!on);
 				}else if(p.getKey().equalsIgnoreCase("presentarse")) {
 					SandwichBot.actualBot().presentarse = SandwichBot.actualBot().presentarse;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "SET");
-					return;
 				}
 			}
 		}
@@ -202,16 +196,14 @@ public class Especial {
 						canal = p.getValueAsString();
 					}else if(p.getKey().equalsIgnoreCase("servidor")) {
 						servidor = p.getValueAsString();
-					}*/else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-						AutoHelpCommand.sendHelp(e.getChannel(), "SEND");
-						return;
-					}
+					}*/
 				}else if(p.getType() == InputParamType.Custom){
 					msg = p.getValueAsString();
 				}
 			}
 			List<Guild> glds = e.getAuthor().getJDA().getMutualGuilds(SandwichBot.actualBot().getJDA().getSelfUser());
 			if(glds.size()>0) {
+				
 				EmbedBuilder eb = new EmbedBuilder();
 				if(glds.size()==1) {
 					eb.setTitle("Servidor *'"+glds.get(0).getName() +"'*");

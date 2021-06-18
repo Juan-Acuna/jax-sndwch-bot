@@ -6,7 +6,12 @@ import java.util.HashMap;
 
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.LanguageHandler;
-
+/**
+ * Representa una Categoría.
+ * Represents a Category.
+ * @author Juancho
+ * @version 1.0
+ */
 public class ModelCategory implements Comparable<ModelCategory>{
 	private String id;
 	private HashMap<Language,String> name;

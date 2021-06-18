@@ -6,7 +6,12 @@ import java.util.ArrayList;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import xyz.sandwichframework.models.InputParameter;
-
+/**
+ * Clase que ejecuta los comandos.
+ * Class that runs the commands.
+ * @author Juancho
+ * @version 1.0
+ */
 class CommandRunner implements Runnable{
 
 	private Method method;

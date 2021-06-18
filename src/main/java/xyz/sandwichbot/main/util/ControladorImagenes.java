@@ -14,10 +14,13 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import xyz.sandwichbot.main.Constantes;
 import xyz.sandwichbot.main.SandwichBot;
+import xyz.sandwichframework.core.Values;
+import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.MessageUtils;
 
 public class ControladorImagenes implements Runnable{
 
+	protected Language lang = Language.ES;
 	MessageChannel channel;
 	boolean pausado = false;
 	FuenteImagen fuente;
@@ -51,7 +54,7 @@ public class ControladorImagenes implements Runnable{
 				//System.out.println("lnk: " + lnk);
 				if(lnk==null) {
 					EmbedBuilder eb = new EmbedBuilder();
-					eb.setFooter("No se encontró contenido (#PichulaTriste), intentalo nuevamente",Constantes.JaxSandwich.Imagenes.nonsfw);
+					eb.setFooter(Values.value("jax-no-cont", lang),Constantes.JaxSandwich.Imagenes.nonsfw);
 					MessageUtils.SendAndDestroy(channel, eb.build(), 15);
 					return;
 				}
@@ -75,13 +78,9 @@ public class ControladorImagenes implements Runnable{
 				channel.sendMessage(builder.build()).queue();
 			}
 		} catch (Exception e) {
-			//System.out.println("**ERROR****************");
 			e.printStackTrace();
-			//System.out.println(e.getLocalizedMessage());
-			//System.out.println("**ERROR****************");
 			lock.unlock();
 		}
-		
 	}
 	
 	private String linkAPI() throws Exception {
@@ -167,19 +166,19 @@ public class ControladorImagenes implements Runnable{
 			return null;
 		}
 	}
-	private String linkCustom(String url) throws Exception {//INCOMPLETO
+	/*protected String linkCustom(String url) throws Exception {//INCOMPLETO
 		String hc = ClienteHttp.peticionHttp(url);
 		if(hc == null) {
 			throw new Exception();
 		}
 		JSONObject j = new JSONObject(hc);
 		return j.getString("file");
-	}
+	}*/
 	
 	public void enviarRestriccion() {
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.addField("¡Deja esa cosa horrorosa o verás!....", "Este canal no permite este tipo de contenido :smirk:", true);
-		eb.setFooter("Busca un canal con la etiqueta \"NSFW\" y yo mism@ te quito la ropa 🍑🍆😈👉👌😏",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.addField(Values.value("jax-no-nsfw-ft", lang), Values.value("jax-no-nsfw-fd", lang), true);
+		eb.setFooter(Values.value("jax-no-nsfw-ftr", lang),SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
 		eb.setThumbnail(Constantes.JaxSandwich.Imagenes.nonsfw);
 		eb.setColor(Color.red);
 		channel.sendMessage(eb.build()).queue();
@@ -201,6 +200,9 @@ public class ControladorImagenes implements Runnable{
 	
 	
 	/* GETTERS SETTERS */
+	public void setLang(Language lang) {
+		this.lang=lang;
+	}
 	public MessageChannel getChannel() {
 		return channel;
 	}

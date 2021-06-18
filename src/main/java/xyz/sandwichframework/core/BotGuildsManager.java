@@ -1,21 +1,26 @@
 package xyz.sandwichframework.core;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import net.dv8tion.jda.api.entities.Guild;
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.models.discord.ModelGuild;
-
+/**
+ * Clase cuyo trabajo es manejar todos los servidores en los que el bot ha sido invitado.
+ * Class whic job is manage all the guilds that the bot has been invited.
+ * @author Juancho
+ * @version 0.9
+ */
 public class BotGuildsManager {
 	
 	private static BotGuildsManager _instancia = new BotGuildsManager();
-	private ArrayList<ModelGuild> guilds;
+	private Map<Long, ModelGuild> guilds;
 	
 	private BotGuildsManager() {
-		guilds = new ArrayList<ModelGuild>();
+		guilds = Collections.synchronizedMap(new HashMap<Long, ModelGuild>());
 	}
 	public static BotGuildsManager getManager() {
 		if(_instancia!=null) {
@@ -24,40 +29,35 @@ public class BotGuildsManager {
 		return _instancia = new BotGuildsManager();
 	}
 	public boolean registerGuild(ModelGuild guild) {
-		if(guilds.indexOf(guild)<0) {
-			guilds.add(guild);
+		if(guilds.get(guild.getId())==null) {
+			guilds.put(guild.getId(),guild);
+			System.out.println("G:"+guild.getId()+"|"+guild.getLastKnownName()+"|"+guild.getLanguage());
 			return true;
 		}
 		return false;
 	}
 	public ModelGuild registerGuild(Guild guild, Language lang) {
-		ModelGuild g = new ModelGuild(guild.getId(),guild.getName(), lang);
-		int i = guilds.indexOf(g);
-		if(i<0) {
-			guilds.add(g);
+		ModelGuild g = new ModelGuild(guild.getIdLong(),guild.getName(), lang);
+		if(guilds.get(guild.getIdLong())==null) {
+			guilds.put(guild.getIdLong(), g);
 			return g;
 		}else {
-			return guilds.get(i);
+			return guilds.get(guild.getIdLong());
 		}
 	}
-	public ModelGuild registerGuild(String id, String lastKnownName, Language lang) {
+	public ModelGuild registerGuild(long id, String lastKnownName, Language lang) {
 		ModelGuild g = new ModelGuild(id,lastKnownName,lang);
-		int i = guilds.indexOf(g);
-		if(i<0) {
-			guilds.add(g);
+		if(guilds.get(id)==null) {
+			guilds.put(id, g);
 			return g;
 		}else {
-			return guilds.get(i);
+			return guilds.get(id);
 		}
 	}
-	public ModelGuild getGuild(String id) {
-		int idx = guilds.indexOf(new ModelGuild(id));
-		if(idx>=0) {
-			return guilds.get(idx);
-		}
-		return null;
+	public ModelGuild getGuild(long id) {
+		return guilds.get(id);
 	}
-	public void loadData(List<ModelGuild> data) {
+	public void loadData(List<? extends ModelGuild> data) {
 		for(ModelGuild g : data) {
 			registerGuild(g);
 		}
@@ -72,8 +72,8 @@ public class BotGuildsManager {
 	}
 	public int joinedGuildsCount() {
 		int i=0;
-		for(ModelGuild g : guilds) {
-			if(g.isJoined()) {
+		for(long id : guilds.keySet()) {
+			if(guilds.get(id).isJoined()) {
 				i++;
 			}
 		}

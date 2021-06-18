@@ -3,7 +3,6 @@ package xyz.sandwichframework.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +17,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
-import xyz.sandwichbot.main.SandwichBot;
 import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.annotations.configure.*;
+import xyz.sandwichframework.annotations.text.ValueID;
 import xyz.sandwichframework.annotations.text.Values;
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.LanguageHandler;
@@ -31,7 +30,12 @@ import xyz.sandwichframework.models.ModelExtraCommand;
 import xyz.sandwichframework.models.ModelOption;
 import xyz.sandwichframework.models.discord.ModelGuild;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
-
+/**
+ * Clase para configurar el bot.
+ * Class for bot configuration.
+ * @author Juancho
+ * @version 1.0
+ */
 public class BotRunner {
 	//settings
 	protected JDA jda = null;
@@ -48,6 +52,7 @@ public class BotRunner {
 	protected List<ModelCategory> categories;
 	protected List<ModelCommand> commands;
 	private Set<ModelCategory> hcategories;
+	protected Map<String, Map<Language, String>> tempVals;
 	private Set<Class<?>> configs;
 	protected Reflections reflections;
 	protected static BotRunner _self = null;
@@ -113,6 +118,8 @@ public class BotRunner {
 		this.def_lang= def_lang; 
 		commands = (List<ModelCommand>)Collections.synchronizedList(new ArrayList<ModelCommand>());
 		hcategories = (Set<ModelCategory>)Collections.synchronizedSet(new HashSet<ModelCategory>());
+		configs = (Set<Class<?>>)Collections.synchronizedSet(new HashSet<Class<?>>());
+		tempVals = new HashMap<String, Map<Language, String>>();
 		this.guildsManager = BotGuildsManager.getManager();
 		try {
 			initialize();
@@ -129,11 +136,21 @@ public class BotRunner {
 	}
 	private void initialize() throws Exception {
 		Package[] pkgs = Package.getPackages();
+		boolean u = true;
 		for(Package p : pkgs) {
-			if(!(p.getName().startsWith("xyz.sandwichframework.") || p.getName().startsWith("sun.") || p.getName().startsWith("java.")
-					|| p.getName().startsWith("com.google") || p.getName().startsWith("net.dv8tion.jda")
-					|| p.getName().startsWith("javassist") || p.getName().startsWith("org.reflections")
-					|| p.getName().startsWith("jdk.") || p.getName().startsWith("org.slf4j."))) { //PACKAGES QUE SE OCUPAN DENTRO DEL FRAMEWORK
+			String pn = p.getName();
+			if(pn.startsWith("xyz.sandwichframework.")) {
+				if(u) {
+					pn = "xyz.sandwichframework.core.util.defaultvalues";
+				}else {
+					continue;
+				}
+				
+			}
+			if(!(pn.startsWith("sun.") || pn.startsWith("java.")
+					|| pn.startsWith("com.google") || pn.startsWith("net.dv8tion.jda")
+					|| pn.startsWith("javassist") || pn.startsWith("org.reflections")
+					|| pn.startsWith("jdk.") || pn.startsWith("org.slf4j.")) || pn.equals("xyz.sandwichframework.core.util.defaultvalues")) { //PACKAGES QUE SE OCUPAN DENTRO DEL FRAMEWORK
 				// AQUI VA LO QUE SE DEBE HACER CON CADA PACKAGE
 				String[] str = p.getName().split("\\.");
 				Reflections r = new Reflections(str[0] + "." + str[1]);
@@ -141,9 +158,24 @@ public class BotRunner {
 				Set<Class<?>> vals = r.getTypesAnnotatedWith(Values.class);
 				Set<Class<?>> xcs = r.getTypesAnnotatedWith(ExtraCommandContainer.class);
 				Set<Class<?>> cats = r.getTypesAnnotatedWith(Category.class);
+				Set<Class<?>> cfgs = r.getTypesAnnotatedWith(Configuration.class);
 				if(vals.size()>0) {
 					for(Class<?> c : vals) {
-						//VALORES
+						Language l = c.getDeclaredAnnotation(Values.class).value();
+						Map<Language, String> m;
+						Field[] fs = c.getDeclaredFields();
+						for(Field f : fs) {
+							ValueID id = f.getDeclaredAnnotation(ValueID.class);
+							if(id!=null) {
+								if(tempVals.get(id.value())!=null) {
+									m = tempVals.get(id.value());
+								}else {
+									m = new HashMap<Language, String>();
+									tempVals.put(id.value(), m);
+								}
+								m.put(l, (String) f.get(null));
+							}
+						}
 					}
 				}
 				if(xcs.size()>0) {
@@ -180,11 +212,6 @@ public class BotRunner {
 								mxc.setName(n);
 								ModelExtraCommand.compute(mxc);
 							}
-							/*Collection<ModelExtraCommand> l = ModelExtraCommand.getExtraCommandList();
-							System.out.println("Comandos extra computados: "+l.size()+"\n");
-							for(ModelExtraCommand m : l) {
-								System.out.println("Nombre: "+m.getName());
-							}*/
 						}
 					}
 				}
@@ -227,12 +254,15 @@ public class BotRunner {
 						cmdcategory.sortCommands();
 						hcategories.add(cmdcategory);
 					}
-					
 				}
-				configs = r.getTypesAnnotatedWith(Configuration.class);
-				//break;
+				if(cfgs.size()>0) {
+					for(Class<?> cc : cfgs) {
+						configs.add(cc);
+					}
+				}
 			}
 		}
+		xyz.sandwichframework.core.Values.initialize(tempVals);
 		categories = (List<ModelCategory>)Collections.synchronizedList(new ArrayList<>(hcategories));
 		Collections.sort(categories);
 		hcategories = null;
@@ -340,7 +370,7 @@ public class BotRunner {
 		if(message.toLowerCase().startsWith(commandsPrefix) || !b) {
 			Language actualLang = def_lang;
 			if(b) {
-				actualGuild = guildsManager.getGuild(e.getGuild().getId());
+				actualGuild = guildsManager.getGuild(e.getGuild().getIdLong());
 				actualLang = actualGuild.getLanguage();
 			}
 			String r = (message.split(" ")[0]).trim();
@@ -377,9 +407,13 @@ public class BotRunner {
 						return;
 					}
 					if(actualGuild!=null) {
+						boolean b12 = true;
+						if(e.getMember().getRoles().size()>0) {
+							b12 = actualGuild.isRoleAllowed(e.getMember().getRoles().get(0).getId());
+						}
 						if(!actualGuild.isCategoryAllowed(cmd.getCategory().getId())
 								|| !actualGuild.isCommandAllowed(cmd.getId())
-								|| !actualGuild.isRoleAllowed(e.getMember().getRoles().get(0).getId())
+								|| !b12
 								|| !actualGuild.isChannelAllowed(e.getChannel().getId())
 								|| !actualGuild.isMemberAllowed(e.getMember().getId())) {
 							if(actualGuild.getSpecialRole("admin")==null) {

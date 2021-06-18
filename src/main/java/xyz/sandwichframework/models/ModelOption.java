@@ -4,7 +4,12 @@ import java.util.HashMap;
 
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.LanguageHandler;
-
+/**
+ * Representa una Opción.
+ * Represents an Option.
+ * @author Juancho
+ * @version 1.0
+ */
 public class ModelOption implements Comparable<ModelOption>{
 	private String id;
 	private HashMap<Language, String> name;

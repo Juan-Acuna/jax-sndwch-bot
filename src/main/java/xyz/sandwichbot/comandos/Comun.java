@@ -27,6 +27,8 @@ import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.core.AutoHelpCommand;
 import xyz.sandwichframework.core.BotGuildsManager;
 import xyz.sandwichframework.core.ExtraCmdManager;
+import xyz.sandwichframework.core.Values;
+import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.MessageUtils;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
@@ -52,9 +54,6 @@ public class Comun {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Saludar");
-					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
 				nombre = p.getValueAsString();
@@ -86,6 +85,13 @@ public class Comun {
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void youtube(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+		Language lang = Language.ES;
+		ModelGuild servidor;
+		if(e.isFromGuild()) {
+			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
+			if(servidor!=null)
+				lang=servidor.getLanguage();
+		}
 		String busqueda = null;
 		boolean autodes = false;
 		int autodesTime=15;
@@ -99,9 +105,6 @@ public class Comun {
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "YouTube");
-					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
 				busqueda = p.getValueAsString();
@@ -118,7 +121,7 @@ public class Comun {
 			ArrayList<String> tit = Comparador.EncontrarTodos(Comparador.Patrones.Youtube_Title, hc);
 			if(ids.size()>0) {
 				EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle("Resultados de la busqueda:");
+				eb.setTitle(Values.value("jax-resultado-busqueda", lang));
 				eb.setColor(Color.DARK_GRAY);
 				for(int i=0;i<ids.size() && i<24;i++) {
 					if(i>=tit.size()) {
@@ -138,10 +141,10 @@ public class Comun {
 				}
 				return;
 			}
-			MessageUtils.SendAndDestroy(e.getChannel(),"No se encontraron resultados):", 10);
+			MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-yt-no-resultados", lang), 10);
 			return;
 		}else {
-			MessageUtils.SendAndDestroy(e.getChannel(),"Debe especificar una busqueda.", 10);
+			MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-yt-ingresar-busqueda", lang), 10);
 		}
 		
 	}
@@ -161,14 +164,18 @@ public class Comun {
 					}
 				}if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Presentacion");
-					return;
 				}
 			}
 		}
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
+		}
+		Language lang = Language.ES;
+		ModelGuild servidor;
+		if(e.isFromGuild()) {
+			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
+			if(servidor!=null)
+				lang=servidor.getLanguage();
 		}
 		Guild guild = e.getGuild();
 		Member m = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
@@ -184,22 +191,22 @@ public class Comun {
 		if(!invocador.getVoiceState().inVoiceChannel()) {
 			//necesita estar en un canal de voz para reproducir musica
 			if(autodes) {
-				MessageUtils.SendAndDestroy(e.getChannel(),"primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@",autodesTime);
+				MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-i-audio-requerido", lang),autodesTime);
 			}else {
-				e.getChannel().sendMessage("primero te tienes que meter a un canal de voz para invocarme, no sea gil manit@").queue();
+				e.getChannel().sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			}
 			return;
 		}
 		AudioManager audioManager = guild.getAudioManager();
 		if(autodes) {
-			MessageUtils.SendAndDestroy(e.getChannel(),"voy",autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-i-voy", lang),autodesTime);
 		}else {
-			e.getChannel().sendMessage("voy").queue();
+			e.getChannel().sendMessage(Values.value("jax-i-voy", lang)).queue();
 		}
 		
 		audioManager.openAudioConnection(vchannel);
 	}
-	@Command(name="Presentacion")//,enabled=false,visible=false)
+	@Command(name="Presentacion")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void info(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
@@ -215,13 +222,10 @@ public class Comun {
 					}
 				}if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Presentacion");
-					return;
 				}
 			}
 		}
-		ModelGuild server = BotGuildsManager.getManager().getGuild(e.getTextChannel().getGuild().getId());
+		ModelGuild server = BotGuildsManager.getManager().getGuild(e.getTextChannel().getGuild().getIdLong());
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
@@ -255,7 +259,6 @@ public class Comun {
 		int autodesTime = 15;
 		boolean anon = false;
 		EmbedBuilder eb = new EmbedBuilder();
-		//ArrayList<String> escapados = new ArrayList<String>();
 		ArrayList<String> campos = new ArrayList<String>();
 		
 		String titulo = null;
@@ -293,18 +296,11 @@ public class Comun {
 					color = p.getValueAsString();
 				}else if(p.getKey().equalsIgnoreCase("autor")) {
 					autor = p.getValueAsString();
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Embed");
-					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
 				mensaje = p.getValueAsString();
-			}/*else if(p.getType() == InputParamType.Invalid){
-				escapados.add(p.getKey() + p.getValueAsString());
-			}*/
+			}
 		}
-		//CONVERTIR STRING A COLOR (?)
-		
 		eb.setTitle(titulo);
 		eb.setDescription(descripcion);
 		if(autor!=null) {
@@ -317,10 +313,6 @@ public class Comun {
 				aImg = Tools.toValidHttpUrl(Tools.replaceAllFromString("\\{%img%\\}", aImg, ""));
 				aHref = Tools.toValidHttpUrl(Tools.replaceAllFromString("\\{%href%\\}", aHref, ""));
 				eb.setAuthor(aNombre, aHref, aImg);
-				System.out.println("nombre: '"+aNombre+"'");
-				System.out.println("href: '"+aHref+"'");
-				System.out.println("img: '"+aImg+"'");
-				System.out.println("autor: '"+autor+"'");
 			}
 		}
 		eb.setFooter(footer, Tools.toValidHttpUrl(footer_img));
@@ -414,9 +406,6 @@ public class Comun {
 					}
 				}else if(p.getKey().equalsIgnoreCase("autor")) {
 					autor = p.getValueAsString();
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Funar");
-					return;
 				}
 			}else if(p.getType() == InputParamType.Custom){
 				nombre = p.getValueAsString();
@@ -447,7 +436,7 @@ public class Comun {
 			nombre = mencionado.getAsMention();
 		}
 		eb.addField("", "`Responde al nombre de `" + nombre + ".", false);
-		eb.setFooter("Para reclamar la recompensa, favor entregar al funao en la inter, será recibido por "+ Tools.getRandomGuy() +" o llame al +56 9 4983 0717.", Tools.toValidHttpUrl(footer_img));
+		eb.setFooter("Para reclamar la recompensa, favor entregar "+(genero==null?"al funado":(genero.equals("f")?"a la funada":"al funado"))+" en la inter, será recibid"+ (genero==null?"@":(genero.equals("f")?"a":"o"))+" por "+ Tools.getRandomGuy() +" o llame al +56 9 4983 0717.", Tools.toValidHttpUrl(footer_img));
 		if(img!=null) {
 			if(img.equals("none") && mencionado != null) {
 				img = mencionado.getAvatarUrl();
@@ -501,9 +490,6 @@ public class Comun {
 							er_src.duracion = Integer.parseInt(p.getValueAsString().split("\\s")[1]);
 						}
 					}
-				}else if(p.getKey().equalsIgnoreCase(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Trollear");
-					return;
 				}
 			}
 		}
@@ -539,9 +525,12 @@ public class Comun {
 			}
 		}
 	}
-	@Command(name="Test")
+	@Command(name="RAE",enabled=false)
+	public static void rae(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+		
+	}
+	@Command(name="Test",visible=false,enabled=false)
 	public static void test(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
-		/*MessageEmbed me = MessageUtils.createVideoEmbed("Este es un embed", "este es un embed de ejemplo", "https://www.youtube.com/embed/RydO8iGhwEY","YouTube","https://www.youtube.com");
-		e.getChannel().sendMessage(me).queue();*/
+		
 	}
 }

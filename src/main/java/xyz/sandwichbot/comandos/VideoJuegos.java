@@ -34,10 +34,7 @@ public class VideoJuegos {
 		boolean anon = false;
 		for(InputParameter p : parametros) {
 			if(p.getType() == InputParamType.Standar) {
-				if(p.getKey().equals(AutoHelpCommand.AUTO_HELP_KEY)) {
-					AutoHelpCommand.sendHelp(e.getChannel(), "Pokedex");
-					return;
-				}else if(p.getKey().equalsIgnoreCase("autodestruir")){
+				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(!p.getValueAsString().equals("none")) {
 						autodesTime = p.getValueAsInt();
@@ -151,5 +148,17 @@ public class VideoJuegos {
 		}else {
 			e.getChannel().sendMessage(eb.build()).queue();
 		}
+	}
+	@Command(name="LolStats",enabled=false)
+	public static void lolstat(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+		
+	}
+	@Command(name="LolCampeon",enabled=false)
+	public static void campeon(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+		
+	}
+	@Command(name="ValorantStats",enabled=false)
+	public static void valorantstat(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+		
 	}
 }

@@ -1,5 +1,10 @@
 package xyz.sandwichframework.models.discord;
-
+/**
+ * Representa un Canal de texto de Discord.
+ * Represents a Discord's Text channel.
+ * @author Juancho
+ * @version 0.3
+ */
 public class ModelTextChannel {
 	private String id;
 	private String lastKnownName;

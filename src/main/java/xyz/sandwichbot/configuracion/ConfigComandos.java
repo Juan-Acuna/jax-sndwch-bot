@@ -1,4 +1,4 @@
-package xyz.sandwichbot.comandos.configuracion;
+package xyz.sandwichbot.configuracion;
 
 import xyz.sandwichframework.annotations.Configuration;
 import xyz.sandwichframework.annotations.configure.*;

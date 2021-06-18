@@ -336,7 +336,7 @@ public class Tools {
 					new EarrapeSRC("Thomas the train theme","https://www.youtube.com/watch?v=rBjkkHmb_oY&t=5s",6000,10000)
 				};
 		EarrapeSRC esrc = src[r.nextInt(src.length)];
-		System.out.println("src: " + esrc.nombre + " | " + esrc.url + " | " + esrc.duracion/1000);
+		//System.out.println("src: " + esrc.nombre + " | " + esrc.url + " | " + esrc.duracion/1000);
 		return esrc;
 	}
 	public static MessageEmbed stringToEmb(String texto) {

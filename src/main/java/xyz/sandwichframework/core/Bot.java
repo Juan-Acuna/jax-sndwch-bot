@@ -1,12 +1,15 @@
 package xyz.sandwichframework.core;
 
-import java.lang.reflect.Constructor;
-
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import xyz.sandwichframework.core.util.Language;
-
+/**
+ * Representa al Bot de Discord. Contiene lo básico para la construcción de un bot.
+ * Represents the Discord Bot. Contains the basics for build a bot.
+ * @author Juancho
+ * @version 1.0
+ */
 public class Bot extends ListenerAdapter{
 	protected JDA jda = null;
 	protected JDABuilder builder;

@@ -6,12 +6,17 @@ import java.util.Map;
 
 import net.dv8tion.jda.api.entities.Guild;
 import xyz.sandwichframework.core.util.Language;
-
+/**
+ * Representa un Servidor de Discord. Útil para las configuraciones por servidor.
+ * Represents a Discord's Guild. Useful for Guilds' settings.
+ * @author Juancho
+ * @version 1.0
+ */
 public class ModelGuild {
-	private String id;
+	protected long id;
 	protected String lastKnownName;
 	protected Language language;
-	protected boolean joined = true;
+	protected boolean actuallyJoined = true;
 	protected Map<String, Boolean> allowedCommands = (Map<String, Boolean>) Collections.synchronizedMap(new HashMap<String, Boolean>());
 	protected Map<String, Boolean> allowedCategories = (Map<String, Boolean>) Collections.synchronizedMap(new HashMap<String, Boolean>());
 	protected Map<String, Boolean> allowedRoles = (Map<String, Boolean>) Collections.synchronizedMap(new HashMap<String, Boolean>());
@@ -23,32 +28,30 @@ public class ModelGuild {
 	protected boolean defaultDenyRoles = false;
 	protected boolean defaultDenyMembers = false;
 	protected boolean defaultDenyChannels = false;
-	
-	
-	//protected String customPrefix = null;
-	//protected String customOptionsPrefix = null;
-	
+	protected String customPrefix = null;
+	protected String customOptionsPrefix = null;
+	public ModelGuild() {}
 	public ModelGuild(Guild guild) {
-		id=guild.getId();
+		id=guild.getIdLong();
 		lastKnownName=guild.getName();
-		joined=true;
+		actuallyJoined=true;
 		specialRoles.put("admin", null);
 	}
-	public ModelGuild(String id) {
+	public ModelGuild(long id) {
 		this.id = id;
 	}
-	public ModelGuild(String id, String lastKnownName, Language language) {
+	public ModelGuild(long id, String lastKnownName, Language language) {
 		this.id = id;
 		this.lastKnownName = lastKnownName;
 		this.language = language;
-		joined=true;
+		actuallyJoined=true;
 		specialRoles.put("admin", null);
 	}
-	public String getId() {
+	public long getId() {
 		return id;
 	}
-	public long getIdAsLong() {
-		return Long.parseLong(id);
+	public String getIdAsString() {
+		return id+"";
 	}
 	public String getLastKnownName() {
 		return lastKnownName;
@@ -63,10 +66,10 @@ public class ModelGuild {
 		this.language = language;
 	}
 	public boolean isJoined() {
-		return joined;
+		return actuallyJoined;
 	}
 	public void setJoined(boolean joined) {
-		this.joined = joined;
+		this.actuallyJoined = joined;
 	}
 	public Map<String, Boolean> getAllowedCommands() {
 		return allowedCommands;
@@ -140,11 +143,12 @@ public class ModelGuild {
 	public void setDefaultDenyChannels(boolean defaultDenyChannels) {
 		this.defaultDenyChannels = defaultDenyChannels;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
 	}
 	@Override
@@ -156,10 +160,7 @@ public class ModelGuild {
 		if (getClass() != obj.getClass())
 			return false;
 		ModelGuild other = (ModelGuild) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
+		if (id != other.id)
 			return false;
 		return true;
 	}

@@ -7,7 +7,12 @@ import java.util.HashMap;
 
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.LanguageHandler;
-
+/**
+ * Representa un Comando.
+ * Represents a Command.
+ * @author Juancho
+ * @version 1.0
+ */
 public class ModelCommand implements Comparable<ModelCommand>{
 	private String id;
 	private HashMap<Language, String> name;
