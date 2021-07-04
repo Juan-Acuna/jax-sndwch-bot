@@ -23,6 +23,8 @@ public @interface Command {
 	String name();
 	String desc() default "";
 	String[] alias() default {};
+	boolean isNFSW() default false;
+	boolean isHelpCommand() default false;
 	boolean enabled() default true;
 	boolean visible() default true;
 }

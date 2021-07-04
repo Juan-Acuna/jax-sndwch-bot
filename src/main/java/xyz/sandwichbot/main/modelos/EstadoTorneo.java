@@ -4,15 +4,15 @@ import xyz.sandwichbot.conexion.anotaciones.PrimaryKey;
 import xyz.sandwichbot.conexion.anotaciones.PrivateFieldsAllowed;
 
 @PrivateFieldsAllowed
-public class Juego {
+public class EstadoTorneo {
 	@PrimaryKey
-	private int id_juego;
+	private short id_estado;
 	private String nombre;
-	public int getId_juego() {
-		return id_juego;
+	public short getId_estado() {
+		return id_estado;
 	}
-	public void setId_juego(int id_juego) {
-		this.id_juego = id_juego;
+	public void setId_estado(short id_estado) {
+		this.id_estado = id_estado;
 	}
 	public String getNombre() {
 		return nombre;

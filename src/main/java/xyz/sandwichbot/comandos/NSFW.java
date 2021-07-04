@@ -1,24 +1,22 @@
 package xyz.sandwichbot.comandos;
 
 import java.awt.Color;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import xyz.sandwichbot.main.Constantes;
-import xyz.sandwichbot.main.SandwichBot;
+import xyz.sandwichbot.main.modelos.FuenteImagen;
+import xyz.sandwichbot.main.modelos.Guild;
 import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.main.util.ControladorImagenes;
-import xyz.sandwichbot.main.util.FuenteImagen;
-import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichframework.annotations.*;
-import xyz.sandwichframework.core.AutoHelpCommand;
 import xyz.sandwichframework.core.ExtraCmdManager;
+import xyz.sandwichframework.core.Values;
+import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.MessageUtils;
+import xyz.sandwichframework.models.CommandPacket;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 
@@ -32,9 +30,14 @@ public class NSFW {
 	@Option(name="video",desc="Esta opcion indica que el recurso devuelto debe ser un video. Si se usa junto con la opcion '-gif', esta ultima sera ignorada.",alias={"v","vid","mp4"})
 	@Option(name="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
-	@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void nsfw(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
+	public static void nsfw(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		e.getChannel().purgeMessagesById(e.getMessageId());
+		Guild servidor = (Guild) packet.getModelGuild();
+		Language lang = Language.ES;
+		if(packet.isFromGuild())
+			lang=servidor.getLanguage();
 		int cantidad = 1;
 		//String fuente = null;
 		boolean gif = true;
@@ -44,7 +47,7 @@ public class NSFW {
 		int autodesTime = 15;
 		boolean random = false;
 		boolean noanon = false;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			//System.out.println(p.getClave()+"-"+p.getTipo());
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
@@ -59,7 +62,7 @@ public class NSFW {
 				}else if(p.getKey().equalsIgnoreCase("tags")) {
 					tags = p.getValueAsString().replaceAll("\\s",",").split(",");
 				}else if(p.getKey().equalsIgnoreCase("creditos")) {
-					noanon = true;
+					//noanon = true;
 				}else if(p.getKey().equalsIgnoreCase("video")) {
 					video = true;
 					gif=false;
@@ -76,12 +79,8 @@ public class NSFW {
 		ControladorImagenes gi;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
-		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ")+"🙊😏😏",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
-		if(cantidad>=8) {
-			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.RealBooru,eb,true);
-		}else {
-			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.RealBooru,eb);
-		}
+		eb.setFooter((noanon?"":Values.value("jax-nsfw-img-footer", lang))+"🙊😏😏",packet.getBot().getSelfUser().getAvatarUrl());
+		gi = new ControladorImagenes(e.getChannel(),FuenteImagen.find(FuenteImagen.RealBooru),eb,(cantidad>=8));
 		gi.setGif(gif);
 		gi.setTags(tags);
 		gi.setVideo(video);
@@ -91,13 +90,13 @@ public class NSFW {
 		Thread fuck;
 		try {
 			if(!e.getTextChannel().isNSFW()){
-				gi.enviarRestriccion();
+				gi.enviarRestriccion(packet.getBot());
 				return;
 			}
 		}catch(Exception ex) {
 			
 		}
-		if(noanon) {
+		/*if(noanon) {
 			EmbedBuilder eb2 = new EmbedBuilder();
 			String str = " imagen" + (cantidad>1?"es":"");
 			if(random) {
@@ -112,9 +111,9 @@ public class NSFW {
 			if(autodes) {
 				MessageUtils.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
 			}else {
-				e.getChannel().sendMessage(eb2.build()).queue();
+				e.getChannel().sendMessageEmbeds(eb2.build()).queue();
 			}
-		}
+		}*/
 		
 		for(int i = 1; i<=cantidad;i++) {
 			fuck = new Thread(gi);
@@ -124,12 +123,17 @@ public class NSFW {
 	@Command(name="Xvideos",desc="Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(Aún no soy capaz de reproducirlos, denme tiempo:pensive:).",alias={"xv","xvid","xxxv","videosnopor"})
 	@Parameter(name="Busqueda",desc="Texto con el cual se realizará la busqueda en xvideos (ejemplo: 'creampie'... esta vez no me equivoqué de página :smirk:).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
-	public static void xvideos(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
-		e.getChannel().purgeMessagesById(e.getMessageId());//<span class="duration">23 min
+	public static void xvideos(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+		packet.getChannel().purgeMessagesById(e.getMessageId());//<span class="duration">23 min
+		Guild servidor = (Guild) packet.getModelGuild();
+		Language lang = Language.ES;
+		if(packet.isFromGuild())
+			lang=servidor.getLanguage();
 		String busqueda = null;
 		boolean autodes = false;
 		int autodesTime=15;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
@@ -143,7 +147,6 @@ public class NSFW {
 		}
 		if(busqueda!=null) {
 			String hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.NSFW.toXV_link(busqueda));
-			hc = new String(hc.getBytes(),StandardCharsets.UTF_8);
 			ArrayList<String> ids = Comparador.EncontrarTodos(Comparador.Patrones.XV_Link, hc);
 			//ArrayList<String> tit = new ArrayList<String>();
 			String tit="";
@@ -151,13 +154,13 @@ public class NSFW {
 			int ii = 0;
 			if(ids.size()>0) {
 				EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle("Resultados de la busqueda:");
+				eb.setTitle(Values.value("jax-yt-resultado-busqueda", lang));
 				eb.setColor(Color.DARK_GRAY);
 				for(int i=0;i<ids.size() && i < 24;i=i+2) {
 					tit=ids.get(i).substring(15).replace("_", " ");
 					tit = (tit.length()>34?tit.substring(0,32)+"...":tit);
 					ss[ii++] = Constantes.RecursoExterno.NSFW.LINK_XV_BASE + ids.get(i);
-					eb.addField("[Opción "+ii+"]", ">>> [" + tit +"](" + Constantes.RecursoExterno.NSFW.LINK_XV_BASE + ids.get(i) + ")", true);
+					eb.addField(Values.formatedValue("jax-generico-txt-opcion-s", lang, ii+""), ">>> [" + tit +"](" + Constantes.RecursoExterno.NSFW.LINK_XV_BASE + ids.get(i) + ")", true);
 				}
 				if(autodes) {
 					if(autodesTime<=0) {
@@ -167,15 +170,15 @@ public class NSFW {
 					}
 					MessageUtils.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
 				}else {
-					e.getChannel().sendMessage(eb.build()).queue();
+					e.getChannel().sendMessageEmbeds(eb.build()).queue();
 				}
-				ExtraCmdManager.getManager().registerExtraCmd("xv", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD,50, 5, ss);
+				packet.getExtraCmdManager().registerExtraCmd("xv", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD,50, 5, ss);
 				return;
 			}
-			e.getChannel().sendMessage("No se encontraron resultados:pensive:").queue();
+			e.getChannel().sendMessage(Values.value("jax-yt-no-resultados", lang)).queue();
 			return;
 		}else {
-			e.getChannel().sendMessage("Debe especificar una busqueda.").queue();
+			e.getChannel().sendMessage(Values.value("jax-yt-ingresar-busqueda", lang)).queue();
 		}
 		
 	}
@@ -184,16 +187,21 @@ public class NSFW {
 	@Option(name="cantidad",desc="Indica la cantidad de imagenes que devolverá el comando. DEBE SER UN VALOR NUMÉRICO ENTRE 1 Y 100 (se que quieres más, pero tu mano se va a hacer mierda...me preocupo por ti manit@). Si ingresas mal este número te quedarás sin placer:smirk:",alias={"c","cant","num"})
 	@Option(name="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
 	@Option(name="fuente",desc="Indica la fuente de origen del contenido a mostrar.\nFuentes permitidas:\n- [Konachan.com](https://konachan.com)\n- [Gelbooru](https://gelbooru.com)\n- [Danbooru](https://danbooru.donmai.us)\n- [XBooru](https://xbooru.com)\n - [Yandere](https://yande.re)",alias={"f","source","origen"})
-	@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void otakus(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
-		e.getChannel().purgeMessagesById(e.getMessageId());
+	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
+	public static void otakus(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+		Guild servidor = (Guild) packet.getModelGuild();
+		Language lang = Language.ES;
+		if(packet.isFromGuild())
+			lang=servidor.getLanguage();
+		packet.getChannel().purgeMessagesById(e.getMessageId());
 		int cantidad = 1;
 		String fuente = "konachan";
 		String[] tags = null;
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean noanon=false;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
@@ -216,37 +224,33 @@ public class NSFW {
 		}else if(cantidad<=0) {
 			cantidad=1;
 		}
-		FuenteImagen fi = FuenteImagen.Konachan;
+		FuenteImagen fi = FuenteImagen.find(FuenteImagen.Konachan);
 		if(fuente.equalsIgnoreCase("konachan") || fuente.equalsIgnoreCase("konachan.com") || fuente.equalsIgnoreCase("k")) {//konachan
-			fi = FuenteImagen.Konachan;
+			fi = FuenteImagen.find(FuenteImagen.Konachan);
 		}else if(fuente.equalsIgnoreCase("danbooru") || fuente.equalsIgnoreCase("db") || fuente.equalsIgnoreCase("danboru") || fuente.equalsIgnoreCase("d")  || fuente.equalsIgnoreCase("danbooru.donmai.us")) {//danbooru
-			fi = FuenteImagen.DanBooru;
+			fi = FuenteImagen.find(FuenteImagen.DanBooru);
 		}else if(fuente.equalsIgnoreCase("gelbooru") || fuente.equalsIgnoreCase("g") || fuente.equalsIgnoreCase("gelbooru.com") || fuente.equalsIgnoreCase("gelboru") || fuente.equalsIgnoreCase("gelboru.com") || fuente.equalsIgnoreCase("gel")) {//gelbooru
-			fi = FuenteImagen.GelBooru;
+			fi = FuenteImagen.find(FuenteImagen.GelBooru);
 		}else if(fuente.equalsIgnoreCase("xbooru") || fuente.equalsIgnoreCase("x") || fuente.equalsIgnoreCase("xbooru.com") || fuente.equalsIgnoreCase("xboru") || fuente.equalsIgnoreCase("xboru.com")) {//xbooru
-			fi = FuenteImagen.XBooru;
+			fi = FuenteImagen.find(FuenteImagen.XBooru);
 		}else if(fuente.equalsIgnoreCase("yandere") || fuente.equalsIgnoreCase("y") || fuente.equalsIgnoreCase("yande.re") || fuente.equalsIgnoreCase("yande") || fuente.equalsIgnoreCase("ere")) {//yandere
-			fi = FuenteImagen.Yandere;
+			fi = FuenteImagen.find(FuenteImagen.Yandere);
 		}
 		/*else if(fuente.equalsIgnoreCase("3dbooru") || fuente.equalsIgnoreCase("3d") || fuente.equalsIgnoreCase("behoimi.org") || fuente.equalsIgnoreCase("3")  || fuente.equalsIgnoreCase("3dboru")) {//3dbooru
 			fi = FuenteImagen._3DBooru;
 		}*/
 		else {
-			e.getChannel().sendMessage("Fuente '" + fuente + "' no encontrada. Voy a usar la fuente por defecto(http://Konachan.com)").queue();
+			packet.getChannel().sendMessage(Values.formatedValue("jax-nsfw-otk-fuente-nf", lang,fuente)).queue();
 		}
 		ControladorImagenes gi;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
-		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ") + "🙊😏😏",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
-		if(cantidad>=8) {
-			gi = new ControladorImagenes(e.getChannel(),fi,eb,true);
-		}else {
-			gi = new ControladorImagenes(e.getChannel(),fi,eb);
-		}
+		eb.setFooter((noanon?"":Values.value("jax-nsfw-img-footer", lang)) + "🙊😏😏",packet.getBot().getSelfUser().getAvatarUrl());
+		gi = new ControladorImagenes(e.getChannel(),fi,eb,(cantidad>=8));
 		gi.setTags(tags);
 		gi.setAutodes(autodes);
 		gi.setAutodesTime(autodesTime);
-		if(noanon) {
+		/*if(noanon) {
 			EmbedBuilder eb2 = new EmbedBuilder();
 			String str = " imagen" + (cantidad>1?"es":"");
 			eb2.setColor(Color.red);
@@ -255,13 +259,13 @@ public class NSFW {
 			if(autodes) {
 				MessageUtils.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
 			}else {
-				e.getChannel().sendMessage(eb2.build()).queue();
+				e.getChannel().sendMessageEmbeds(eb2.build()).queue();
 			}
-		}
+		}*/
 		Thread fuck;
 		try {
-			if(!e.getTextChannel().isNSFW()){
-				gi.enviarRestriccion();
+			if(!packet.getTextChannel().isNSFW()){
+				gi.enviarRestriccion(packet.getBot());
 				return;
 			}
 		}catch(Exception ex) {
@@ -279,11 +283,15 @@ public class NSFW {
 	@Option(name="video",desc="Esta opcion indica que el recurso devuelto debe ser un video. Si se usa junto con la opcion '-gif', esta ultima sera ignorada.",alias={"v","vid","mp4"})
 	@Option(name="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
 	@Option(name="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
-	@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void r34(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
-		e.getChannel().purgeMessagesById(e.getMessageId());
+	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
+	public static void r34(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+		Guild servidor = (Guild) packet.getModelGuild();
+		Language lang = Language.ES;
+		if(packet.isFromGuild())
+			lang=servidor.getLanguage();
+		packet.getTextChannel().purgeMessagesById(e.getMessageId());
 		int cantidad = 1;
-		//String fuente = null;
 		boolean gif = true;
 		String[] tags = null;
 		boolean video = false;
@@ -291,7 +299,7 @@ public class NSFW {
 		int autodesTime = 15;
 		boolean random = false;
 		boolean noanon = false;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
@@ -322,12 +330,8 @@ public class NSFW {
 		ControladorImagenes gi;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
-		eb.setFooter((noanon?"":"Tranquil@ cochin@, no diré quien eres ")+"🙊😏😏",SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
-		if(cantidad>=8) {
-			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.R34,eb,true);
-		}else {
-			gi = new ControladorImagenes(e.getChannel(),FuenteImagen.R34,eb);
-		}
+		eb.setFooter((noanon?"":Values.value("jax-nsfw-img-footer", lang))+"🙊😏😏",packet.getBot().getSelfUser().getAvatarUrl());
+		gi = new ControladorImagenes(packet.getChannel(),FuenteImagen.find(FuenteImagen.R34),eb,(cantidad>=8));
 		gi.setGif(gif);
 		gi.setTags(tags);
 		gi.setVideo(video);
@@ -336,14 +340,14 @@ public class NSFW {
 		gi.setRand(random);
 		Thread fuck;
 		try {
-			if(!e.getTextChannel().isNSFW()){
-				gi.enviarRestriccion();
+			if(!packet.getTextChannel().isNSFW()){
+				gi.enviarRestriccion(packet.getBot());
 				return;
 			}
 		}catch(Exception ex) {
 			
 		}
-		if(noanon) {
+		/*if(noanon) {
 			EmbedBuilder eb2 = new EmbedBuilder();
 			String str = " imagen" + (cantidad>1?"es":"");
 			if(random) {
@@ -358,10 +362,9 @@ public class NSFW {
 			if(autodes) {
 				MessageUtils.SendAndDestroy(e.getChannel(), eb2.build(), cantidad * autodesTime + 3);
 			}else {
-				e.getChannel().sendMessage(eb2.build()).queue();
+				e.getChannel().sendMessageEmbeds(eb2.build()).queue();
 			}
-		}
-		
+		}*/
 		for(int i = 1; i<=cantidad;i++) {
 			fuck = new Thread(gi);
 			fuck.start();

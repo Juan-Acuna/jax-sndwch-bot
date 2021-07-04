@@ -30,7 +30,7 @@ public class ConfigComandos {
 	
 	@CommandID("Configurar")
 	@CommandDescription
-	public static final String CONF_DESC = "Comando con el que me puedes configurar... ya sabes, rol de funados, el voteban y quien sabe que otra verga. Si no se especifican parametros a configurar, devuelve la configuración actual.";
+	public static final String CONF_DESC = "Comando con el que me puedes configurar... ya sabes, como interactuo con el servidor, bloqueo/habilitacion de comandos y quien sabe que otra verga. Si no se especifican parametros a configurar, devuelve la configuración actual.";
 	
 	@CommandID("Configurar")
 	@CommandAliases

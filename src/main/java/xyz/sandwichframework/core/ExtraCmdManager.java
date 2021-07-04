@@ -10,7 +10,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import xyz.sandwichframework.models.ExtraCmdPacket;
 import xyz.sandwichframework.models.ModelExtraCommand;
+import xyz.sandwichframework.models.discord.ModelGuild;
 /**
  * Manejador de Comandos extra.
  * Manager of Extra commands.
@@ -26,25 +29,26 @@ public class ExtraCmdManager {
 	public static final String[] STRING_WILDCARD = {string_wildcard};
 	public static final String[] NUMBER_WILDCARD = {number_wildcard};
 	private static Map<MessageChannel, List<ExtraCmdObj>> threads = (Map<MessageChannel, List<ExtraCmdObj>>) Collections.synchronizedMap(new HashMap<MessageChannel, List<ExtraCmdObj>>());
-	private static ExtraCmdManager _instance = new ExtraCmdManager();
+	private Bot bot;
 	
-	private ExtraCmdManager() {
-		
+	private ExtraCmdManager(Bot bot) {
+		this.bot = bot;
 	}
-	
-	public static ExtraCmdManager getManager() {
-		if(_instance!=null) {
-			return _instance;
-		}
-		return _instance = new ExtraCmdManager();
+	protected static ExtraCmdManager startService(Bot bot) {
+		return new ExtraCmdManager(bot);
 	}
-	
 	public ExtraCmdObj registerExtraCmd(String extraCmdName, Message message, String[] spectedValues, int maxSeg, int maxMsg, Object...args) {
 		return registerExtraCmd(extraCmdName, message.getChannel(),message.getAuthor().getId(),spectedValues,maxSeg,maxMsg,args);
 	}
 	public ExtraCmdObj registerExtraCmd(String extraCmdName, MessageChannel channel, String authorId, String[] spectedValues, int maxSeg, int maxMsg, Object...args) {
 		ModelExtraCommand m = pickExtraCommand(extraCmdName);
-		ExtraCmdObj o = new ExtraCmdObj(m, channel, authorId,spectedValues, maxSeg, maxMsg, args);
+		ModelGuild g = null;
+		if(channel.getType()!=ChannelType.PRIVATE) {
+			g = bot.getGuildsManager().getGuild(((TextChannel)channel).getGuild().getIdLong());
+		}
+		CommandPacketBuilder cpb = new CommandPacketBuilder(bot, g, channel, authorId);
+		cpb.setArgs(args);
+		ExtraCmdObj o = new ExtraCmdObj(m,cpb, spectedValues, maxSeg, maxMsg);
 		List<ExtraCmdObj> l = threads.get(channel);
 		if(l==null) {
 			l = Collections.synchronizedList(new ArrayList<ExtraCmdObj>());
@@ -56,50 +60,43 @@ public class ExtraCmdManager {
 		new Thread(o).start();
 		return o;
 	}
-	
-	public void CheckExtras(Message message) {
+	public void CheckExtras(MessageReceivedEvent event) {
 		if(threads.size()<=0)
 			return;
-		if(message.getAuthor().getId().equals(BotRunner._self.jda.getSelfUser().getId()))
+		if(event.getAuthor().getId().equals(bot.getSelfUser().getId()))
 			return;
-		List<ExtraCmdObj> l = threads.get(message.getChannel());
+		List<ExtraCmdObj> l = threads.get(event.getChannel());
 		if(l == null) {
 			return;
 		}
 		for(ExtraCmdObj o : l) {
-			o.PutMessage(message.getContentRaw(),message.getAuthor().getId());
+			o.PutMessage(event);
 		}
 	}
-	
 	public class ExtraCmdObj implements Runnable{
 
 		Lock lock = new ReentrantLock();
-		public MessageChannel channel;
-		public String authorId = null; // user
 		public String[] spectedValues = null;
 		public int maxMsg = 5;
 		public int maxSeg = 60; // 30
-		public boolean authorOnly = false;
-		private String cmd = null;
+		private MessageReceivedEvent event = null;
 		private ModelExtraCommand action;
 		private int msgs = 0;
-		private Object[] args = null;
-		private Object[] eachArgs = null;
-		private Object[] afterArgs = null;
-		private Object[] noArgs = null;
-		private Object[] finallyArgs = null;
+		private CommandPacketBuilder builder;
 		
-		protected ExtraCmdObj() {}
-		protected ExtraCmdObj(ModelExtraCommand action, MessageChannel channel, String authorId, String[] spectedValues, int maxSeg, int maxMsg, Object...args) {
-			this.channel=channel;
-			this.authorId=authorId;
+		protected ExtraCmdObj(ModelExtraCommand action, ExtraCmdPacket packet,String[] spectedValues, int maxSeg, int maxMsg) {
 			this.spectedValues=spectedValues;
 			this.maxSeg=maxSeg;
 			this.maxMsg=maxMsg;
 			this.action = action;
-			this.args=args;
 		}
-		
+		protected ExtraCmdObj(ModelExtraCommand action, CommandPacketBuilder builder,String[] spectedValues, int maxSeg, int maxMsg) {
+			this.spectedValues=spectedValues;
+			this.maxSeg=maxSeg;
+			this.maxMsg=maxMsg;
+			this.action = action;
+			this.builder=builder;
+		}
 		protected ModelExtraCommand getAction() {
 			return action;
 		}
@@ -112,11 +109,14 @@ public class ExtraCmdManager {
 			float s = 0f;
 			msgs = 0;
 			boolean b = true;
+			ExtraCmdPacket packet = builder.buildExtraPacket();
 			while(maxSeg > s && maxMsg > msgs && b) {
-				action.eachRun(channel, eachArgs);
-				if(Compare(cmd)) {
+				action.eachRun(packet);
+				if(Compare(event)) {
 					lock.lock();
-					action.Run(cmd, channel, authorId,args);
+					builder.setMessageReceivedEvent(event);
+					packet = builder.buildExtraPacket();
+					action.Run(packet);
 					lock.unlock();
 					b = false;
 				}
@@ -128,23 +128,23 @@ public class ExtraCmdManager {
 				}
 			}
 			if(!b) {
-				action.afterRun(channel, afterArgs);
+				action.afterRun(packet);
 			}else {
-				action.NoRun(channel, noArgs);
+				action.NoRun(packet);
 			}
-			action.finallyRun(channel, finallyArgs);
-			threads.get(channel).remove(this);
+			action.finallyRun(packet);
+			threads.get(packet.getChannel()).remove(this);
 		}
-		protected void PutMessage(String message, String authorId) {
-			cmd = message;
-			if(this.authorId==null)
+		protected void PutMessage(MessageReceivedEvent event) {
+			this.event=event;
+			if(this.builder.getAuthorId()==null)
 				return;
-			if(this.isAuthorOnly() && !this.authorId.equals(authorId))
+			if(this.isAuthorOnly() && !this.builder.getAuthorId().equals(event.getAuthor().getId()))
 				return;
 			msgs++;
 		}
-		private boolean Compare(String message) {
-			if(message == null) {
+		private boolean Compare(MessageReceivedEvent event) {
+			if(event == null) {
 				return false;
 			}
 			if(spectedValues[0].startsWith(wildcard)) {
@@ -152,57 +152,54 @@ public class ExtraCmdManager {
 				case wildcard:
 					return true;
 				case number_wildcard:
-					return message.matches("[0-9]{1,999}");
+					return event.getMessage().getContentRaw().matches("[0-9]{1,999}");
 				case string_wildcard:
-					return !message.matches("[0-9]{1,999}");
+					return !event.getMessage().getContentRaw().matches("[0-9]{1,999}");
 				}
 			}
 			for(String a : spectedValues) {
-				if(a.equalsIgnoreCase(message)){
+				if(a.equalsIgnoreCase(event.getMessage().getContentRaw())){
 					return true;
 				}
 			}
-			cmd = null;
+			event = null;
 			return false;
 		}
 		public ExtraCmdObj setEachArrgs(Object...args) {
-			this.eachArgs = args;
+			this.builder.setEachArgs(args);
 			return this;
 		}
 		public ExtraCmdObj setAfterArrgs(Object...args) {
-			this.afterArgs = args;
+			this.builder.setAfterArgs(args);
 			return this;
 		}
 		public ExtraCmdObj setNoExecutedArrgs(Object...args) {
-			this.noArgs = args;
+			this.builder.setNoArgs(args);
 			return this;
 		}
 		public ExtraCmdObj setFinallyArrgs(Object...args) {
-			this.finallyArgs = args;
+			this.builder.setFinallyArgs(args);
 			return this;
 		}
 		public ExtraCmdObj setAuthorOnly(boolean b) {
-			this.authorOnly=b;
+			this.builder.setAuthorOnly(b);
 			return this;
 		}
 		public ExtraCmdObj asAuthorOnly() {
-			this.authorOnly=true;
+			this.builder.setAuthorOnly(true);
 			return this;
 		}
 		public boolean isAuthorOnly() {
-			return this.authorOnly;
+			return this.builder.isAuthorOnly();
 		}
 		@Override
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + getEnclosingInstance().hashCode();
-			result = prime * result + Arrays.deepHashCode(afterArgs);
-			result = prime * result + Arrays.deepHashCode(args);
-			result = prime * result + ((authorId == null) ? 0 : authorId.hashCode());
-			result = prime * result + ((channel == null) ? 0 : channel.getId().hashCode());
-			result = prime * result + Arrays.deepHashCode(eachArgs);
-			result = prime * result + Arrays.deepHashCode(finallyArgs);
+			result = prime * result + Arrays.deepHashCode(builder.getArgs());
+			result = prime * result + ((builder.getAuthorId() == null) ? 0 : builder.getAuthorId().hashCode());
+			result = prime * result + ((builder.getChannel() == null) ? 0 : builder.getChannel().getId().hashCode());
 			result = prime * result + maxMsg;
 			result = prime * result + maxSeg;
 			result = prime * result + Arrays.hashCode(spectedValues);
@@ -217,23 +214,17 @@ public class ExtraCmdManager {
 			if (getClass() != obj.getClass())
 				return false;
 			ExtraCmdObj other = (ExtraCmdObj) obj;
-			if (!Arrays.deepEquals(afterArgs, other.afterArgs))
+			if (!Arrays.deepEquals(builder.getArgs(), other.builder.getArgs()))
 				return false;
-			if (!Arrays.deepEquals(args, other.args))
-				return false;
-			if (authorId == null) {
-				if (other.authorId != null)
+			if (builder.getAuthorId() == null) {
+				if (other.builder.getAuthorId() != null)
 					return false;
-			} else if (!authorId.equals(other.authorId))
+			} else if (!builder.getAuthorId().equals(other.builder.getAuthorId()))
 				return false;
-			if (channel == null) {
-				if (other.channel != null)
+			if (builder.getChannel() == null) {
+				if (other.builder.getChannel() != null)
 					return false;
-			} else if (!channel.getId().equals(other.channel.getId()))
-				return false;
-			if (!Arrays.deepEquals(eachArgs, other.eachArgs))
-				return false;
-			if (!Arrays.deepEquals(finallyArgs, other.finallyArgs))
+			} else if (!builder.getChannel().getId().equals(other.builder.getChannel().getId()))
 				return false;
 			if (maxMsg != other.maxMsg)
 				return false;
@@ -248,6 +239,6 @@ public class ExtraCmdManager {
 		}
 	}
 	private ModelExtraCommand pickExtraCommand(String name) {
-		return ModelExtraCommand.findByName(name);
+		return ModelExtraCommand.find(name);
 	}
 }

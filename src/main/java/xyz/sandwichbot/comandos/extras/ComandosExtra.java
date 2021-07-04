@@ -17,21 +17,25 @@ import xyz.sandwichframework.annotations.*;
 import xyz.sandwichframework.annotations.configure.ExtraCmdAfterExecution;
 import xyz.sandwichframework.annotations.configure.ExtraCmdExecutionName;
 import xyz.sandwichframework.annotations.configure.ExtraCmdNoExecution;
-import xyz.sandwichframework.core.BotGuildsManager;
 import xyz.sandwichframework.core.ExtraCmdManager;
 import xyz.sandwichframework.core.Values;
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.MessageUtils;
+import xyz.sandwichframework.models.ExtraCmdPacket;
 import xyz.sandwichframework.models.discord.ModelGuild;
 
 @ExtraCommandContainer
 public class ComandosExtra {
 	@ExtraCmdExecutionName("send")
-	public static void send(String input ,MessageChannel channel, String authorId, Object...args) {
+	public static void send(ExtraCmdPacket packet) {
+		MessageChannel channel = packet.getChannel();
+		String input = packet.getMessageContent();
+		Object[] args = packet.getArgs();
+		String authorId = packet.getAuthorId();
 		Language lang = Language.ES;
 		ModelGuild server;
 		if(channel.getType()==ChannelType.TEXT) {
-			server = BotGuildsManager.getManager().getGuild(((TextChannel)channel).getGuild().getIdLong());
+			server = packet.getModelGuild();
 			if(server!=null)
 				lang=server.getLanguage();
 		}
@@ -44,15 +48,15 @@ public class ComandosExtra {
 			if(i>((String[])args[1]).length) {
 				args[args.length-1] = (int)args[args.length-1] -1;
 				if((int)args[args.length-1]>0) {
-					channel.sendMessage(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang)+Values.formatedValue("jax-val-incorrecto-cont", lang, args[args.length-1]))).queue();
-					ExtraCmdManager.getManager().registerExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
+					channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang)+Values.formatedValue("jax-val-incorrecto-cont", lang, args[args.length-1]))).queue();
+					packet.getExtraCmdManager().registerExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
 					return;
 				}
-				channel.sendMessage(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang))).queue();
+				channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang))).queue();
 				return;
 			}
 			id = ((String[])args[1])[--i];
-			Guild g  = SandwichBot.actualBot().getJDA().getGuildById(id);
+			Guild g  = packet.getBot().getJDA().getGuildById(id);
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle(Values.formatedValue("jax-texto-servidor", lang, g.getName()));
 			eb.setDescription(Values.value("jax-seleccione-canal", lang));
@@ -63,23 +67,23 @@ public class ComandosExtra {
 				tids[l] = t.getId();
 				eb.addField("[" + ++l + "] " + t.getName(),"",true);
 			}
-			ExtraCmdManager.getManager().registerExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
-			channel.sendMessage(eb.build()).queue();
+			packet.getExtraCmdManager().registerExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
+			channel.sendMessageEmbeds(eb.build()).queue();
 			break;
 		case "c":
 			i = Integer.parseInt(input);//0 para extra command
 			if(i>((String[])args[1]).length) {
 				args[args.length-1] = (int)args[args.length-1] -1;
 				if((int)args[args.length-1]>0) {
-					channel.sendMessage(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang)+Values.formatedValue("jax-val-incorrecto-cont", lang, args[args.length-1]))).queue();
-					ExtraCmdManager.getManager().registerExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
+					channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang)+Values.formatedValue("jax-val-incorrecto-cont", lang, args[args.length-1]))).queue();
+					packet.getExtraCmdManager().registerExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
 					return;
 				}
-				channel.sendMessage(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang))).queue();
+				channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang))).queue();
 				return;
 			}
 			id = ((String[])args[1])[--i];
-			channel.sendMessage(Tools.stringToEmb(Values.value("jax-send-pedir-msg", lang))).queue();
+			channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-send-pedir-msg", lang))).queue();
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e1) {
@@ -87,12 +91,12 @@ public class ComandosExtra {
 			}
 			MessageChannel m;
 			try {
-				m = SandwichBot.actualBot().getJDA().getTextChannelById(id);
+				m = packet.getBot().getJDA().getTextChannelById(id);
 				m.sendTyping().queue();
 			}catch(Exception ex) {
 				try {
-					SandwichBot.actualBot().getJDA().openPrivateChannelById(id).queue();
-					m = SandwichBot.actualBot().getJDA().getPrivateChannelById(id);
+					packet.getBot().getJDA().openPrivateChannelById(id).queue();
+					m = packet.getBot().getJDA().getPrivateChannelById(id);
 					m.sendTyping().queue();
 				}catch(Exception e2) {
 					System.out.println("ERROR CASTEANDO CANAL");
@@ -101,7 +105,7 @@ public class ComandosExtra {
 					return;
 				}
 			}
-			ExtraCmdManager.getManager().registerExtraCmd("send", channel, authorId, ExtraCmdManager.WILDCARD, 40 , 5,"m",m);
+			packet.getExtraCmdManager().registerExtraCmd("send", channel, authorId, ExtraCmdManager.WILDCARD, 40 , 5,"m",m);
 			break;
 		case "m":
 			try {
@@ -118,8 +122,11 @@ public class ComandosExtra {
 			break;
 		}
 	}
-	public static void xv(String input ,MessageChannel channel, String authorId, Object...args) throws Exception {
-		int i = 0;//og:duration" content="736"
+	public static void xv(ExtraCmdPacket packet) throws Exception {
+		MessageChannel channel = packet.getChannel();
+		String input = packet.getMessageContent();
+		Object[] args = packet.getArgs();
+		int i = 0;
 		i = Integer.parseInt(input);
 		String hc = ClienteHttp.peticionHttp((String)args[--i]);
 		if(hc == null) {
@@ -139,7 +146,8 @@ public class ComandosExtra {
 		}
 		channel.sendMessage(str1).queue();
 	}
-	public static void join(String input ,MessageChannel channel, String authorId, Object...args) throws Exception {
+	public static void join(ExtraCmdPacket packet) throws Exception {
+		String input = packet.getMessageContent();
 		Language lang = Language.ES;
 		switch(input.toLowerCase()) {
 		case "es":
@@ -149,37 +157,35 @@ public class ComandosExtra {
 			lang = Language.EN;
 			break;
 		}
-		xyz.sandwichbot.main.modelos.Guild g = new xyz.sandwichbot.main.modelos.Guild(((TextChannel)channel).getGuild(),lang);
-		//BLOQUEAR COMANDOS NS
+		xyz.sandwichbot.main.modelos.Guild g = new xyz.sandwichbot.main.modelos.Guild(packet.getTextChannel().getGuild(),lang);
 		g.setAllowedCategory("NSFW", false);
-		g.setAllowedCategory("Especial", false);
-		g.setAllowedCategory("Administracion", false);
+		g.setAllowedCommand("Banear", false);
+		g.setAllowedCommand("LimpiarChat", false);
 		g.setAllowedCommand("Trollear", false);
 		g.setAllowedCommand("Embed", false);
 		g.setAllowedCommand("Funar", false);
 		g.setAllowedCommand("VoteBan", false);
 		g.push();
 		CommandManager.insert(g, false);
-		BotGuildsManager.getManager().registerGuild(g);
+		packet.getGuildsManager().registerGuild(g);
 	}
 	@ExtraCmdNoExecution(name="join")
-	public static void nojoin(MessageChannel channel,Object...args) throws Exception {
-		xyz.sandwichbot.main.modelos.Guild g = new xyz.sandwichbot.main.modelos.Guild(((TextChannel)channel).getGuild(),Language.ES);
-		//BLOQUEAR COMANDOS NS
+	public static void nojoin(ExtraCmdPacket packet) throws Exception {
+		xyz.sandwichbot.main.modelos.Guild g = new xyz.sandwichbot.main.modelos.Guild(packet.getTextChannel().getGuild(),Language.ES);
 		g.setAllowedCategory("NSFW", false);
-		g.setAllowedCategory("Especial", false);
-		g.setAllowedCategory("Administracion", false);
+		g.setAllowedCommand("Banear", false);
+		g.setAllowedCommand("LimpiarChat", false);
 		g.setAllowedCommand("Trollear", false);
 		g.setAllowedCommand("Embed", false);
 		g.setAllowedCommand("Funar", false);
 		g.setAllowedCommand("VoteBan", false);
 		g.push();
 		CommandManager.insert(g, false);
-		BotGuildsManager.getManager().registerGuild(g);
+		packet.getGuildsManager().registerGuild(g);
 	}
 	@ExtraCmdAfterExecution(name="join")
-	public static void afterjoin(MessageChannel channel,Object...args) {
-		ModelGuild server = BotGuildsManager.getManager().getGuild(((TextChannel)channel).getGuild().getIdLong());
-		((TextChannel)channel).sendMessage(SandwichBot.getInfo(server.getLanguage())).queue();
+	public static void afterjoin(ExtraCmdPacket packet) {
+		ModelGuild server = packet.getModelGuild();
+		packet.getTextChannel().sendMessageEmbeds(((SandwichBot)packet.getBot()).getInfo(server.getLanguage())).queue();
 	}
 }

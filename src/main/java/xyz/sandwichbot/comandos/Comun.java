@@ -1,6 +1,7 @@
 package xyz.sandwichbot.comandos;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -9,8 +10,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -21,15 +20,12 @@ import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Comparador;
 import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichbot.main.util.Tools.EarrapeSRC;
-import xyz.sandwichbot.main.util.lavaplayer.GuildMusicManager;
 import xyz.sandwichbot.main.util.lavaplayer.PlayerManager;
 import xyz.sandwichframework.annotations.*;
-import xyz.sandwichframework.core.AutoHelpCommand;
-import xyz.sandwichframework.core.BotGuildsManager;
-import xyz.sandwichframework.core.ExtraCmdManager;
 import xyz.sandwichframework.core.Values;
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.MessageUtils;
+import xyz.sandwichframework.models.CommandPacket;
 import xyz.sandwichframework.models.InputParameter;
 import xyz.sandwichframework.models.InputParameter.InputParamType;
 import xyz.sandwichframework.models.discord.ModelGuild;
@@ -40,16 +36,17 @@ public class Comun {
 	@Parameter(name="Nombre del objetivo",desc="Nombre del objetivo(ejemplo: Tulencio).\nSe permiten espacios. Todo texto que comience con un '-' no formará parte del nombre.")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void saludar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	public static void saludar(CommandPacket packet) {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		String nombre = null;
 		boolean autodes = false;
 		int autodesTime=15;
 		boolean anon=false;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
@@ -76,31 +73,27 @@ public class Comun {
 			return;
 		}
 		EmbedBuilder eb = new EmbedBuilder();
-		eb.setThumbnail(SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
-		e.getChannel().sendMessage(eb.build()).queue();
+		eb.setThumbnail(packet.getBot().getSelfUser().getAvatarUrl());
+		e.getChannel().sendMessageEmbeds(eb.build()).queue();
 		e.getChannel().sendMessage("Debe especificar un nombre.").queue();
 	}
+	
 	@Command(name="YouTube")
 	@Parameter(name="Nombre del objetivo",desc="Texto con el cual se realizará la busqueda en Youtube (ejemplo: s.youtube '[creampie](https://preppykitchen.com/cream-pie/)'... chucha, creo me equivoqué de página xD).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void youtube(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
-		Language lang = Language.ES;
-		ModelGuild servidor;
-		if(e.isFromGuild()) {
-			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
-			if(servidor!=null)
-				lang=servidor.getLanguage();
-		}
+	public static void youtube(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+		Language lang = packet.getPreferredLang();
 		String busqueda = null;
 		boolean autodes = false;
 		int autodesTime=15;
 		boolean anon = false;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
@@ -116,12 +109,11 @@ public class Comun {
 		if(busqueda!=null) {
 			busqueda = URLEncoder.encode(busqueda, StandardCharsets.UTF_8.toString());
 			String hc = ClienteHttp.peticionHttp(Constantes.RecursoExterno.LINK_YOUTUBE_QUERY+busqueda);
-			hc = new String(hc.getBytes(),StandardCharsets.UTF_8);
 			ArrayList<String> ids = Comparador.EncontrarTodos(Comparador.Patrones.Youtube_Link, hc);
 			ArrayList<String> tit = Comparador.EncontrarTodos(Comparador.Patrones.Youtube_Title, hc);
 			if(ids.size()>0) {
 				EmbedBuilder eb = new EmbedBuilder();
-				eb.setTitle(Values.value("jax-resultado-busqueda", lang));
+				eb.setTitle(Values.value("jax-yt-resultado-busqueda", lang));
 				eb.setColor(Color.DARK_GRAY);
 				for(int i=0;i<ids.size() && i<24;i++) {
 					if(i>=tit.size()) {
@@ -137,7 +129,7 @@ public class Comun {
 					}
 					MessageUtils.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
 				}else {
-					e.getChannel().sendMessage(eb.build()).queue();
+					e.getChannel().sendMessageEmbeds(eb.build()).queue();
 				}
 				return;
 			}
@@ -151,15 +143,16 @@ public class Comun {
 	@Command(name="Invocar")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void invocar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	public static void invocar(CommandPacket packet) {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean anon = false;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}if(p.getKey().equalsIgnoreCase("anonimo")) {
@@ -170,54 +163,33 @@ public class Comun {
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
-		Language lang = Language.ES;
-		ModelGuild servidor;
-		if(e.isFromGuild()) {
-			servidor = BotGuildsManager.getManager().getGuild(e.getGuild().getIdLong());
-			if(servidor!=null)
-				lang=servidor.getLanguage();
-		}
-		Guild guild = e.getGuild();
-		Member m = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
-		GuildVoiceState vs = m.getVoiceState();
-		Member invocador = guild.getMember(e.getAuthor());
-		VoiceChannel vchannel = invocador.getVoiceState().getChannel();
-		
-		if(vs.inVoiceChannel()) {
-			if(vs.getChannel()==vchannel) {
-				return;
-			}
-		}
-		if(!invocador.getVoiceState().inVoiceChannel()) {
-			//necesita estar en un canal de voz para reproducir musica
-			if(autodes) {
-				MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-i-audio-requerido", lang),autodesTime);
-			}else {
-				e.getChannel().sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
-			}
+		Language lang = packet.getPreferredLang();
+		if(!packet.isFromGuild()) {
+			packet.getTextChannel().sendMessage("Solo se puede usar este comando en un servidor.").queue();
 			return;
 		}
-		AudioManager audioManager = guild.getAudioManager();
+		Guild guild = e.getGuild();
+		Member invocador = guild.getMember(e.getAuthor());
 		if(autodes) {
 			MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-i-voy", lang),autodesTime);
 		}else {
 			e.getChannel().sendMessage(Values.value("jax-i-voy", lang)).queue();
 		}
-		
-		audioManager.openAudioConnection(vchannel);
+		((SandwichBot)packet.getBot()).conectarVoz(lang, invocador,e.getTextChannel(), guild.getAudioManager());
 	}
 	@Command(name="Presentacion")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void info(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	public static void info(CommandPacket packet) {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean anon = false;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}if(p.getKey().equalsIgnoreCase("anonimo")) {
@@ -225,20 +197,20 @@ public class Comun {
 				}
 			}
 		}
-		ModelGuild server = BotGuildsManager.getManager().getGuild(e.getTextChannel().getGuild().getIdLong());
+		ModelGuild server = packet.getModelGuild();
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(autodes) {
-			MessageUtils.SendAndDestroy(e.getChannel(),SandwichBot.getInfo(server.getLanguage()),autodesTime);
+			MessageUtils.SendAndDestroy(e.getChannel(),((SandwichBot)packet.getBot()).getInfo(server.getLanguage()),autodesTime);
 		}else {
-			e.getChannel().sendMessage(SandwichBot.getInfo(server.getLanguage())).queue();
+			e.getChannel().sendMessageEmbeds(((SandwichBot)packet.getBot()).getInfo(server.getLanguage())).queue();
 		}
 	}
 	
 	@Command(name="VoteBan",enabled=false)
 	@Parameter(name="Nombre Objetivo(mención)",desc="Nombre(mención) del usuario a Banear. Se permiten mas de uno.")
-	public static void voteban(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	public static void voteban(CommandPacket packet) {
 		
 	}
 	
@@ -254,7 +226,8 @@ public class Comun {
 	@Option(name="color",desc="Corresponde a el color del embed. Se debe proporcionar un valor hexadecimal de 3 o 6 caracteres sin contar el caracter '#'(ej: #fff). También están permitidos los siguientes colores predefinidos: blanco, negro, rojo, verde, azul, amarillo, gris, gris oscuro, cian y magenta (se debe escribir el nombre correctamente. Se permiten también en ingrlés).",alias={"c","col"})
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void embed(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	public static void embed(CommandPacket packet) {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean anon = false;
@@ -264,18 +237,18 @@ public class Comun {
 		String titulo = null;
 		String descripcion = null;
 		String autor = null;
-		String mensaje = "";
+		String mensaje = null;
 		String color = "gray";
 		String footer = null;
 		String img = null;
 		String thumb = null;
 		String footer_img = null;
 		
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
@@ -324,7 +297,7 @@ public class Comun {
 		eb.setImage(Tools.toValidHttpUrl(img));
 		if(thumb!=null) {
 			if(thumb.equals("none")) {
-				thumb = SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl();
+				thumb = packet.getBot().getSelfUser().getAvatarUrl();
 			}
 		}
 		eb.setThumbnail(Tools.toValidHttpUrl(thumb));
@@ -351,7 +324,7 @@ public class Comun {
 		if(autodes) {
 			MessageUtils.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
 		}else {
-			e.getChannel().sendMessage(eb.build()).queue();
+			e.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
 	}
 	
@@ -365,7 +338,8 @@ public class Comun {
 	@Option(name="genero",desc="Indica si a quien se funa es hombre o mujer. Los valores son:\nHOMBRE: m, masculino y hombre\nMUJER: f, femenino y mujer\nSi no se especifica esta opción, no se asumirá ninguno.",alias={"gen","g","sexo"})
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void funar(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	public static void funar(CommandPacket packet) {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean anon = false;
@@ -381,11 +355,11 @@ public class Comun {
 		String img = null;
 		String footer_img = null;
 		
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
@@ -458,27 +432,28 @@ public class Comun {
 		if(autodes) {
 			MessageUtils.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
 		}else {
-			e.getChannel().sendMessage(eb.build()).queue();
+			e.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
 	}
 	
 	@Command(name="Trollear")
-	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"},enabled=false,visible=false)
+	//@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"},enabled=false,visible=false)
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	@Option(name="earrape",desc="Reproduce un audio que hace mierda el oido. Puedes especificarl la url con esta opción o dejarla vacía y yo haré el resto.",alias={"e","ear","errape"})
-	public static void trollear(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
-		boolean autodes = false;
-		int autodesTime = 15;
+	public static void trollear(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+		//boolean autodes = false;
+		//int autodesTime = 15;
 		boolean anon = false;
 		EarrapeSRC er_src = new EarrapeSRC();
 		boolean er = false;
-		EmbedBuilder eb = new EmbedBuilder();
-		for(InputParameter p : parametros) {
+		//EmbedBuilder eb = new EmbedBuilder();
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
-					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
-						autodesTime = p.getValueAsInt();
+					//autodes=true;
+					if(p.getValueAsString()!=null) {
+						//autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
@@ -496,10 +471,9 @@ public class Comun {
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
-		TextChannel tChannel = e.getTextChannel();
 		Guild guild = e.getGuild();
 		Member member;
-		Member self = guild.getMember(SandwichBot.actualBot().getJDA().getSelfUser());
+		//Member self = guild.getMember(packet.getBot().getSelfUser());
 		if(e.getMessage().getMentionedMembers().size()>0) {
 			member = e.getMessage().getMentionedMembers().get(0);
 		}else {
@@ -526,11 +500,11 @@ public class Comun {
 		}
 	}
 	@Command(name="RAE",enabled=false)
-	public static void rae(MessageReceivedEvent e, ArrayList<InputParameter> parametros) {
+	public static void rae(CommandPacket packet) {
 		
 	}
 	@Command(name="Test",visible=false,enabled=false)
-	public static void test(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+	public static void test(CommandPacket packet) throws IOException{
 		
 	}
 }

@@ -35,6 +35,7 @@ public class Constantes {
 		public static final String Veneno = "☠";
 		public static final String Volador = "🕊";
 		public static String getTipo(String tipo) throws Exception {
+			tipo = tipo.replace("Tipo ","");
 			tipo = tipo.replace("á", "a").replace("é", "e").replace("í", "i").replace("ó", "o").replace("ú", "u");
 			tipo = tipo.replace("Á", "a").replace("É", "e").replace("Í", "i").replace("Ó", "o").replace("Ú", "u");
 			tipo = tipo.toUpperCase().substring(0,1) + tipo.toLowerCase().substring(1);

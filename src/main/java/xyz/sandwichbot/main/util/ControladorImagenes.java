@@ -3,7 +3,6 @@ package xyz.sandwichbot.main.util;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -13,7 +12,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import xyz.sandwichbot.main.Constantes;
-import xyz.sandwichbot.main.SandwichBot;
+import xyz.sandwichbot.main.modelos.FuenteImagen;
+import xyz.sandwichframework.core.Bot;
 import xyz.sandwichframework.core.Values;
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.core.util.MessageUtils;
@@ -49,7 +49,7 @@ public class ControladorImagenes implements Runnable{
 			}else {
 				Thread.sleep(300);
 			}
-			if(!fuente.getName().equalsIgnoreCase("randomcat")) {
+			if(!fuente.isApi()) {
 				lnk = linkBooru();
 				//System.out.println("lnk: " + lnk);
 				if(lnk==null) {
@@ -75,7 +75,7 @@ public class ControladorImagenes implements Runnable{
 					channel.sendMessage(lnk).queue();
 					return;
 				}
-				channel.sendMessage(builder.build()).queue();
+				channel.sendMessageEmbeds(builder.build()).queue();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,13 +175,13 @@ public class ControladorImagenes implements Runnable{
 		return j.getString("file");
 	}*/
 	
-	public void enviarRestriccion() {
+	public void enviarRestriccion(Bot bot) {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.addField(Values.value("jax-no-nsfw-ft", lang), Values.value("jax-no-nsfw-fd", lang), true);
-		eb.setFooter(Values.value("jax-no-nsfw-ftr", lang),SandwichBot.actualBot().getJDA().getSelfUser().getAvatarUrl());
+		eb.setFooter(Values.value("jax-no-nsfw-ftr", lang),bot.getSelfUser().getAvatarUrl());
 		eb.setThumbnail(Constantes.JaxSandwich.Imagenes.nonsfw);
 		eb.setColor(Color.red);
-		channel.sendMessage(eb.build()).queue();
+		channel.sendMessageEmbeds(eb.build()).queue();
 	}
 	
 	/* CONSTRUCTORES */

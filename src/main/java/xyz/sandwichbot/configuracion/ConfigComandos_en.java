@@ -34,7 +34,7 @@ public class ConfigComandos_en {
 	@CommandID("Configurar")
 	@TranslatedName("Settings")
 	@CommandDescription
-	public static final String CONF_DESC = "With this one you can configure me... you know, the voteban command and somo other sh*ts. Use without parameters to return the actual settings.";
+	public static final String CONF_DESC = "With this one you can configure me... you know, how I interact with the guild, allowing/disabling command and somo other sh'ts. Use without parameters to return the actual settings.";
 	
 	@CommandID("Configurar")
 	@CommandAliases

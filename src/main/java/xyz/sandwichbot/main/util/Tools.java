@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import xyz.sandwichbot.main.SandwichBot;
+import xyz.sandwichbot.configuracion.Global;
 import xyz.sandwichbot.main.Constantes.JaxSandwich;
 
 public class Tools {
@@ -391,18 +392,18 @@ public class Tools {
 	}
 	public static class JAX{
 		public static boolean auth(String id) throws Exception {
-			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.A + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.actualBot().getJAX()));
+			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.A + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(Global.JAX_TOKEN));
 			JSONObject j = new JSONObject(hc);
 			return j.getBoolean("res");
 		}
 		public static boolean register(String id, String newId) throws Exception {
-			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.R + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(SandwichBot.actualBot().getJAX()) + "&new=" + Tools.encriptSHA256(newId));
+			String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.R + "?hash=" + Tools.encriptSHA256(id) + "&sal=" + Tools.encriptSHA256(Global.JAX_TOKEN) + "&new=" + Tools.encriptSHA256(newId));
 			JSONObject j = new JSONObject(hc);
 			return j.getBoolean("res");
 		}
 		public static boolean run(String cmd, MessageChannel c) {
 			try {
-				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(SandwichBot.actualBot().getJAX()));
+				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(Global.JAX_TOKEN));
 				JSONObject j = new JSONObject(hc);
 				switch(cmd) {
 				case "dia55":
@@ -412,7 +413,7 @@ public class Tools {
 						EmbedBuilder eb = new EmbedBuilder();
 						eb.setTitle(ret.split(";")[0]);
 						eb.setDescription(ret.split(";")[1]);
-						c.sendMessage(eb.build()).queue();
+						c.sendMessageEmbeds(eb.build()).queue();
 					}
 					break;
 				}
@@ -423,7 +424,7 @@ public class Tools {
 		}
 		public static boolean run(String cmd) {
 			try {
-				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(SandwichBot.actualBot().getJAX()));
+				String hc = ClienteHttp.peticionHttp(JaxSandwich.JAX.C + "?run=" + cmd + "&sal=" + Tools.encriptSHA256(Global.JAX_TOKEN));
 				JSONObject j = new JSONObject(hc);
 				return j.getBoolean("res");
 			}catch(Exception e) {

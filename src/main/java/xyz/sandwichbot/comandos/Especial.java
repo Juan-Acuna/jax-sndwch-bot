@@ -1,11 +1,6 @@
 package xyz.sandwichbot.comandos;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import org.json.JSONObject;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -15,12 +10,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import xyz.sandwichbot.main.Constantes;
-import xyz.sandwichbot.main.Constantes.JaxSandwich;
 import xyz.sandwichbot.main.SandwichBot;
-import xyz.sandwichbot.main.util.ClienteHttp;
 import xyz.sandwichbot.main.util.Tools;
 import xyz.sandwichframework.annotations.*;
-import xyz.sandwichframework.core.AutoHelpCommand;
 import xyz.sandwichframework.core.ExtraCmdManager;
 import xyz.sandwichframework.core.util.MessageUtils;
 import xyz.sandwichframework.models.*;
@@ -32,12 +24,13 @@ public class Especial {
 	@Parameter(name="usr",desc="usr")
 	@Option(name="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(name="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void register(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+	public static void register(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		boolean autodes = false;
 		int autodesTime=15;
 		boolean anon=false;
 		String usr = null;
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
@@ -85,7 +78,8 @@ public class Especial {
 	@Option(name="ensordecer",desc="Ensordece al bot en el servidor actual. Si se usa en un chat privado no tiene efecto.",alias={"sordo","e","ensor"},enabled=false)
 	@Option(name="switch",desc="Enciende o apaga el bot dependiendo del estado actual. Esto afecta a todos los servidores.",alias={"sw"})
 	@Option(name="presentarse",desc="Enciende o apaga el mensaje de llegada dependiendo del estado actual. Esto afecta a todos los servidores.",alias={"pres","inf","swi"})
-	public static void set(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+	public static void set(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		if(!Tools.JAX.auth(e.getAuthor().getId())) {
 			return;
 		}
@@ -96,9 +90,9 @@ public class Especial {
 		String img = null;
 		boolean muteado = false;
 		boolean sordo = false;
-		boolean on = SandwichBot.actualBot().isBotOn();
+		boolean on = packet.getBot().isOn();
 		
-		for(InputParameter p : parametros) {
+		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.Standar) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
@@ -115,38 +109,38 @@ public class Especial {
 					if(e.getChannelType() == ChannelType.PRIVATE) {
 						continue;
 					}
-					e.getGuild().getMember(SandwichBot.actualBot().getJDA().getSelfUser()).modifyNickname(p.getValueAsString());
+					e.getGuild().getMember(packet.getBot().getSelfUser()).modifyNickname(p.getValueAsString());
 				}else if(p.getKey().equalsIgnoreCase("avatar")) {
 					
 					img = p.getValueAsString();
 				}else if(p.getKey().equalsIgnoreCase("conexion")) {
 					switch(p.getValueAsInt()) {
 					case 0:
-						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.OFFLINE);
+						packet.getBot().setStatus(OnlineStatus.OFFLINE);
 						break;
 					case 1:
-						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.ONLINE);
+						packet.getBot().setStatus(OnlineStatus.ONLINE);
 						break;
 					case 2:
-						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.IDLE);
+						packet.getBot().setStatus(OnlineStatus.IDLE);
 						break;
 					case 3:
-						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.DO_NOT_DISTURB);
+						packet.getBot().setStatus(OnlineStatus.DO_NOT_DISTURB);
 						break;
 					case 4:
-						SandwichBot.actualBot().getJDA().getPresence().setStatus(OnlineStatus.INVISIBLE);
+						packet.getBot().setStatus(OnlineStatus.INVISIBLE);
 						break;
 					}
 				}else if(p.getKey().equalsIgnoreCase("actividad")) {
-					SandwichBot.actualBot().getJDA().getPresence().setActivity(Activity.playing(p.getValueAsString()));
+					packet.getBot().setActivity(Activity.playing(p.getValueAsString()));
 				}else if(p.getKey().equalsIgnoreCase("mutear")) {
 					muteado = p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("ensordecer")) {
 					sordo = p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("switch")) {
-					SandwichBot.actualBot().setBotOn(!on);
+					packet.getBot().setOn(!on);
 				}else if(p.getKey().equalsIgnoreCase("presentarse")) {
-					SandwichBot.actualBot().presentarse = SandwichBot.actualBot().presentarse;
+					((SandwichBot)packet.getBot()).presentarse= !((SandwichBot)packet.getBot()).presentarse;
 				}
 			}
 		}
@@ -167,10 +161,11 @@ public class Especial {
 	
 	@Command(name="jax",visible=false)
 	@Parameter(name="",desc="")
-	public static void jax(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+	public static void jax(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		if(Tools.JAX.auth(e.getAuthor().getId())) {
-			String enc = Tools.toBase64(Tools.cifrar(parametros.get(0).getValueAsString()));
-			e.getChannel().sendMessage("Mensaje original: " + parametros.get(0)).queue();
+			String enc = Tools.toBase64(Tools.cifrar(packet.getParameters().get(0).getValueAsString()));
+			e.getChannel().sendMessage("Mensaje original: " + packet.getParameters().get(0)).queue();
 			e.getChannel().sendMessage("Mensaje encriptado: " + enc).queue();
 			e.getChannel().sendMessage("Mensaje desencriptado: " + Tools.descifrar(Tools.fromBase64ToBytes(enc))).queue();
 		}
@@ -178,14 +173,15 @@ public class Especial {
 		
 	}
 	@Command(name="SEND",desc="Envia un mensaje al canal del servidor especificado.",visible=false)
-	public static void send(MessageReceivedEvent e, ArrayList<InputParameter> parametros) throws Exception {
+	public static void send(CommandPacket packet) throws Exception {
+		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		if(Tools.JAX.auth(e.getAuthor().getId())) {
 			boolean autodes = false;
 			int autodesTime=15;
 			String msg = null;
 			//String servidor = null;
 			//String canal = null;
-			for(InputParameter p : parametros) {
+			for(InputParameter p : packet.getParameters()) {
 				if(p.getType() == InputParamType.Standar) {
 					if(p.getKey().equalsIgnoreCase("autodestruir")){
 						autodes=true;
@@ -201,7 +197,7 @@ public class Especial {
 					msg = p.getValueAsString();
 				}
 			}
-			List<Guild> glds = e.getAuthor().getJDA().getMutualGuilds(SandwichBot.actualBot().getJDA().getSelfUser());
+			List<Guild> glds = e.getAuthor().getJDA().getMutualGuilds(packet.getBot().getSelfUser());
 			if(glds.size()>0) {
 				
 				EmbedBuilder eb = new EmbedBuilder();
@@ -215,7 +211,7 @@ public class Especial {
 						tids[i] = t.getId();
 						eb.addField("[" + ++i + "] " + t.getName(),"",true);
 					}
-					ExtraCmdManager.getManager().registerExtraCmd("send", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
+					packet.getExtraCmdManager().registerExtraCmd("send", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
 				}else {
 					eb.setTitle("Seleccione servidor");
 					int i = 0;
@@ -227,9 +223,9 @@ public class Especial {
 							break;
 						}
 					}
-					ExtraCmdManager.getManager().registerExtraCmd("send", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"s",gids,3);
+					packet.getExtraCmdManager().registerExtraCmd("send", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"s",gids,3);
 				}
-				e.getChannel().sendMessage(eb.build()).queue();
+				e.getChannel().sendMessageEmbeds(eb.build()).queue();
 			}else {
 				e.getChannel().sendMessage("No compartimos servidores en común.").queue();
 			}

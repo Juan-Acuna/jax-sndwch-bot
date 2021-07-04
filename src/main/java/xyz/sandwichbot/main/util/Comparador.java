@@ -38,8 +38,6 @@ public class Comparador {
 		/* POKEMON */
 		
 		public static final String XV_Link = "/video[0-9]{3,10}/([a-zA-Z0-9_]{1,100})";
-		public static final String RB_ImageQuery = "https://realbooru.com/index.php\\?page=post\\&s=view\\&id=[0-9]{5,7}";
-		public static final String RB_Image = "https://realbooru.com//images/[0-9]{1,5}/(.{5,50})\\.[a-zA-Z0-9]{2,5}";
 		
 		public static final String[] YoutubeTitle_Cleanner = {"\"title\":\\{\"runs\":\\[\\{\"text\":\"","\"\\}\\],\"accessibility\""};
 	}

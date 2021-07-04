@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>xyz.sandwichbot</groupId>
   <artifactId>the-sandwich-bot</artifactId>
-  <version>0.4.0-SNAPSHOT</version>
+  <version>0.5.1-SNAPSHOT</version>
   <name>The Sandwich Bot</name>
    <packaging>jar</packaging> 
   <properties>
@@ -11,10 +11,17 @@
   	<maven.compiler.target>1.8</maven.compiler.target>
   </properties>
   <dependencies>
+	<dependency>
+		  <!-- jsoup HTML parser library @ https://jsoup.org/ -->
+		<groupId>org.jsoup</groupId>
+		<artifactId>jsoup</artifactId>
+		<version>1.13.1</version>
+	</dependency>
   	<dependency>
 		<groupId>net.dv8tion</groupId>
 		<artifactId>JDA</artifactId>
-		<version>4.2.0_227</version>
+		<!--<version>4.2.0_227</version>-->
+		<version>4.3.0_283</version>
 	</dependency>
 	<dependency>
     	<groupId>org.json</groupId>
@@ -38,6 +45,11 @@
   	</dependency>
   </dependencies>
   <repositories>
+	  <repository>
+	    <id>dv8tion</id>
+	    <name>m2-dv8tion</name>
+	    <url>https://m2.dv8tion.net/releases</url>
+	</repository>
 	<repository>
 		<id>jcenter</id>
 		<name>jcenter-bintray</name>

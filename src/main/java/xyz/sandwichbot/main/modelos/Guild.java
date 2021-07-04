@@ -1,7 +1,9 @@
 package xyz.sandwichbot.main.modelos;
 
 import xyz.sandwichbot.conexion.CommandManager;
+import xyz.sandwichbot.conexion.anotaciones.PrimaryKey;
 import xyz.sandwichbot.main.SandwichBot;
+import xyz.sandwichframework.core.Bot;
 import xyz.sandwichframework.core.util.Language;
 import xyz.sandwichframework.models.discord.ModelGuild;
 
@@ -18,7 +20,7 @@ public class Guild extends ModelGuild{
 		this.lastKnownName=guild.getName();
 		push();
 	}
-
+	@PrimaryKey
 	public long id_guild;
 	public String lang;
 	public String name;
@@ -33,6 +35,7 @@ public class Guild extends ModelGuild{
 	
 	public void push() {
 		this.id_guild=this.id;
+		System.out.println("[push]id:"+this.id+"|>"+this.id_guild);
 		this.lang=this.language.name();
 		this.name=this.lastKnownName;
 		this.prefix=this.customPrefix;
@@ -78,7 +81,7 @@ public class Guild extends ModelGuild{
 	
 	public void pull() {
 		this.id=this.id_guild;
-		this.language=Enum.valueOf(Language.class, this.lang);
+		this.language=Language.valueOf(this.lang);
 		this.lastKnownName=this.name;
 		this.customPrefix=this.prefix;
 		this.customOptionsPrefix=this.opt_prefix;
@@ -110,8 +113,8 @@ public class Guild extends ModelGuild{
 		}
 		this.actuallyJoined=this.joined==1;
 	}
-	public void refresh() {
-		net.dv8tion.jda.api.entities.Guild g = SandwichBot.actualBot().getJDA().getGuildById(id);
+	public void refresh(Bot bot) {
+		net.dv8tion.jda.api.entities.Guild g = bot.getJDA().getGuildById(id);
 		if(g==null) {
 			this.actuallyJoined=false;
 			push();
