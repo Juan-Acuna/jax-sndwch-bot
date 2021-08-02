@@ -15,51 +15,61 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 /**
- * Representa un Servidor de Discord. Útil para las configuraciones por servidor.
- * Represents a Discord's Guild. Useful for Guilds' settings.
+ * Representa la configuración de un servidor de Discord.
+ * Represents a Discord's guild configuration.
  * @author Juancho
- * @version 1.0
+ * @version 1.2
  */
 public class ConfigGuild {
 	protected long id;
-	protected String lastKnownName;
 	protected Language language;
 	protected boolean actuallyJoined = true;
+	protected Guild referencedGuild = null;
+	protected String customPrefix = null;
+	protected String customOptionsPrefix = null;
 	protected Map<String, Boolean> allowedCommands = (Map<String, Boolean>) Collections.synchronizedMap(new HashMap<String, Boolean>());
 	protected Map<String, Boolean> allowedCategories = (Map<String, Boolean>) Collections.synchronizedMap(new HashMap<String, Boolean>());
 	protected Map<String, Boolean> allowedRoles = (Map<String, Boolean>) Collections.synchronizedMap(new HashMap<String, Boolean>());
 	protected Map<String, Boolean> allowedMembers = (Map<String, Boolean>) Collections.synchronizedMap(new HashMap<String, Boolean>());
 	protected Map<String, Boolean> allowedChannels = (Map<String, Boolean>) Collections.synchronizedMap(new HashMap<String, Boolean>());
-	protected Map<String, String> specialRoles = (Map<String, String>) Collections.synchronizedMap(new HashMap<String, String>());
 	protected boolean defaultDenyCommands = false;
 	protected boolean defaultDenyCategories = false;
 	protected boolean defaultDenyRoles = false;
 	protected boolean defaultDenyMembers = false;
 	protected boolean defaultDenyChannels = false;
-	protected String customPrefix = null;
-	protected String customOptionsPrefix = null;
 	public ConfigGuild() {}
 	public ConfigGuild(Guild guild) {
 		id=guild.getIdLong();
-		lastKnownName=guild.getName();
 		actuallyJoined=true;
-		specialRoles.put("admin", null);
+		referencedGuild = guild;
+		this.language = Language.EN;
 	}
+	public ConfigGuild(Guild guild, Language language) {
+		id=guild.getIdLong();
+		actuallyJoined=true;
+		referencedGuild = guild;
+		this.language = language;
+	}
+	@Deprecated
 	public ConfigGuild(long id) {
 		this.id = id;
 	}
-	public ConfigGuild(long id, String lastKnownName, Language language) {
+	@Deprecated
+	public ConfigGuild(long id, Language language) {
 		this.id = id;
-		this.lastKnownName = lastKnownName;
 		this.language = language;
 		actuallyJoined=true;
-		specialRoles.put("admin", null);
 	}
 	public static boolean canRunThisCommand(ConfigGuild guild, ModelCommand command, MessageChannel channel, User author) {
 		if(guild==null) {
 			return !command.getCategory().isNsfw();
 		}
-		Member m = ((TextChannel)channel).getGuild().getMember(author);
+		Member m;
+		if(guild.referencedGuild!=null) {
+			m = guild.referencedGuild.getMember(author);
+		}else {
+			m = ((TextChannel)channel).getGuild().getMember(author);
+		}
 		boolean r = guild.isCommandAllowed(command.getId()) 
 				&& guild.isCategoryAllowed(command.getCategory().getId()) 
 				&& guild.isChannelAllowed(channel.getId())
@@ -78,12 +88,6 @@ public class ConfigGuild {
 	public String getIdAsString() {
 		return id+"";
 	}
-	public String getLastKnownName() {
-		return lastKnownName;
-	}
-	public void setLastKnownName(String lastKnownName) {
-		this.lastKnownName = lastKnownName;
-	}
 	public Language getLanguage() {
 		return language;
 	}
@@ -95,6 +99,19 @@ public class ConfigGuild {
 	}
 	public void setJoined(boolean joined) {
 		this.actuallyJoined = joined;
+	}
+	public Guild getReferencedGuild() {
+		return referencedGuild;
+	}
+	public void setReferencedGuild(Guild referencedGuild) throws Exception {
+		if(referencedGuild==null) {
+			throw new Exception("Can't set a null Guild reference!");
+		}
+		this.id=referencedGuild.getIdLong();
+		this.referencedGuild = referencedGuild;
+	}
+	public void setId(long id) {
+		this.id = id;
 	}
 	public Map<String, Boolean> getAllowedCommands() {
 		return allowedCommands;
@@ -125,18 +142,6 @@ public class ConfigGuild {
 	}
 	public void setAllowedChannels(Map<String, Boolean> allowedChannels) {
 		this.allowedChannels = allowedChannels;
-	}
-	public Map<String, String> getSpecialRoles() {
-		return specialRoles;
-	}
-	public void setSpecialRoles(Map<String, String> specialRoles) {
-		this.specialRoles = specialRoles;
-	}
-	public void setSpecialRole(String roleFunction, String roleId) {
-		specialRoles.put(roleFunction, roleId);
-	}
-	public String getSpecialRole(String roleFunction) {
-		return specialRoles.get(roleFunction);
 	}
 	public boolean isDefaultDenyCommands() {
 		return defaultDenyCommands;

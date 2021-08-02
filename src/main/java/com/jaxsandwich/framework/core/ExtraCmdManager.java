@@ -91,7 +91,7 @@ public class ExtraCmdManager {
 		ModelExtraCommand m = ModelExtraCommand.find(extraCmdName);
 		ConfigGuild g = null;
 		if(channel.getType()!=ChannelType.PRIVATE) {
-			g = bot.getGuildsManager().getGuild(((TextChannel)channel).getGuild().getIdLong());
+			g = bot.getGuildsManager().getConfig(((TextChannel)channel).getGuild().getIdLong());
 		}
 		CommandPacketBuilder cpb = new CommandPacketBuilder(bot, g, channel, authorId);
 		cpb.setArgs(args);

@@ -60,7 +60,7 @@ public class AutoHelpCommand extends CommandBase{
 		boolean cmdPass = false;
 		boolean catPass = false;
 		if(packet.isFromGuild()) {
-			actualGuild = packet.getGuildsManager().getGuild(e.getGuild().getIdLong());
+			actualGuild = packet.getGuildsManager().getConfig(e.getGuild().getIdLong());
 			if(actualGuild!=null)
 				actualLang = actualGuild.getLanguage();
 		}

@@ -67,7 +67,7 @@ public class CommandPacket {
 		this.messageReceived=event;
 		this.fromGuild=event.isFromGuild();
 		this.isWebhookMessage=event.isWebhookMessage();
-		this.guild=guildsManager.getGuild(event.getGuild().getIdLong());
+		this.guild=guildsManager.getConfig(event.getGuild().getIdLong());
 		if(this.guild!=null) {
 			this.prefLang=this.guild.getLanguage();
 		}else {

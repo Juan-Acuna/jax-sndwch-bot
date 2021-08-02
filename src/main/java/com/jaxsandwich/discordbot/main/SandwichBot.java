@@ -32,7 +32,12 @@ public class SandwichBot extends Bot{
 	public void onGuildJoin(GuildJoinEvent e) {
 		if(!this.isOn()) {
 			Guild g = new Guild(e.getGuild(),Language.ES);
-			this.guildsManager.registerGuild(g);
+			try {
+				this.guildsManager.registerGuild(g);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			return;
 		}
 		TextChannel c = e.getGuild().getDefaultChannel();

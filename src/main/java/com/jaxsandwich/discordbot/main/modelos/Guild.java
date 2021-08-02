@@ -17,7 +17,6 @@ public class Guild extends ConfigGuild{
 		super();
 		this.id=guild.getIdLong();
 		this.language=lang;
-		this.lastKnownName=guild.getName();
 		push();
 	}
 	@PrimaryKey
@@ -37,7 +36,6 @@ public class Guild extends ConfigGuild{
 		this.id_guild=this.id;
 		System.out.println("[push]id:"+this.id+"|>"+this.id_guild);
 		this.lang=this.language.name();
-		this.name=this.lastKnownName;
 		this.prefix=this.customPrefix;
 		this.opt_prefix=this.customOptionsPrefix;
 		
@@ -82,7 +80,6 @@ public class Guild extends ConfigGuild{
 	public void pull() {
 		this.id=this.id_guild;
 		this.language=Language.valueOf(this.lang);
-		this.lastKnownName=this.name;
 		this.customPrefix=this.prefix;
 		this.customOptionsPrefix=this.opt_prefix;
 		
@@ -124,16 +121,6 @@ public class Guild extends ConfigGuild{
 				e.printStackTrace();
 			}
 			return;
-		}
-		String n = g.getName();
-		if(!this.lastKnownName.equals(n)) {
-			this.lastKnownName=n;
-			push();
-			try {
-				CommandManager.update(this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 }

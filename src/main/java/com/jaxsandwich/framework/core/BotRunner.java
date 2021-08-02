@@ -184,7 +184,7 @@ public final class BotRunner {
 		boolean u = true;
 		for(Package p : pkgs) {
 			String pn = p.getName();
-			if(pn.startsWith("xyz.sandwichframework.")) {
+			if(pn.startsWith("com.jaxsandwich.framework.")) {
 				if(u) {
 					pn = "com.jaxsandwich.framework.core.util.defaultvalues";
 					u=false;
@@ -426,7 +426,7 @@ public final class BotRunner {
 		ConfigGuild actualGuild = null;
 		Language actualLang = bot.getDefaultLanguage();
 		if(b) {
-			actualGuild = bot.getGuildsManager().getGuild(e.getGuild().getIdLong());
+			actualGuild = bot.getGuildsManager().getConfig(e.getGuild().getIdLong());
 			actualLang = actualGuild.getLanguage();
 			if(actualGuild.getCustomPrefix()!=null)
 				prx=actualGuild.getCustomPrefix();

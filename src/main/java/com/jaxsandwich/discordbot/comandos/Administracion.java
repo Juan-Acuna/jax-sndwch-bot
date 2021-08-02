@@ -77,11 +77,6 @@ public class Administracion {
 			packet.getTextChannel().sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-conf-no-admin", lang), "rojo")).queue();
 			return;
 		}
-		if(!e.getGuild().getName().equals(servidor.getLastKnownName())) {
-			servidor.setLastKnownName(e.getGuild().getName());
-			servidor.push();
-			CommandManager.update(servidor);
-		}
 		boolean b = true;
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle(Values.value("jax-conf-act-conf", lang));

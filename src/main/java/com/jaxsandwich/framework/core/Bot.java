@@ -89,8 +89,13 @@ public abstract class Bot extends ListenerAdapter{
 	 */
 	protected boolean hide_nsfw_category = false;
 	/**
-	 * Gestor de servidores({@link com.jaxsandwich.framework.models.discord.ConfigGuild}) del bot.
-	 * Manager of guilds({@link com.jaxsandwich.framework.models.discord.ConfigGuild}) of the bot.
+	 * 
+	 * 
+	 */
+	protected boolean singleGuildMode = false;
+	/**
+	 * Gestor de configuraciones de servidores({@link com.jaxsandwich.framework.models.discord.ConfigGuild}) del bot.
+	 * Manager of guilds config({@link com.jaxsandwich.framework.models.discord.ConfigGuild}) of the bot.
 	 */
 	protected GuildsManager guildsManager;
 	/**
@@ -346,6 +351,20 @@ public abstract class Bot extends ListenerAdapter{
 	 */
 	public final void setIgnoreWebHook(boolean ignore) {
 		this.ignoreWebHook = ignore;
+	}
+	/**
+	 * Devuelve verdadero si el bot no tiene configuraciones especiales por cada servidor.
+	 * Returns true if the bot does not have custom configurations per guild.
+	 */
+	public boolean isSingleGuildMode() {
+		return singleGuildMode;
+	}
+	/**
+	 * Configura si el bot no tiene configuraciones especiales por cada servidor.
+	 * Sets if the bot does not have custom configurations per guild.
+	 */
+	public void setSingleGuildMode(boolean singleGuildMode) {
+		this.singleGuildMode = singleGuildMode;
 	}
 	/**
 	 * Devuelve el tokenHash de este bot.
