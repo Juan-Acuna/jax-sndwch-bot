@@ -7,7 +7,7 @@ import com.jaxsandwich.framework.core.BotRunner;
 import com.jaxsandwich.framework.core.ExtraCmdManager;
 import com.jaxsandwich.framework.core.GuildsManager;
 import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.PrivateChannel;
@@ -30,7 +30,7 @@ public class CommandPacket {
 	protected GuildsManager guildsManager;
 	protected ArrayList<InputParameter> parameters = null;
 	protected MessageReceivedEvent messageReceived;
-	protected ConfigGuild guild = null;
+	protected GuildConfig guildConfig = null;
 	protected String messageContent = null;
 	protected String authorId = null;
 	protected Language prefLang = null;
@@ -39,16 +39,16 @@ public class CommandPacket {
 	protected TextChannel textChannel = null;
 	protected PrivateChannel privateChannel = null;
 	protected StoreChannel storeChannel = null;
-	protected Category category = null;
+	//protected Category category = null;
 	
-	public CommandPacket(Bot bot, ConfigGuild guild, MessageReceivedEvent event) {
+	public CommandPacket(Bot bot, GuildConfig config, MessageReceivedEvent event) {
 		this.bot=bot;
 		this.extraCmdManager=bot.getExtraCmdManager();
 		this.messageReceived=event;
 		this.guildsManager=bot.getGuildsManager();
-		this.guild=guild;
-		if(this.guild!=null) {
-			this.prefLang=this.guild.getLanguage();
+		this.guildConfig=config;
+		if(this.guildConfig!=null) {
+			this.prefLang=this.guildConfig.getLanguage();
 		}else {
 			this.prefLang=this.bot.getDefaultLanguage();
 		}
@@ -67,9 +67,9 @@ public class CommandPacket {
 		this.messageReceived=event;
 		this.fromGuild=event.isFromGuild();
 		this.isWebhookMessage=event.isWebhookMessage();
-		this.guild=guildsManager.getConfig(event.getGuild().getIdLong());
-		if(this.guild!=null) {
-			this.prefLang=this.guild.getLanguage();
+		this.guildConfig=guildsManager.getConfig(event.getGuild());
+		if(this.guildConfig!=null) {
+			this.prefLang=this.guildConfig.getLanguage();
 		}else {
 			this.prefLang=this.bot.getDefaultLanguage();
 		}
@@ -90,9 +90,9 @@ public class CommandPacket {
 		case STORE:
 			this.storeChannel=(StoreChannel) channel;
 			break;
-		case CATEGORY:
+		/*case CATEGORY:
 			this.category=(Category) channel;
-			break;
+			break;*/
 		default:
 			break;
 		}
@@ -118,8 +118,8 @@ public class CommandPacket {
 	public boolean isWebhookMessage() {
 		return isWebhookMessage;
 	}
-	public ConfigGuild getModelGuild() {
-		return this.guild;
+	public GuildConfig getModelGuild() {
+		return this.guildConfig;
 	}
 	public String getMessageContent() {
 		return messageContent;
@@ -142,9 +142,9 @@ public class CommandPacket {
 	public StoreChannel getStoreChannel() {
 		return this.storeChannel;
 	}
-	public Category getCategoryChannel() {
+	/*public Category getCategoryChannel() {
 		return this.category;
-	}
+	}*/
 	public ChannelType getChannelType() {
 		return channelType;
 	}

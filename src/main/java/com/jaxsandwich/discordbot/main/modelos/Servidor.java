@@ -4,10 +4,10 @@ import com.jaxsandwich.discordbot.conexion.CommandManager;
 import com.jaxsandwich.discordbot.conexion.anotaciones.PrimaryKey;
 import com.jaxsandwich.framework.core.Bot;
 import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class Servidor extends ConfigGuild{
+public class Servidor extends GuildConfig{
 
 	public Servidor() {
 		super();

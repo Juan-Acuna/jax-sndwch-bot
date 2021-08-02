@@ -28,15 +28,15 @@ public class PlayerManager {
 		AudioSourceManagers.registerLocalSource(audioPlayerManager);
 	}
 	public GuildMusicManager getMusicManager(Guild guild) {
-		/*return this.musicManagers.computeIfAbsent(guild.getId(), (guildId) -> {
+		/*return this.musicManagers.computeIfAbsent(guildConfig.getId(), (guildId) -> {
 			GuildMusicManager guildMusicManager = new GuildMusicManager(this.audioPlayerManager);
-			guild.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());
+			guildConfig.getAudioManager().setSendingHandler(guildMusicManager.getSendHandler());
 			
 			return guildMusicManager;
 		});*/
 		/*System.out.println("GUILDS REGISTRADOS:");
 		for(String s : musicManagers.keySet()) {
-			System.out.println(s + " | " + s.equals(guild.getId()) + " | " + musicManagers.containsKey(guild.getId()));
+			System.out.println(s + " | " + s.equals(guildConfig.getId()) + " | " + musicManagers.containsKey(guildConfig.getId()));
 		}*/
 		if(musicManagers.containsKey(guild.getId())) {
 			return musicManagers.get(guild.getId());

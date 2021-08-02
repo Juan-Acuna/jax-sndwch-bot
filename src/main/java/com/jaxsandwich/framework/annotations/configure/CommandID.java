@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 /**
- * Identifica el Comando a configurar.
- * Identifies the Command to configure.
+ * [ES] Identifica el Comando a configurar.<br>
+ * [EN] Identifies the Command to configure.
  * @author Juan Acuña
- * @version 1.0
+ * @version 1.1
  */
 public @interface CommandID {
 	String value();

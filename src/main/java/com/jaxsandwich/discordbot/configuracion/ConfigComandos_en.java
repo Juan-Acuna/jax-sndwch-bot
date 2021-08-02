@@ -16,7 +16,7 @@ public class ConfigComandos_en {
 	@CommandID("Banear")
 	@TranslatedName("Ban")
 	@CommandDescription
-	public static final String BANEAR_DESC = "Allows to ban a member of the guild for a determined time.";
+	public static final String BANEAR_DESC = "Allows to ban a member of the guildConfig for a determined time.";
 	
 	@CommandID("Banear")
 	@CommandAliases
@@ -34,7 +34,7 @@ public class ConfigComandos_en {
 	@CommandID("Configurar")
 	@TranslatedName("Settings")
 	@CommandDescription
-	public static final String CONF_DESC = "With this one you can configure me... you know, how I interact with the guild, allowing/disabling command and somo other sh'ts. Use without parameters to return the actual settings.";
+	public static final String CONF_DESC = "With this one you can configure me... you know, how I interact with the guildConfig, allowing/disabling command and somo other sh'ts. Use without parameters to return the actual settings.";
 	
 	@CommandID("Configurar")
 	@CommandAliases
@@ -84,7 +84,7 @@ public class ConfigComandos_en {
 	
 	@CommandID("VoteBan")
 	@CommandDescription
-	public static final String VOTEBAN_DESC = "Starts a vote to ban a member from this guild(for a determined time). *THIS COMMAND MUST BE ACTIVATED BY A GUILD'S ADMINISTRATOR.*";
+	public static final String VOTEBAN_DESC = "Starts a vote to ban a member from this guildConfig(for a determined time). *THIS COMMAND MUST BE ACTIVATED BY A GUILD'S ADMINISTRATOR.*";
 	
 	@CommandID("VoteBan")
 	@CommandAliases
@@ -101,7 +101,7 @@ public class ConfigComandos_en {
 	@CommandID("Funar")
 	@TranslatedName("Wanted")
 	@CommandDescription
-	public static final String FUNAR_DESC = "Returns a wanted poster for a member from this guild.";
+	public static final String FUNAR_DESC = "Returns a wanted poster for a member from this guildConfig.";
 	
 	@CommandID("Funar")
 	@CommandAliases

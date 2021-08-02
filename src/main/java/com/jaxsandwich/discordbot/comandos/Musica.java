@@ -13,7 +13,7 @@ import com.jaxsandwich.framework.core.util.MessageUtils;
 import com.jaxsandwich.framework.models.CommandPacket;
 import com.jaxsandwich.framework.models.InputParameter;
 import com.jaxsandwich.framework.models.InputParameter.InputParamType;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
@@ -33,7 +33,7 @@ public class Musica {
 		int autodesTime =15;
 		String busqueda =null;
 		Language lang = Language.ES;
-		ConfigGuild servidor;
+		GuildConfig servidor;
 		if(e.isFromGuild()) {
 			servidor = packet.getModelGuild();
 			if(servidor!=null)
@@ -96,7 +96,7 @@ public class Musica {
 		Member self = guild.getMember(packet.getBot().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Language lang = Language.ES;
-		ConfigGuild servidor;
+		GuildConfig servidor;
 		if(e.isFromGuild()) {
 			servidor = packet.getModelGuild();
 			if(servidor!=null)
@@ -132,7 +132,7 @@ public class Musica {
 		Member self = guild.getMember(packet.getBot().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Language lang = Language.ES;
-		ConfigGuild servidor;
+		GuildConfig servidor;
 		if(e.isFromGuild()) {
 			servidor = packet.getModelGuild();
 			if(servidor!=null)
@@ -175,7 +175,7 @@ public class Musica {
 		Member self = guild.getMember(packet.getBot().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Language lang = Language.ES;
-		ConfigGuild servidor;
+		GuildConfig servidor;
 		if(e.isFromGuild()) {
 			servidor = packet.getModelGuild();
 			if(servidor!=null)
@@ -209,7 +209,7 @@ public class Musica {
 		Member self = guild.getMember(packet.getBot().getSelfUser());
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Language lang = Language.ES;
-		ConfigGuild servidor;
+		GuildConfig servidor;
 		if(e.isFromGuild()) {
 			servidor = packet.getModelGuild();
 			if(servidor!=null)
@@ -260,7 +260,7 @@ public class Musica {
 			}
 		}
 		Language lang = Language.ES;
-		ConfigGuild servidor;
+		GuildConfig servidor;
 		if(e.isFromGuild()) {
 			servidor = packet.getModelGuild();
 			if(servidor!=null)

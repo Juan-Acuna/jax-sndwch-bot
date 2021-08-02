@@ -11,85 +11,85 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.jaxsandwich.framework.models.ExtraCmdPacket;
 import com.jaxsandwich.framework.models.ModelExtraCommand;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 /**
- * Manejador de Comandos extra.
- * Manager of Extra commands.
+ * [ES] Manejador de Comandos extra.<br>
+ * [ES] Manager of Extra commands.
  * @author Juancho
- * @version 1.2
+ * @version 1.3
  */
 public class ExtraCmdManager {
 	/**
-	 * Constante privada de clase.
-	 * Private constant of class.
+	 * [ES] Constante privada de clase.<br>
+	 * [EN] Private constant of class.
 	 */
 	private static final String wildcard = "\\*/";
 	/**
-	 * Constante privada de clase.
-	 * Private constant of class.
+	 * [ES] Constante privada de clase.<br>
+	 * [EN] Private constant of class.
 	 */
 	private static final String string_wildcard = wildcard +"{s}";
 	/**
-	 * Constante privada de clase.
-	 * Private constant of class.
+	 * [ES] Constante privada de clase.<br>
+	 * [EN] Private constant of class.
 	 */
 	private static final String number_wildcard = wildcard + "{n}";
 	/**
-	 * Constante de clase. Representa un comodín.
-	 * Constant of class. Represents a wildcard.
+	 * [ES] Constante de clase. Representa un comodín.<br>
+	 * [EN] Constant of class. Represents a wildcard.
 	 */
 	public static final String[] WILDCARD = {wildcard};
 	/**
-	 * Constante de clase. Representa un comodín solo para texto sin números.
-	 * Constant of class. Represents a wildcard. Only for text without numbers.
+	 * [ES] Constante de clase. Representa un comodín solo para texto sin números.<br>
+	 * [EN] Constant of class. Represents a wildcard. Only for text without numbers.
 	 */
 	public static final String[] STRING_WILDCARD = {string_wildcard};
 	/**
-	 * Constante de clase. Representa un comodín solo para números.
-	 * Constant of class. Represents a wildcard. Only for numbers.
+	 * [ES] Constante de clase. Representa un comodín solo para números.<br>
+	 * [EN] Constant of class. Represents a wildcard. Only for numbers.
 	 */
 	public static final String[] NUMBER_WILDCARD = {number_wildcard};
 	/**
-	 * Contenedor de {@link ExtraCmdListener}.
-	 * Container of {@link ExtraCmdListener}.
+	 * [ES] Contenedor de {@link ExtraCmdListener}.<br>
+	 * [EN] Container of {@link ExtraCmdListener}.
 	 */
 	private static Map<MessageChannel, List<ExtraCmdListener>> threads = (Map<MessageChannel, List<ExtraCmdListener>>) Collections.synchronizedMap(new HashMap<MessageChannel, List<ExtraCmdListener>>());
 	/**
-	 * {@link Bot} asociado a este gestor.
-	 * {@link Bot} associated to this manager.
+	 * [ES] {@link Bot} asociado a este gestor.<br>
+	 * [EN] {@link Bot} associated to this manager.
 	 */
 	private Bot bot;
 	/**
-	 * Constructor de ExtraCmdManager.
-	 * Constructor of ExtraCmdManager.
+	 * [ES] Constructor de ExtraCmdManager.<br>
+	 * [EN] Constructor of ExtraCmdManager.
 	 */
 	private ExtraCmdManager(Bot bot) {
 		this.bot = bot;
 	}
 	/**
-	 * Inicializa un gestor de comandos extra.
-	 * Initializes an extra commands manager.
+	 * [ES] Inicializa un gestor de comandos extra.<br>
+	 * [EN] Initializes an extra commands manager.
 	 */
 	protected static ExtraCmdManager startService(Bot bot) {
 		return new ExtraCmdManager(bot);
 	}
 	/**
-	 * Espera por la ejecución de un comando extra.
-	 * Waits for the execution of an extra command.
+	 * [ES] Espera por la ejecución de un comando extra.<br>
+	 * [EN] Waits for the execution of an extra command.
 	 */
 	public ExtraCmdListener waitForExtraCmd(String extraCmdName, Message message, String[] spectedValues, int maxSeg, int maxMsg, Object...args) {
 		return waitForExtraCmd(extraCmdName, message.getChannel(),message.getAuthor().getId(),spectedValues,maxSeg,maxMsg,args);
 	}
 	/**
-	 * Espera por la ejecución de un comando extra.
-	 * Waits for the execution of an extra command.
+	 * [ES] Espera por la ejecución de un comando extra.<br>
+	 * [EN] Waits for the execution of an extra command.
 	 */
 	public ExtraCmdListener waitForExtraCmd(String extraCmdName, MessageChannel channel, String authorId, String[] spectedValues, int maxSeg, int maxMsg, Object...args) {
 		ModelExtraCommand m = ModelExtraCommand.find(extraCmdName);
-		ConfigGuild g = null;
+		GuildConfig g = null;
 		if(channel.getType()!=ChannelType.PRIVATE) {
 			g = bot.getGuildsManager().getConfig(((TextChannel)channel).getGuild().getIdLong());
 		}
@@ -108,8 +108,8 @@ public class ExtraCmdManager {
 		return o;
 	}
 	/**
-	 * Revisa si se llama a algun comando extra.
-	 * Checks if an extra command is called.
+	 * [ES] Revisa si se llama a algun comando extra.<br>
+	 * [EN] Checks if an extra command is called.
 	 */
 	public void CheckExtras(MessageReceivedEvent event) {
 		if(threads.size()<=0)
@@ -125,48 +125,48 @@ public class ExtraCmdManager {
 		}
 	}
 	/**
-	 * Objeto que se encarga de escuchar y ejecutar llamadas a un comando extra.
-	 * Object wich listen an executes calls for an extra command.
+	 * [ES] Objeto que se encarga de escuchar y ejecutar llamadas a un comando extra.<br>
+	 * [EN] Object wich listen an executes calls for an extra command.
 	 */
 	public class ExtraCmdListener implements Runnable{
 		/**
-		 * Arreglo con todas las posibles entradas a las que el ExtraCmdListener debe responder.
-		 * Array with all the inputs which the ExtraCmdListener have to response.
+		 * [ES] Arreglo con todas las posibles entradas a las que el ExtraCmdListener debe responder.<br>
+		 * [EN] Array with all the inputs which the ExtraCmdListener have to response.
 		 */
 		public String[] spectedValues = null;
 		/**
-		 * Cantidad máxima de mensajes recibidos en espera por la llamada al comando extra antes de abortar.
-		 * Max count of received messages while is waiting for the call for the extra command before abort.
+		 * [ES] Cantidad máxima de mensajes recibidos en espera por la llamada al comando extra antes de abortar.<br>
+		 * [EN] Max count of received messages while is waiting for the call for the extra command before abort.
 		 */
 		public int maxMsg = 5;
 		/**
-		 * Tiempo de espera(en segundos) para la llamada del comando extra.
-		 * Time of wait(in seconds) for a call for the extra command.
+		 * [ES] Tiempo de espera(en segundos) para la llamada del comando extra.<br>
+		 * [EN] Time of wait(in seconds) for a call for the extra command.
 		 */
 		public int maxSeg = 60;
 		/**
-		 * Representa el {@link MessageReceivedEvent} asociado al comando extra.
-		 * Represents the {@link MessageReceivedEvent} associated to the extra command.
+		 * [ES] Representa el {@link MessageReceivedEvent} asociado al comando extra.<br>
+		 * [EN] Represents the {@link MessageReceivedEvent} associated to the extra command.
 		 */
 		private MessageReceivedEvent event = null;
 		/**
-		 * Representa al objeto del comando extra.
-		 * Represents the extra command object.
+		 * [ES] Representa al objeto del comando extra.<br>
+		 * [EN] Represents the extra command object.
 		 */
 		private ModelExtraCommand action;
 		/**
-		 * Contador de mensajes.
-		 * Count of messages.
+		 * [ES] Contador de mensajes.<br>
+		 * [EN] Count of messages.
 		 */
 		private int msgs = 0;
 		/**
-		 * Constructor de {@link ExtraCmdPacket} associado al comando extra.
-		 * Builder of {@link ExtraCmdPacket} associated to the extra command.
+		 * [ES] Constructor de {@link ExtraCmdPacket} associado al comando extra.<br>
+		 * [EN] Builder of {@link ExtraCmdPacket} associated to the extra command.
 		 */
 		private CommandPacketBuilder builder;
 		/**
-		 * Constructor del {@link ExtraCmdListener}
-		 * Constructor of the {@link ExtraCmdListener}
+		 * [ES] Constructor del {@link ExtraCmdListener}<br>
+		 * [EN] Constructor of the {@link ExtraCmdListener}
 		 */
 		protected ExtraCmdListener(ModelExtraCommand action, ExtraCmdPacket packet,String[] spectedValues, int maxSeg, int maxMsg) {
 			this.spectedValues=spectedValues;
@@ -175,8 +175,8 @@ public class ExtraCmdManager {
 			this.action = action;
 		}
 		/**
-		 * Constructor del {@link ExtraCmdListener}
-		 * Constructor of the {@link ExtraCmdListener}
+		 * [ES] Constructor del {@link ExtraCmdListener}<br>
+		 * [EN] Constructor of the {@link ExtraCmdListener}
 		 */
 		protected ExtraCmdListener(ModelExtraCommand action, CommandPacketBuilder builder,String[] spectedValues, int maxSeg, int maxMsg) {
 			this.spectedValues=spectedValues;
@@ -186,15 +186,15 @@ public class ExtraCmdManager {
 			this.builder=builder;
 		}
 		/**
-		 * Devuelve el objto que representa al comando extra.
-		 * Returns the object that represents the extra command.
+		 * [ES] Devuelve el objto que representa al comando extra.<br>
+		 * [EN] Returns the object that represents the extra command.
 		 */
 		protected ModelExtraCommand getAction() {
 			return action;
 		}
 		/**
-		 * Configura el objto que representa al comando extra.
-		 * Sets the object that represents the extra command.
+		 * [ES] Configura el objto que representa al comando extra.<br>
+		 * [EN] Sets the object that represents the extra command.
 		 */
 		protected ExtraCmdListener setAction(ModelExtraCommand action) {
 			this.action = action;
@@ -230,8 +230,8 @@ public class ExtraCmdManager {
 			threads.get(packet.getChannel()).remove(this);
 		}
 		/**
-		 * Metodo que captura el evento y lo inserta en el listener.
-		 * Method wich catches the event and puts it into the listener.
+		 * [ES] Metodo que captura el evento y lo inserta en el listener.<br>
+		 * [EN] Method wich catches the event and puts it into the listener.
 		 */
 		protected void PutMessage(MessageReceivedEvent event) {
 			this.event=event;
@@ -242,8 +242,8 @@ public class ExtraCmdManager {
 			msgs++;
 		}
 		/**
-		 * Compara la entrada con las entradas esperadas.
-		 * Compares the input with the spected inputs.
+		 * [ES] Compara la entrada con las entradas esperadas.<br>
+		 * [EN] Compares the input with the spected inputs.
 		 */
 		private boolean Compare(MessageReceivedEvent event) {
 			if(event == null) {
@@ -268,48 +268,48 @@ public class ExtraCmdManager {
 			return false;
 		}
 		/**
-		 * Permite agregar argumentos 'Each'.
-		 * Allows to put 'Each' arguments.
+		 * [ES] Permite agregar argumentos 'Each'.<br>
+		 * [EN] Allows to put 'Each' arguments.
 		 */
 		public ExtraCmdListener setEachArrgs(Object...args) {
 			this.builder.setEachArgs(args);
 			return this;
 		}
 		/**
-		 * Permite agregar argumentos 'After'.
-		 * Allows to put 'After' arguments.
+		 * [ES] Permite agregar argumentos 'After'.<br>
+		 * [EN] Allows to put 'After' arguments.
 		 */
 		public ExtraCmdListener setAfterArrgs(Object...args) {
 			this.builder.setAfterArgs(args);
 			return this;
 		}
 		/**
-		 * Permite agregar argumentos 'NoExecuted'.
-		 * Allows to put 'NoExecuted' arguments.
+		 * [ES] Permite agregar argumentos 'NoExecuted'.<br>
+		 * [EN] Allows to put 'NoExecuted' arguments.
 		 */
 		public ExtraCmdListener setNoExecutedArrgs(Object...args) {
 			this.builder.setNoArgs(args);
 			return this;
 		}
 		/**
-		 * Permite agregar argumentos 'Finally'.
-		 * Allows to put 'Finally' arguments.
+		 * [ES] Permite agregar argumentos 'Finally'.<br>
+		 * [EN] Allows to put 'Finally' arguments.
 		 */
 		public ExtraCmdListener setFinallyArrgs(Object...args) {
 			this.builder.setFinallyArgs(args);
 			return this;
 		}
 		/**
-		 * 
-		 * 
+		 * [ES] Configura si el comando extra solo responde al autor.<br>
+		 * [EN] Sets if the extra command only listens to the author.
 		 */
 		public ExtraCmdListener setAuthorOnly(boolean b) {
 			this.builder.setAuthorOnly(b);
 			return this;
 		}
 		/**
-		 * Devuelve verdadero si el comando extra solo responde al autor.
-		 * Returns true if the extra command only listens to the author.
+		 * [ES] Devuelve verdadero si el comando extra solo responde al autor.<br>
+		 * [EN] Returns true if the extra command only listens to the author.
 		 */
 		public boolean isAuthorOnly() {
 			return this.builder.isAuthorOnly();

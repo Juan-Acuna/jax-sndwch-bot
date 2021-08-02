@@ -4,8 +4,8 @@ import com.jaxsandwich.framework.annotations.text.*;
 import com.jaxsandwich.framework.core.util.Language;
 @ValuesContainer(Language.ES)
 /**
- * Valores por defecto dentro del framework. En este caso: Español.
- * Defaul values inside the framework. In this case: Spanish.
+ * [ES] Valores por defecto dentro del framework. En este caso: Español.<br>
+ * [EN] Defaul values inside the framework. In this case: Spanish.
  * @author Juancho
  * @version 1.0
  */

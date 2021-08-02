@@ -15,12 +15,12 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 /**
- * Representa la configuración de un servidor de Discord.
- * Represents a Discord's guild configuration.
+ * [ES] Representa la configuración de un servidor de Discord.
+ * [EN] Represents a Discord's guildConfig configuration.
  * @author Juancho
  * @version 1.2
  */
-public class ConfigGuild {
+public class GuildConfig {
 	protected long id;
 	protected Language language;
 	protected boolean actuallyJoined = true;
@@ -37,30 +37,30 @@ public class ConfigGuild {
 	protected boolean defaultDenyRoles = false;
 	protected boolean defaultDenyMembers = false;
 	protected boolean defaultDenyChannels = false;
-	public ConfigGuild() {}
-	public ConfigGuild(Guild guild) {
+	public GuildConfig() {}
+	public GuildConfig(Guild guild) {
 		id=guild.getIdLong();
 		actuallyJoined=true;
 		referencedGuild = guild;
 		this.language = Language.EN;
 	}
-	public ConfigGuild(Guild guild, Language language) {
+	public GuildConfig(Guild guild, Language language) {
 		id=guild.getIdLong();
 		actuallyJoined=true;
 		referencedGuild = guild;
 		this.language = language;
 	}
 	@Deprecated
-	public ConfigGuild(long id) {
+	public GuildConfig(long id) {
 		this.id = id;
 	}
 	@Deprecated
-	public ConfigGuild(long id, Language language) {
+	public GuildConfig(long id, Language language) {
 		this.id = id;
 		this.language = language;
 		actuallyJoined=true;
 	}
-	public static boolean canRunThisCommand(ConfigGuild guild, ModelCommand command, MessageChannel channel, User author) {
+	public static boolean canRunThisCommand(GuildConfig guild, ModelCommand command, MessageChannel channel, User author) {
 		if(guild==null) {
 			return !command.getCategory().isNsfw();
 		}
@@ -251,7 +251,7 @@ public class ConfigGuild {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ConfigGuild other = (ConfigGuild) obj;
+		GuildConfig other = (GuildConfig) obj;
 		if (id != other.id)
 			return false;
 		return true;

@@ -3,9 +3,6 @@ package com.jaxsandwich.framework.core;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,70 +24,70 @@ import com.jaxsandwich.framework.models.ModelCategory;
 import com.jaxsandwich.framework.models.ModelCommand;
 import com.jaxsandwich.framework.models.ModelExtraCommand;
 import com.jaxsandwich.framework.models.ModelOption;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 /**
- * Clase intermediaria entre el bot(s) y el resto de elementos.
- * Intermediate class between the bot(s) and the others elements.
+ * [ES] Clase intermediaria entre el bot(s) y el resto de elementos.<br>
+ * [EN] Intermediate class between the bot(s) and the others elements.
  * @author Juancho
- * @version 1.6
+ * @version 1.7
  */
 public final class BotRunner {
 	/**
-	 * Contenedor de bots. Solo disponible en modo MultiBot.
-	 * Bot container. Only available in MultiBot mode
+	 * [ES] Contenedor de bots. Solo disponible en modo MultiBot.<br>
+	 * [EN] Bot container. Only available in MultiBot mode
 	 */
 	private Map<Integer, Bot> bots = Collections.synchronizedMap(new HashMap<Integer , Bot>());
 	/**
-	 * Variable temporal para la inicializacion.
-	 * Temporal variable for the initialization.
+	 * [ES] Variable temporal para la inicializacion.<br>
+	 * [EN] Temporal variable for the initialization.
 	 */
 	private Map<String, Map<Language, String>> tempVals;
 	/**
-	 * Variable temporal para la inicializacion.
-	 * Temporal variable for the initialization.
+	 * [ES] Variable temporal para la inicializacion.<br>
+	 * [EN] Temporal variable for the initialization.
 	 */
 	private Set<Class<?>> configs;
 	/**
-	 * Idioma por defecto para la inicializacion.
-	 * Default language for the initialization.
+	 * [ES] Idioma por defecto para la inicializacion.<br>
+	 * [EN] Default language for the initialization.
 	 */
 	private Language defaultLanguage = Language.EN;
 	/**
-	 * Variable que verifica que BotRunner se ha inicializado.
-	 * Variable wich verifies that BotRunner is started.
+	 * [ES] Variable que verifica que BotRunner se ha inicializado.<br>
+	 * [EN] Variable wich verifies that BotRunner is started.
 	 */
 	private boolean started = false;
 	/**
-	 * Indica si es en modo MuliBot.
-	 * Indicates if it's in MultiBot mode.
+	 * [ES] Indica si es en modo MuliBot.<br>
+	 * [EN] Indicates if it's in MultiBot mode.
 	 */
 	private boolean multibotmode = false;
 	/**
-	 * Instancia de BotRunner(Singleton).
-	 * Instancia of BotRunner(Singleton).
+	 * [ES] Instancia de BotRunner(Singleton).<br>
+	 * [EN] Instancia of BotRunner(Singleton).
 	 */
 	private static BotRunner instance = new BotRunner();
 	/**
-	 * Constructor de BotRunner privado(Singleton).
-	 * Private constructor of BotRunner(Singleton).
+	 * [ES] Constructor de BotRunner privado(Singleton).<br>
+	 * [EN] Private constructor of BotRunner(Singleton).
 	 */
 	private BotRunner() {
 		configs = Collections.synchronizedSet(new HashSet<Class<?>>());
 		tempVals = new HashMap<String, Map<Language, String>>();
 	}
 	/**
-	 * Devuelve la instancia de BotRunner(Singleton).
-	 * Returns the instance of BotRunner(Singleton).
+	 * [ES] Devuelve la instancia de BotRunner(Singleton).<br>
+	 * [EN] Returns the instance of BotRunner(Singleton).
 	 */
 	public static BotRunner getInstance() {
 		return BotRunner.instance;
 	}
 	/**
-	 * Registra bot en BotRunner.
-	 * Registers bot in BotRunner.
+	 * [ES] Registra bot en BotRunner.<br>
+	 * [EN] Registers bot in BotRunner.
 	 */
 	private static void registerBot(Bot bot) throws Exception {
 		if(!instance.started)
@@ -109,8 +106,8 @@ public final class BotRunner {
 		
 	}
 	/**
-	 * Inicia BotRunner en modo SingleBot.
-	 * Starts BotRunner in SingleBot mode.
+	 * [ES] Inicia BotRunner en modo SingleBot.<br>
+	 * [EN] Starts BotRunner in SingleBot mode.
 	 */
 	public static void singleBotModeInit(Bot bot) throws Exception {
 		if(instance.started)
@@ -122,8 +119,8 @@ public final class BotRunner {
 		instance.initialize();
 	}
 	/**
-	 * Inicia BotRunner en modo MultiBot.
-	 * Starts BotRunner in MultiBot mode.
+	 * [ES] Inicia BotRunner en modo MultiBot.<br>
+	 * [EN] Starts BotRunner in MultiBot mode.
 	 */
 	public static void multiBotModeInit(Language defaultLang, Bot...bots) throws Exception {
 		if(instance.started)
@@ -142,8 +139,8 @@ public final class BotRunner {
 		instance.initialize();
 	}
 	/**
-	 * Busca el bot registrado en BotRunner segun su tokenHash. Solo disponible en modo MultiBot.
-	 * Finds the bot registered in BotRunner by its tokenHash. Only available in MultiBot mode.
+	 * [ES] Busca el bot registrado en BotRunner segun su tokenHash. Solo disponible en modo MultiBot.<br>
+	 * [EN] Finds the bot registered in BotRunner by its tokenHash. Only available in MultiBot mode.
 	 */
 	public static final Bot findBot(int tokenHash) throws Exception {
 		if(!instance.isMultiBotMode())
@@ -151,8 +148,8 @@ public final class BotRunner {
 		return instance.bots.get(tokenHash);
 	}
 	/**
-	 * Busca el bot registrado en BotRunner según un token de Discord ingresado. Solo disponible en modo MultiBot.
-	 * Finds the bot registered in BotRunner by a Discord token. Only available in MultiBot mode.
+	 * [ES] Busca el bot registrado en BotRunner según un token de Discord ingresado. Solo disponible en modo MultiBot.<br>
+	 * [EN] Finds the bot registered in BotRunner by a Discord token. Only available in MultiBot mode.
 	 */
 	public static final Bot getBotByToken(String token) throws Exception {
 		if(!instance.isMultiBotMode())
@@ -160,8 +157,8 @@ public final class BotRunner {
 		return instance.bots.get(token.hashCode());
 	}
 	/**
-	 * Devuelve todos los bots contenidos en forma de lista. Solo disponible en modo MultiBot.
-	 * Returns all the bots contained as a list. Only available in MultiBot mode.
+	 * [ES] Devuelve todos los bots contenidos en forma de lista. Solo disponible en modo MultiBot.<br>
+	 * [EN] Returns all the bots contained as a list. Only available in MultiBot mode.
 	 */
 	public static final List<Bot> getBotList() throws Exception{
 		if(!instance.isMultiBotMode())
@@ -169,15 +166,15 @@ public final class BotRunner {
 		return new ArrayList<Bot>(instance.bots.values());
 	}
 	/**
-	 * Devuelve verdadero si BotRunner esta configurado en modo MultiBot.
-	 * Returns true if BotRunner is set in Multiot mode.
+	 * [ES] Devuelve verdadero si BotRunner esta configurado en modo MultiBot.<br>
+	 * [EN] Returns true if BotRunner is set in Multiot mode.
 	 */
 	public boolean isMultiBotMode() {
 		return this.multibotmode;
 	}
 	/**
-	 * Inicializa todos los objetos del framework.
-	 * Initializes all the framework objects.
+	 * [ES] Inicializa todos los objetos del framework.<br>
+	 * [EN] Initializes all the framework objects.
 	 */
 	private void initialize() throws Exception {
 		Package[] pkgs = Package.getPackages();
@@ -412,8 +409,8 @@ public final class BotRunner {
 		}
 	}
 	/**
-	 * Analiza el evento {@link MessageReceivedEvent} y ejecuta el comando para el {@link Bot} especificado.
-	 * Analyzes the event {@link MessageReceivedEvent} and executes the command for the specified {@link Bot}.
+	 * [ES] Analiza el evento {@link MessageReceivedEvent} y ejecuta el {@link ModelCommand} para el {@link Bot} especificado.<br>
+	 * [EN] Analyzes the event {@link MessageReceivedEvent} and executes the {@link ModelCommand} for the specified {@link Bot}.
 	 */
 	public static void run(MessageReceivedEvent e, Bot bot) throws Exception {
 		if(e.isWebhookMessage() && bot.isIgnoreWebHook())
@@ -423,7 +420,7 @@ public final class BotRunner {
 		boolean b = e.isFromGuild();
 		String message = e.getMessage().getContentRaw();
 		bot.getExtraCmdManager().CheckExtras(e);
-		ConfigGuild actualGuild = null;
+		GuildConfig actualGuild = null;
 		Language actualLang = bot.getDefaultLanguage();
 		if(b) {
 			actualGuild = bot.getGuildsManager().getConfig(e.getGuild().getIdLong());
@@ -484,7 +481,7 @@ public final class BotRunner {
 						e.getChannel().sendMessage(Values.value("xyz-sndwch-def-t-boff", actualLang)).queue();
 						return;
 					}
-					if(!ConfigGuild.canRunThisCommand(actualGuild, cmd, e.getChannel(), e.getAuthor()))
+					if(!GuildConfig.canRunThisCommand(actualGuild, cmd, e.getChannel(), e.getAuthor()))
 						return;
 					if(bot.isTypingOnCommand()) {
 						try {
@@ -512,7 +509,7 @@ public final class BotRunner {
 								e.getChannel().sendMessage(Values.value("xyz-sndwch-def-t-boff", actualLang)).queue();
 								return;
 							}
-							if(!ConfigGuild.canRunThisCommand(actualGuild, cmd, e.getChannel(), e.getAuthor()))
+							if(!GuildConfig.canRunThisCommand(actualGuild, cmd, e.getChannel(), e.getAuthor()))
 								return;
 							if(bot.isTypingOnCommand()) {
 								try {

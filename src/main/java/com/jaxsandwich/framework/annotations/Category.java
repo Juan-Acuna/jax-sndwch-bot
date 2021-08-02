@@ -10,41 +10,40 @@ import java.lang.annotation.Target;
 @Target({ FIELD, TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 /**
- * Indica que la clase es una Categoría, la cual será convertida en un objeto {@link com.jaxsandwich.framework.models.ModelCategory} por el framework.
- * Indicates that the class is a Category, which will be turned into a {@link com.jaxsandwich.framework.models.ModelCategory} object by the framework.
- * 
+ * [ES] Indica que la clase es una Categoría, la cual será convertida en un objeto {@link com.jaxsandwich.framework.models.ModelCategory} por el framework.<br>
+ * [EN] Indicates that the class is a Category, which will be turned into a {@link com.jaxsandwich.framework.models.ModelCategory} object by the framework.
  * @author Juan Acuña
- * @version 1.1
+ * @version 1.2
  */
 public @interface Category {
 	/**
-	 * Identificador de la categoría. Tambien es el nombre en el idioma por defecto indicado. Si no esta presente, se usa el nombre de la clase.
-	 * Identifier of the category. Also it is the name in the default language indicated. If it is not present, it uses the class name.
+	 * [ES] Identificador de la categoría. Tambien es el nombre en el idioma por defecto indicado. Si no esta presente, se usa el nombre de la clase.<br>
+	 * [EN] Identifier of the category. Also it is the name in the default language indicated. If it is not present, it uses the class name.
 	 */
 	String id() default "";
 	/**
-	 * Descripción de la categoría.
-	 * Description of the category.
+	 * [ES] Descripción de la categoría.<br>
+	 * [EN] Description of the category.
 	 */
 	String desc() default "";
 	/**
-	 * Indica si la categoría es NSFW.
-	 * Indicates if the category is NSFW.
+	 * [ES] Indica si la categoría es NSFW.<br>
+	 * [EN] Indicates if the category is NSFW.
 	 */
 	boolean nsfw() default false;
 	/**
-	 * La categoría es visible para los comandos de ayuda.
-	 * The category is visible for the help commands.
+	 * [ES] La categoría es visible para los comandos de ayuda.<br>
+	 * [EN] The category is visible for the help commands.
 	 */
 	boolean visible() default true;
 	/**
-	 * Los comandos de esta categoría pueden ser ejecutados.
-	 * The commands of this category can be executed.
+	 * [ES] Los comandos de esta categoría pueden ser ejecutados.<br>
+	 * [EN] The commands of this category can be executed.
 	 */
 	boolean enabled() default true;
 	/**
-	 * Indica si esta es una categoría especial.
-	 * Indicates if this is a special category.
+	 * [ES] Indica si esta es una categoría especial.<br>
+	 * [EN] Indicates if this is a special category.
 	 */
 	boolean isSpecial() default false;
 }

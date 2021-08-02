@@ -9,12 +9,12 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(FIELD)
 /**
- * Indica que el campo es la descripción del comando.
- * Indicates that the field is the description of the command.
+ * [ES] Indica que el campo es la descripción del comando.<br>
+ * [EN] Indicates that the field is the description of the command.
  * @author Juan Acuña
- * @version 1.0
- * Requiere que el campo contenga una anotacion del tipo {@link CommandID}
- * Requires the field to have an annotation of type {@link CommandID}
+ * @version 1.1<br>
+ * [ES] Requiere que el campo contenga una anotacion del tipo {@link CommandID}<br>
+ * [EN] Requires the field to have an annotation of type {@link CommandID}
  */
 public @interface CommandDescription {
 }

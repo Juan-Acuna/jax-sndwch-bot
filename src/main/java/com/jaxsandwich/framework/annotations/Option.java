@@ -11,36 +11,35 @@ import java.lang.annotation.Target;
 @Repeatable(Options.class)
 @Target(METHOD)
 /**
- * Agrega una Opción al comando.
- * Adds an Option to the command.
- * 
+ * [ES] Agrega una Opción al comando.<br>
+ * [EN] Adds an Option to the command.
  * @author Juan Acuña
- * @version 1.1
+ * @version 1.2
  */
 public @interface Option {
 	/**
-	 * Identificador de la opcion. También es el nombre en el idioma por defecto.
-	 * Identifier of the option. Also it's the name in the default language.
+	 * [ES] Identificador de la opcion. También es el nombre en el idioma por defecto.<br>
+	 * [EN] Identifier of the option. Also it's the name in the default language.
 	 */
 	String id();
 	/**
-	* Descripción de la opcion en el idioma por defecto.
-	* Option description in the default language.
+	* [ES] Descripción de la opcion en el idioma por defecto.<br>
+	* [EN] Option description in the default language.
 	*/
 	String desc() default "";
 	/**
-	 * Alias de la opción. Son otros Strings con los que se puede usar la opcion. No pueden repetirse ni ser iguales a otras opciones dentro del mismo comando.
-	 * Aliases of the option. They are others Strings with you can use the option. They can't be the same as the name of others options inside the same command.
+	 * [ES] Alias de la opción. Son otros Strings con los que se puede usar la opcion. No pueden repetirse ni ser iguales a otras opciones dentro del mismo comando.<br>
+	 * [EN] Aliases of the option. They are others Strings with you can use the option. They can't be the same as the name of others options inside the same command.
 	 */
 	String[] alias() default {};
 	/**
-	 * Indica que la opción puede ser usada.
-	 * Indicates that the option can be used.
+	 * [ES] Indica que la opción puede ser usada.<br>
+	 * [EN] Indicates that the option can be used.
 	 */
 	boolean enabled() default true;
 	/**
-	 * La opción es visible por los comandos de ayuda.
-	 * The option is visible for the help commands.
+	 * [ES] La opción es visible por los comandos de ayuda.<br>
+	 * [EN] The option is visible for the help commands.
 	 */
 	boolean visible() default true;
 }

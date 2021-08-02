@@ -2,51 +2,57 @@ package com.jaxsandwich.framework.core.util;
 
 import java.util.concurrent.TimeUnit;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.EmbedType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.MessageEmbed.AuthorInfo;
-import net.dv8tion.jda.api.entities.MessageEmbed.Provider;
-import net.dv8tion.jda.api.entities.MessageEmbed.VideoInfo;
 /**
- * Funciones útiles para mensajes en Discord.
- * Useful functions for messages on Discord.
+ * [ES] Funciones útiles para mensajes en Discord.<br>
+ * [EN] Useful functions for messages on Discord.
  * @author Juancho
- * @version 0.7
+ * @version 0.8
  */
 public class MessageUtils {
+	/**
+	 * [ES] Envía un {@link MessageEmbed} en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
+	 * [EN] Sends a {@link MessageEmbed} to the {@link MessageChannel} and deletes itself after the specified time.
+	 */
 	public static void SendAndDestroy(MessageChannel c, MessageEmbed emb, int time) {
-		c.sendMessage(emb).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));
+		c.sendMessageEmbeds(emb).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));
 	}
+	/**
+	 * [ES] Envía un mensaje en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
+	 * [EN] Sends a message to the {@link MessageChannel} and deletes itself after the specified time.
+	 */
 	public static void SendAndDestroy(MessageChannel c, String msg,int time) {
 		c.sendMessage(msg).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));
 	}
+	/**
+	 * [ES] Envía un {@link Message} en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
+	 * [EN] Sends a {@link Message} to the {@link MessageChannel} and deletes itself after the specified time.
+	 */
 	public static void SendAndDestroy(MessageChannel c, Message msg,int time) {
 		c.sendMessage(msg).queue((message) -> message.delete().queueAfter(time, TimeUnit.SECONDS));
 	}
-	/*public static MessageEmbed createVideoEmbed(String title, String desc, String url, String providerName, String providerUrl) {
-		EmbedBuilder eb = new EmbedBuilder();
-		Provider p = new Provider(providerName, providerUrl);
-		System.out.println("p:"+p);
-		eb.setTitle(title);
-		eb.setDescription(desc);
-		MessageEmbed me = eb.build();
-		MessageEmbed me2 = new MessageEmbed(null, 
-				title, 
-				desc, 
-				EmbedType.VIDEO,
-				me.getTimestamp(),
-				me.getColorRaw(), 
-				null, 
-				p, 
-				new AuthorInfo("Sandwich", null, null, null), 
-				new VideoInfo(url, 1280, 720), 
-				me.getFooter(), 
-				me.getImage(), 
-				me.getFields());
-		
-		return me2;
-	}*/
+	
+	/**
+	 * [ES] Envía un {@link MessageEmbed} en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
+	 * [EN] Sends a {@link MessageEmbed} to the {@link MessageChannel} and deletes itself after the specified time.
+	 */
+	public static void SendAndDestroy(MessageChannel c, MessageEmbed emb, int time, TimeUnit unit) {
+		c.sendMessageEmbeds(emb).queue((message) -> message.delete().queueAfter(time, unit));
+	}
+	/**
+	 * [ES] Envía un mensaje en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
+	 * [EN] Sends a message to the {@link MessageChannel} and deletes itself after the specified time.
+	 */
+	public static void SendAndDestroy(MessageChannel c, String msg,int time, TimeUnit unit) {
+		c.sendMessage(msg).queue((message) -> message.delete().queueAfter(time, unit));
+	}
+	/**
+	 * [ES] Envía un {@link Message} en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
+	 * [EN] Sends a {@link Message} to the {@link MessageChannel} and deletes itself after the specified time.
+	 */
+	public static void SendAndDestroy(MessageChannel c, Message msg,int time, TimeUnit unit) {
+		c.sendMessage(msg).queue((message) -> message.delete().queueAfter(time, unit));
+	}
 }

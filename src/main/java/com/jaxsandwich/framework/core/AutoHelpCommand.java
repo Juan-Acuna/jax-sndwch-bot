@@ -5,36 +5,36 @@ import java.util.List;
 import com.jaxsandwich.framework.core.util.Language;
 import com.jaxsandwich.framework.models.*;
 import com.jaxsandwich.framework.models.InputParameter.InputParamType;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 /**
- * Representa el comando de ayuda automático del bot.
- * Represents the bot automatic help command.
+ * [ES] Representa el comando de ayuda automático del bot.<br>
+ * [EN] Represents the bot automatic help command.
  * @author Juan Acuña
  * @version 1.2
  */
 public class AutoHelpCommand extends CommandBase{
 	/**
-	 * Bot al cual este AutoHelpCommand esta asociado.
-	 * Bot wich this AutoHelpCommand is associated.
+	 * [ES] Bot al cual este AutoHelpCommand esta asociado.<br>
+	 * [EN] Bot wich this AutoHelpCommand is associated.
 	 */
 	protected Bot bot;
 	/**
-	 * Constante que indica el identificador de este comando.
-	 * Constant wich Indicates this command identifier.
+	 * [ES] Constante que indica el identificador de este comando.<br>
+	 * [EN] Constant wich Indicates this command identifier.
 	 */
 	public static final String AUTO_HELP_KEY = "Help";
 	/**
-	 * Inidica si los comandos y categorías etiquetadas como 'NSFW' deben acultarse al usar el comando de ayuda automático.
-	 * Indicates if the commands an categories tagged as 'NSFW' have to been hidden when using the automatic help command.
+	 * [ES] Inidica si los comandos y categorías etiquetadas como 'NSFW' deben acultarse al usar el comando de ayuda automático.<br>
+	 * [EN] Indicates if the commands an categories tagged as 'NSFW' have to been hidden when using the automatic help command.
 	 */
 	protected boolean hide_nsfw_category = false;
 	/**
-	 * Constructor de la clase AutoHelpCommand.
-	 * Constructor of the AutoHelpCommand class.
+	 * [ES] Constructor de la clase AutoHelpCommand.<br>
+	 * [EN] Constructor of the AutoHelpCommand class.
 	 */
 	protected AutoHelpCommand(Bot bot) {
 		super(AUTO_HELP_KEY);
@@ -48,13 +48,13 @@ public class AutoHelpCommand extends CommandBase{
 		this.bot=bot;
 	}
 	/**
-	 * Metodo que ejecuta el comando de ayuda.
-	 * Method that executes the help command.
+	 * [ES] Metodo que ejecuta el comando de ayuda.<br>
+	 * [EN] Method that executes the help command.
 	 */
 	public void help(CommandPacket packet) {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		Language actualLang = Language.ES;
-		ConfigGuild actualGuild = null;
+		GuildConfig actualGuild = null;
 		String searchQuery = null;
 		EmbedBuilder eb = null;
 		boolean cmdPass = false;
@@ -161,8 +161,8 @@ public class AutoHelpCommand extends CommandBase{
 		e.getChannel().sendMessageEmbeds(eb.build()).queue();
 	}
 	/**
-	 * Metodo auxiliar para imprimir la ayuda de un comando.
-	 * Auxiliary method for printing the help of a command.
+	 * [ES] Metodo auxiliar para imprimir la ayuda de un comando.<br>
+	 * [EN] Auxiliary method for printing the help of a command.
 	 */
 	private EmbedBuilder setForCommand(EmbedBuilder eb, ModelCommand cmd, Language lang, boolean pass) {
 		if(!pass || cmd.isNsfw())
@@ -200,10 +200,10 @@ public class AutoHelpCommand extends CommandBase{
 		return eb;
 	}
 	/**
-	 * Metodo auxiliar para imprimir la ayuda de una categoría.
-	 * Auxiliary method for printing the help of a category.
+	 * [ES] Metodo auxiliar para imprimir la ayuda de una categoría.<br>
+	 * [EN] Auxiliary method for printing the help of a category.
 	 */
-	private EmbedBuilder setForCategory(EmbedBuilder eb, ModelCategory cat, Language lang, boolean duplicated,boolean catPass, ConfigGuild guild) {
+	private EmbedBuilder setForCategory(EmbedBuilder eb, ModelCategory cat, Language lang, boolean duplicated,boolean catPass, GuildConfig guild) {
 		if(!catPass) {
 			return null;
 		}
@@ -229,15 +229,15 @@ public class AutoHelpCommand extends CommandBase{
 	return eb;
 	}
 	/**
-	 * Devuelve verdadero si el la protección de contenido NSFW esta activada en este comando.
-	 * Returns true if the NSFW protection is enabled in this command.
+	 * [ES] Devuelve verdadero si el la protección de contenido NSFW esta activada en este comando.<br>
+	 * [EN] Returns true if the NSFW protection is enabled in this command.
 	 */
 	public boolean isHideNSFWCategory() {
 		return hide_nsfw_category;
 	}
 	/**
-	 * Configura si el la protección de contenido NSFW esta activada en este comando.
-	 * Sets if the NSFW protection is enabled in this command.
+	 * [ES] Configura si el la protección de contenido NSFW esta activada en este comando.<br>
+	 * [EN] Sets if the NSFW protection is enabled in this command.
 	 */
 	public void setHideNSFWCategory(boolean hide) {
 		this.hide_nsfw_category = hide;

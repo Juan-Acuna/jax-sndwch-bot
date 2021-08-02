@@ -9,11 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(TYPE)
 /**
- * Indica que la clase contiene comandos extra.
- * Indicates that the class contains extra commands.
- * 
+ * [ES] Indica que la clase contiene comandos extra.<br>
+ * [EN] Indicates that the class contains extra commands.
  * @author Juan Acuña
- * @version 1.0
+ * @version 1.1
  */
 public @interface ExtraCommandContainer {
 

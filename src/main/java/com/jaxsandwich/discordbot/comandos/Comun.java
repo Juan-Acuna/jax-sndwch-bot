@@ -20,7 +20,7 @@ import com.jaxsandwich.framework.core.util.MessageUtils;
 import com.jaxsandwich.framework.models.CommandPacket;
 import com.jaxsandwich.framework.models.InputParameter;
 import com.jaxsandwich.framework.models.InputParameter.InputParamType;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -198,7 +198,7 @@ public class Comun {
 				}
 			}
 		}
-		ConfigGuild server = packet.getModelGuild();
+		GuildConfig server = packet.getModelGuild();
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
@@ -474,7 +474,7 @@ public class Comun {
 		}
 		Guild guild = e.getGuild();
 		Member member;
-		//Member self = guild.getMember(packet.getBot().getSelfUser());
+		//Member self = guildConfig.getMember(packet.getBot().getSelfUser());
 		if(e.getMessage().getMentionedMembers().size()>0) {
 			member = e.getMessage().getMentionedMembers().get(0);
 		}else {

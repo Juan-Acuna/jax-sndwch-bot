@@ -92,7 +92,7 @@ public class Textos_en {
 	public static final String C_C_M_R5 = "Playing: %s";
 
 	@ValueID("jax-conf-inf-titulo")
-	public static final String CAC = "Actual settings for guild: %s";
+	public static final String CAC = "Actual settings for guildConfig: %s";
 
 	@ValueID("jax-conf-inf-desc")
 	public static final String CaCg = "";
@@ -188,7 +188,7 @@ public class Textos_en {
 	public static final String C8 = "> Deny <command|category*|@role|@channel|@member>[,+]";
 
 	@ValueID("jax-conf-?-f4-d")
-	public static final String C8d = "```If the target is a command|category|role|member this one can't use commands in this guild."
+	public static final String C8d = "```If the target is a command|category|role|member this one can't use commands in this guildConfig."
 			+ "\nIf the target is a channel, deny everybody to use commands in this channel."
 			+ "\nSee the settings to know which are allowed/denied.```";
 
@@ -196,7 +196,7 @@ public class Textos_en {
 	public static final String C9 = "> Allow <command|category*|@role|@channel|@member>[,+]";
 
 	@ValueID("jax-conf-?-f5-d")
-	public static final String C9d = "```If the target is a command|category|role|member this one can use commands in this guild."
+	public static final String C9d = "```If the target is a command|category|role|member this one can use commands in this guildConfig."
 			+ "\nIf the target is a channel, allows to everybody to use commands in this channel."
 			+ "\nSee the settings to know which are allowed/denied.```";
 

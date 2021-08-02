@@ -1,7 +1,7 @@
 package com.jaxsandwich.framework.models;
 
 import com.jaxsandwich.framework.core.Bot;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -13,8 +13,8 @@ public class ExtraCmdPacket extends CommandPacket{
 	private Object[] noArgs = null;
 	private Object[] finallyArgs = null;
 	
-	public ExtraCmdPacket(Bot bot, ConfigGuild guild, MessageReceivedEvent event, boolean isAuthorOnly, Object...args) {
-		super(bot, guild, event);
+	public ExtraCmdPacket(Bot bot, GuildConfig config, MessageReceivedEvent event, boolean isAuthorOnly, Object...args) {
+		super(bot, config, event);
 		this.args=args;
 		this.authorOnly=isAuthorOnly;
 	}

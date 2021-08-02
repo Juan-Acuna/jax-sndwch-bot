@@ -8,61 +8,65 @@ import java.util.Map;
 import com.jaxsandwich.framework.core.util.Language;
 import com.jaxsandwich.framework.models.ModelCategory;
 import com.jaxsandwich.framework.models.ModelCommand;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.entities.Guild;
 /**
- * Clase cuyo trabajo es manejar todos los servidores en los que el bot ha sido invitado.(ex BotGuildsManager)
- * Class whic job is manage all the guilds that the bot has been invited.(ex BotGuildsManager)
+ * [ES] Clase que manejar todos los servidores en los que el bot ha sido invitado.(ex BotGuildsManager)<br>
+ * [EN] Class which manage all the guilds that the bot has been invited.(ex BotGuildsManager)
  * @author Juancho
- * @version 1.2
+ * @version 1.3
  */
 public class GuildsManager {
 	/**
-	 * Bot asociado a este GuildsManager.
-	 * Bot associated to this GuildsManager.
+	 * [ES] Bot asociado a este GuildsManager.<br>
+	 * [EN] Bot associated to this GuildsManager.
 	 */
 	private Bot bot;
 	/**
-	 * Contenedor de {@link ConfigGuild}(No confundir con {@link Servidor})
-	 * Container of {@link ConfigGuild}(Do not confuse with {@link Servidor})
+	 * [ES] Contenedor de {@link GuildConfig}(No confundir con {@link Servidor}).<br>
+	 * [EN] Container of {@link GuildConfig}(Do not confuse with {@link Servidor}).
 	 */
-	private Map<Long, ConfigGuild> guilds;
+	private Map<Long, GuildConfig> guilds;
 	/**
-	 * 
-	 * 
+	 * [ES] Indica si el gestor de servidores actua en modo monoServidor.<br>
+	 * [EN] Indicates if the guilds manager works in singleGuild mode.
 	 */
 	private boolean singleGuildMode = false;
-	private ConfigGuild defaultConfig = null;
 	/**
-	 * Constructor privado de GuildsManager.
-	 * Private constructor of GuildsManager.
+	 * [ES] Configuración por defecto para todos los servidores en modo monoServidor.<br>
+	 * [EN] Default configuration for all guilds in singleGuild mode.
+	 */
+	private GuildConfig defaultConfig = null;
+	/**
+	 * [ES] Constructor privado de GuildsManager.<br>
+	 * [EN] Private constructor of GuildsManager.
 	 */
 	private GuildsManager(Bot bot) {
-		this.guilds = Collections.synchronizedMap(new HashMap<Long, ConfigGuild>());
+		this.guilds = Collections.synchronizedMap(new HashMap<Long, GuildConfig>());
 		this.bot=bot;
 		if(this.bot.isSingleGuildMode()) {
 			this.singleGuildMode=true;
-			this.defaultConfig = new ConfigGuild();
+			this.defaultConfig = new GuildConfig();
 			if(this.bot.isHideNSFWCategory())
 				this.configNSFWProtection();
 		}
 	}
 	/**
-	 * Inicia una nueva instancia de esta clase.
-	 * Starts a new instance of this class.
+	 * [ES] Inicia una nueva instancia de esta clase.<br>
+	 * [EN] Starts a new instance of this class.
 	 */
 	public static GuildsManager startSercive(Bot bot) {
 		return new GuildsManager(bot);
 	}
 	/**
-	 * Agrega un servidor al contenedor.
-	 * Adds a guild to the container.
+	 * [ES] Agrega un servidor al contenedor.<br>
+	 * [EN] Adds a guildConfig to the container.
 	 * @throws Exception 
 	 */
-	public boolean registerGuild(ConfigGuild guild) throws Exception {
+	public boolean registerGuild(GuildConfig guild) throws Exception {
 		if(this.singleGuildMode)
-			throw new Exception("Can't register guilds in single-guild mode!");
+			throw new Exception("Can't register guilds in single-guildConfig mode!");
 		if(guilds.get(guild.getId())==null) {
 			guilds.put(guild.getId(),guild);
 			return true;
@@ -70,14 +74,14 @@ public class GuildsManager {
 		return false;
 	}
 	/**
-	 * Agrega un servidor al contenedor.
-	 * Adds a guild to the container.
+	 * [ES] Agrega un servidor al contenedor.<br>
+	 * [EN] Adds a guildConfig to the container.
 	 * @throws Exception 
 	 */
-	public ConfigGuild registerGuild(Guild guild, Language lang) throws Exception {
+	public GuildConfig registerGuild(Guild guild, Language lang) throws Exception {
 		if(this.singleGuildMode)
-			throw new Exception("Can't register guilds in single-guild mode!");
-		ConfigGuild g = new ConfigGuild(guild, lang);
+			throw new Exception("Can't register guilds in single-guildConfig mode!");
+		GuildConfig g = new GuildConfig(guild, lang);
 		if(guilds.get(guild.getIdLong())==null) {
 			guilds.put(guild.getIdLong(), g);
 			return g;
@@ -86,14 +90,14 @@ public class GuildsManager {
 		}
 	}
 	/**
-	 * Agrega un servidor al contenedor.<br>
-	 * Adds a guild to the container.
+	 * [ES] Agrega un servidor al contenedor.<br>
+	 * [EN] Adds a guildConfig to the container.
 	 * @throws Exception 
 	 */
-	public ConfigGuild registerGuild(long id, Language lang) throws Exception {
+	public GuildConfig registerGuild(long id, Language lang) throws Exception {
 		if(this.singleGuildMode)
-			throw new Exception("Can't register guilds in single-guild mode!");
-		ConfigGuild g = new ConfigGuild(bot.getJDA().getGuildById(id), lang);
+			throw new Exception("Can't register guilds in single-guildConfig mode!");
+		GuildConfig g = new GuildConfig(bot.getJDA().getGuildById(id), lang);
 		if(guilds.get(id)==null) {
 			guilds.put(id, g);
 			return g;
@@ -101,7 +105,11 @@ public class GuildsManager {
 			return guilds.get(id);
 		}
 	}
-	public ConfigGuild getConfig(long id) {
+	/**
+	 * [ES] Obtiene la configuración para el servidor según el valor de {@link Guild#getIdLong()}.<br>
+	 * [EN] Gets the configuration for the guild by it's {@link Guild#getIdLong()} value.
+	 */
+	public GuildConfig getConfig(long id) {
 		if(this.singleGuildMode){
 			try {
 				this.defaultConfig.setReferencedGuild(bot.getJDA().getGuildById(id));
@@ -112,7 +120,12 @@ public class GuildsManager {
 		}
 		return guilds.get(id);
 	}
-	public ConfigGuild getConfig(Guild g) {
+	
+	/**
+	 * [ES] Obtiene la configuración para el servidor({@link Guild}).<br>
+	 * [EN] Gets the configuration for the guild({@link Guild}).
+	 */
+	public GuildConfig getConfig(Guild g) {
 		if(this.singleGuildMode){
 			try {
 				this.defaultConfig.setReferencedGuild(g);
@@ -123,24 +136,40 @@ public class GuildsManager {
 		}
 		return guilds.get(g.getIdLong());
 	}
-	public void loadData(List<? extends ConfigGuild> data) throws Exception {
-		for(ConfigGuild g : data) {
+	/**
+	 * [ES] Registra todas las configuraciones contenidas en un List.<br>
+	 * [EN] Registers all the configurations contained in the List.
+	 */
+	public void loadData(List<? extends GuildConfig> data) throws Exception {
+		for(GuildConfig g : data) {
 			registerGuild(g);
 		}
 	}
-	public void loadData(ConfigGuild[] data) throws Exception {
-		for(ConfigGuild g : data) {
+	/**
+	 * [ES] Registra todas las configuraciones contenidas en un arreglo.<br>
+	 * [EN] Registers all the configurations contained in the array.
+	 */
+	public void loadData(GuildConfig[] data) throws Exception {
+		for(GuildConfig g : data) {
 			registerGuild(g);
 		}
 	}
+	/**
+	 * [ES] Devuelve el numero de servidores registrados.<br>
+	 * [EN] Returns the count of registered guilds.
+	 */
 	public int registeredGuildsCount() throws Exception {
 		if(this.singleGuildMode)
-			throw new Exception("There is no registered guilds in single-guild mode!");
+			throw new Exception("There is no registered guilds in single-guildConfig mode!");
 		return guilds.size();
 	}
+	/**
+	 * [ES] Devuelve el numero de servidores registrados con los que el bot aun esta conectado.<br>
+	 * [EN] Returns the count of registered guilds wich the bot is connected yet.
+	 */
 	public int joinedGuildsCount() throws Exception {
 		if(this.singleGuildMode)
-			throw new Exception("There is no registered guilds in single-guild mode!");
+			throw new Exception("There is no registered guilds in single-guildConfig mode!");
 		int i=0;
 		for(long id : guilds.keySet()) {
 			if(guilds.get(id).isJoined()) {
@@ -149,6 +178,10 @@ public class GuildsManager {
 		}
 		return i;
 	}
+	/**
+	 * [ES] Configura la proteccion NSFW. Solo disponible en modo monoServidor.<br>
+	 * [EN] Configures the NSFW protection. Only available in singleGuild mode.
+	 */
 	private void configNSFWProtection() {
 		for(ModelCategory c : ModelCategory.getAsList()) {
 			if(c.isNsfw()) {

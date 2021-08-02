@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target(METHOD)
 /**
- * Requerido por otras anotaciones.
- * Required by others annotations.
+ * [ES] Requerido por otras anotaciones.<br>
+ * [EN] Required by others annotations.
  * @author Juan Acuña
- * @version 1.0
+ * @version 1.1
  */
 public @interface Options {
 	Option[] value();

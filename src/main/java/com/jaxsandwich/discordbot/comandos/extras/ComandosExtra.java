@@ -16,7 +16,7 @@ import com.jaxsandwich.framework.core.Values;
 import com.jaxsandwich.framework.core.util.Language;
 import com.jaxsandwich.framework.core.util.MessageUtils;
 import com.jaxsandwich.framework.models.ExtraCmdPacket;
-import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import com.jaxsandwich.framework.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -34,7 +34,7 @@ public class ComandosExtra {
 		Object[] args = packet.getArgs();
 		String authorId = packet.getAuthorId();
 		Language lang = Language.ES;
-		ConfigGuild server;
+		GuildConfig server;
 		if(channel.getType()==ChannelType.TEXT) {
 			server = packet.getModelGuild();
 			if(server!=null)
@@ -186,7 +186,7 @@ public class ComandosExtra {
 	}
 	@ExtraCmdAfterExecution(name="join")
 	public static void afterjoin(ExtraCmdPacket packet) {
-		ConfigGuild server = packet.getModelGuild();
+		GuildConfig server = packet.getModelGuild();
 		packet.getTextChannel().sendMessageEmbeds(((SandwichBot)packet.getBot()).getInfo(server.getLanguage())).queue();
 	}
 }
