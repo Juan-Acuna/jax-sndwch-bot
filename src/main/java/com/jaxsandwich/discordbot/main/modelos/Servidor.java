@@ -2,18 +2,18 @@ package com.jaxsandwich.discordbot.main.modelos;
 
 import com.jaxsandwich.discordbot.conexion.CommandManager;
 import com.jaxsandwich.discordbot.conexion.anotaciones.PrimaryKey;
-import com.jaxsandwich.discordbot.main.SandwichBot;
 import com.jaxsandwich.framework.core.Bot;
 import com.jaxsandwich.framework.core.util.Language;
 import com.jaxsandwich.framework.models.discord.ConfigGuild;
+import net.dv8tion.jda.api.entities.Guild;
 
-public class Guild extends ConfigGuild{
+public class Servidor extends ConfigGuild{
 
-	public Guild() {
+	public Servidor() {
 		super();
 	}
 	
-	public Guild(net.dv8tion.jda.api.entities.Guild guild, Language lang) {
+	public Servidor(Guild guild, Language lang) {
 		super();
 		this.id=guild.getIdLong();
 		this.language=lang;
@@ -22,7 +22,6 @@ public class Guild extends ConfigGuild{
 	@PrimaryKey
 	public long id_guild;
 	public String lang;
-	public String name;
 	public String prefix;
 	public String opt_prefix;
 	public String alwd_cmds = null;
@@ -111,7 +110,7 @@ public class Guild extends ConfigGuild{
 		this.actuallyJoined=this.joined==1;
 	}
 	public void refresh(Bot bot) {
-		net.dv8tion.jda.api.entities.Guild g = bot.getJDA().getGuildById(id);
+		Guild g = bot.getJDA().getGuildById(id);
 		if(g==null) {
 			this.actuallyJoined=false;
 			push();

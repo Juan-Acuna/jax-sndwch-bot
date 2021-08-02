@@ -1,6 +1,6 @@
 package com.jaxsandwich.discordbot.main;
 
-import com.jaxsandwich.discordbot.main.modelos.Guild;
+import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.framework.core.Bot;
 import com.jaxsandwich.framework.core.Values;
@@ -31,7 +31,7 @@ public class SandwichBot extends Bot{
 	@Override
 	public void onGuildJoin(GuildJoinEvent e) {
 		if(!this.isOn()) {
-			Guild g = new Guild(e.getGuild(),Language.ES);
+			Servidor g = new Servidor(e.getGuild(),Language.ES);
 			try {
 				this.guildsManager.registerGuild(g);
 			} catch (Exception e1) {

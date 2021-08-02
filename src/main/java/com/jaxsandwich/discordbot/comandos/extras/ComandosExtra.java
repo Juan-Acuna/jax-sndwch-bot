@@ -158,7 +158,7 @@ public class ComandosExtra {
 			lang = Language.EN;
 			break;
 		}
-		com.jaxsandwich.discordbot.main.modelos.Guild g = new com.jaxsandwich.discordbot.main.modelos.Guild(packet.getTextChannel().getGuild(),lang);
+		com.jaxsandwich.discordbot.main.modelos.Servidor g = new com.jaxsandwich.discordbot.main.modelos.Servidor(packet.getTextChannel().getGuild(),lang);
 		g.setAllowedCategory("NSFW", false);
 		g.setAllowedCommand("Banear", false);
 		g.setAllowedCommand("LimpiarChat", false);
@@ -172,7 +172,7 @@ public class ComandosExtra {
 	}
 	@ExtraCmdNoExecution(name="join")
 	public static void nojoin(ExtraCmdPacket packet) throws Exception {
-		com.jaxsandwich.discordbot.main.modelos.Guild g = new com.jaxsandwich.discordbot.main.modelos.Guild(packet.getTextChannel().getGuild(),Language.ES);
+		com.jaxsandwich.discordbot.main.modelos.Servidor g = new com.jaxsandwich.discordbot.main.modelos.Servidor(packet.getTextChannel().getGuild(),Language.ES);
 		g.setAllowedCategory("NSFW", false);
 		g.setAllowedCommand("Banear", false);
 		g.setAllowedCommand("LimpiarChat", false);

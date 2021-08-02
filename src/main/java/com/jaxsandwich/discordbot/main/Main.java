@@ -11,7 +11,7 @@ import com.jaxsandwich.discordbot.conexion.ConexionMySQL;
 import com.jaxsandwich.discordbot.configuracion.Global;
 import com.jaxsandwich.discordbot.main.modelos.Fuente;
 import com.jaxsandwich.discordbot.main.modelos.FuenteImagen;
-import com.jaxsandwich.discordbot.main.modelos.Guild;
+import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.framework.core.BotRunner;
 import com.jaxsandwich.framework.core.util.Language;
 
@@ -28,8 +28,8 @@ public class Main {
 		Bot.setStatus(OnlineStatus.ONLINE);
 		ConexionMySQL.conectar();
 		CommandManager.setConexion(ConexionMySQL.getConexion());
-		List<Guild> l = CommandManager.selectAll(Guild.class);
-		for(Guild g : l) {
+		List<Servidor> l = CommandManager.selectAll(Servidor.class);
+		for(Servidor g : l) {
 			g.pull();
 		}
 		Bot.getGuildsManager().loadData(l);

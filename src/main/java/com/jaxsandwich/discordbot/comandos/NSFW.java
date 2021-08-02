@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import com.jaxsandwich.discordbot.main.Constantes;
 import com.jaxsandwich.discordbot.main.modelos.FuenteImagen;
-import com.jaxsandwich.discordbot.main.modelos.Guild;
+import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.ClienteHttp;
 import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.ControladorImagenes;
@@ -35,7 +35,7 @@ public class NSFW {
 	public static void nsfw(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		e.getChannel().purgeMessagesById(e.getMessageId());
-		Guild servidor = (Guild) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getModelGuild();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang=servidor.getLanguage();
@@ -127,7 +127,7 @@ public class NSFW {
 	public static void xvideos(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		packet.getChannel().purgeMessagesById(e.getMessageId());//<span class="duration">23 min
-		Guild servidor = (Guild) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getModelGuild();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang=servidor.getLanguage();
@@ -191,7 +191,7 @@ public class NSFW {
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
 	public static void otakus(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		Guild servidor = (Guild) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getModelGuild();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang=servidor.getLanguage();
@@ -287,7 +287,7 @@ public class NSFW {
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
 	public static void r34(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		Guild servidor = (Guild) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getModelGuild();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang=servidor.getLanguage();

@@ -24,8 +24,8 @@ public class GuildsManager {
 	 */
 	private Bot bot;
 	/**
-	 * Contenedor de {@link ConfigGuild}(No confundir con {@link Guild})
-	 * Container of {@link ConfigGuild}(Do not confuse with {@link Guild})
+	 * Contenedor de {@link ConfigGuild}(No confundir con {@link Servidor})
+	 * Container of {@link ConfigGuild}(Do not confuse with {@link Servidor})
 	 */
 	private Map<Long, ConfigGuild> guilds;
 	/**

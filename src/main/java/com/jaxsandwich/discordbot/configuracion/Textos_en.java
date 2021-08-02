@@ -50,7 +50,7 @@ public class Textos_en {
 	public static final String XC_PED_MEN = "Enter the message";
 	
 	@ValueID("jax-texto-servidor")
-	public static final String SERV = "Guild *'%s'*";
+	public static final String SERV = "Servidor *'%s'*";
 
 	@ValueID("jax-seleccione-canal")
 	public static final String SEL_CAN = "Select channel";

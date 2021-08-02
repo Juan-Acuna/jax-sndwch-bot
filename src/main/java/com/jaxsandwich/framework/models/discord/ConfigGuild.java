@@ -105,7 +105,7 @@ public class ConfigGuild {
 	}
 	public void setReferencedGuild(Guild referencedGuild) throws Exception {
 		if(referencedGuild==null) {
-			throw new Exception("Can't set a null Guild reference!");
+			throw new Exception("Can't set a null Servidor reference!");
 		}
 		this.id=referencedGuild.getIdLong();
 		this.referencedGuild = referencedGuild;

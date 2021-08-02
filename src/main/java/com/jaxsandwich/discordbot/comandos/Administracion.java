@@ -3,7 +3,7 @@ package com.jaxsandwich.discordbot.comandos;
 import java.util.List;
 
 import com.jaxsandwich.discordbot.conexion.CommandManager;
-import com.jaxsandwich.discordbot.main.modelos.Guild;
+import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.framework.annotations.*;
 import com.jaxsandwich.framework.core.Values;
@@ -62,7 +62,7 @@ public class Administracion {
 			return;
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		Language lang = packet.getPreferredLang();
-		Guild servidor = (Guild) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getModelGuild();
 		List<Role> rl = e.getMember().getRoles();
 		boolean admin = false;
 		if(rl.size()>0) {
@@ -299,7 +299,7 @@ public class Administracion {
 			}
 		}
 		if(b) {
-			eb.setTitle(Values.formatedValue("jax-conf-inf-titulo", lang, servidor.getLastKnownName()));
+			eb.setTitle(Values.formatedValue("jax-conf-inf-titulo", lang, servidor.getReferencedGuild().getName()));
 			eb.addField(Values.value("jax-conf-inf-pref-t", lang), (servidor.prefix!=null?servidor.prefix:Values.value("jax-conf-inf-pref-n", lang)), true);
 			eb.addField(Values.value("jax-conf-inf-opt-pref-t", lang), (servidor.opt_prefix!=null?servidor.opt_prefix:Values.value("jax-conf-inf-pref-n", lang)), true);
 			eb.addField(Values.value("jax-conf-inf-lang-t", lang), Values.formatedValue("jax-conf-inf-lang-d", lang,lang.name()), true);
@@ -316,7 +316,7 @@ public class Administracion {
 		}
 		packet.getTextChannel().sendMessageEmbeds(eb.build()).queue();
 	}
-	protected static EmbedBuilder getInfoComandos(Guild servidor, Language lang, EmbedBuilder eb) {
+	protected static EmbedBuilder getInfoComandos(Servidor servidor, Language lang, EmbedBuilder eb) {
 		String str = "";//int i = 1;
 		if(servidor.isDefaultDenyCommands()) {
 			if(servidor.getAllowedCommands().size()>0) {
@@ -343,7 +343,7 @@ public class Administracion {
 		}
 		return eb;
 	}
-	protected static EmbedBuilder getInfoCategorias(Guild servidor, Language lang, EmbedBuilder eb) {
+	protected static EmbedBuilder getInfoCategorias(Servidor servidor, Language lang, EmbedBuilder eb) {
 		String str = "";
 		if(servidor.isDefaultDenyCategories()) {
 			if(servidor.getAllowedCategories().size()>0) {
@@ -368,7 +368,7 @@ public class Administracion {
 		}
 		return eb;
 	}
-	protected static EmbedBuilder getInfoRoles(Guild servidor, Language lang, EmbedBuilder eb,MessageReceivedEvent e) {
+	protected static EmbedBuilder getInfoRoles(Servidor servidor, Language lang, EmbedBuilder eb,MessageReceivedEvent e) {
 		String str = "";
 		if(servidor.isDefaultDenyRoles()) {
 			if(servidor.getAllowedRoles().size()>0) {
@@ -401,7 +401,7 @@ public class Administracion {
 		}
 		return eb;
 	}
-	protected static EmbedBuilder getInfoCanales(Guild servidor, Language lang, EmbedBuilder eb,MessageReceivedEvent e) {
+	protected static EmbedBuilder getInfoCanales(Servidor servidor, Language lang, EmbedBuilder eb,MessageReceivedEvent e) {
 		String str = "";
 		if(servidor.isDefaultDenyChannels()) {
 			if(servidor.getAllowedChannels().size()>0) {
@@ -438,7 +438,7 @@ public class Administracion {
 		}
 		return eb;
 	}
-	protected static EmbedBuilder getInfoMiembros(Guild servidor, Language lang, EmbedBuilder eb,MessageReceivedEvent e) {
+	protected static EmbedBuilder getInfoMiembros(Servidor servidor, Language lang, EmbedBuilder eb,MessageReceivedEvent e) {
 		String str = "";
 		if(servidor.isDefaultDenyMembers()) {
 			if(servidor.getAllowedMembers().size()>0) {
