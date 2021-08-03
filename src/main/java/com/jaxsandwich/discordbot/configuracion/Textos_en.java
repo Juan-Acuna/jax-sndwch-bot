@@ -1,7 +1,7 @@
 package com.jaxsandwich.discordbot.configuracion;
 
-import com.jaxsandwich.framework.annotations.text.*;
-import com.jaxsandwich.framework.core.util.Language;
+import com.jaxsandwich.sandwichcord.annotations.text.*;
+import com.jaxsandwich.sandwichcord.core.util.Language;
 
 @ValuesContainer(Language.EN)
 public class Textos_en {

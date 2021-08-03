@@ -5,11 +5,11 @@ import java.util.List;
 import com.jaxsandwich.discordbot.main.Constantes;
 import com.jaxsandwich.discordbot.main.SandwichBot;
 import com.jaxsandwich.discordbot.main.util.Tools;
-import com.jaxsandwich.framework.annotations.*;
-import com.jaxsandwich.framework.core.ExtraCmdManager;
-import com.jaxsandwich.framework.core.util.MessageUtils;
-import com.jaxsandwich.framework.models.*;
-import com.jaxsandwich.framework.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.annotations.*;
+import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
+import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
+import com.jaxsandwich.sandwichcord.models.*;
+import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;

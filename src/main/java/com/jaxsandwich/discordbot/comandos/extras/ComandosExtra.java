@@ -7,16 +7,16 @@ import com.jaxsandwich.discordbot.main.SandwichBot;
 import com.jaxsandwich.discordbot.main.util.ClienteHttp;
 import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.Tools;
-import com.jaxsandwich.framework.annotations.*;
-import com.jaxsandwich.framework.annotations.configure.ExtraCmdAfterExecution;
-import com.jaxsandwich.framework.annotations.configure.ExtraCmdExecutionName;
-import com.jaxsandwich.framework.annotations.configure.ExtraCmdNoExecution;
-import com.jaxsandwich.framework.core.ExtraCmdManager;
-import com.jaxsandwich.framework.core.Values;
-import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.core.util.MessageUtils;
-import com.jaxsandwich.framework.models.ExtraCmdPacket;
-import com.jaxsandwich.framework.models.discord.GuildConfig;
+import com.jaxsandwich.sandwichcord.annotations.*;
+import com.jaxsandwich.sandwichcord.annotations.configure.ExtraCmdAfterExecution;
+import com.jaxsandwich.sandwichcord.annotations.configure.ExtraCmdExecutionName;
+import com.jaxsandwich.sandwichcord.annotations.configure.ExtraCmdNoExecution;
+import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
+import com.jaxsandwich.sandwichcord.core.Values;
+import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
+import com.jaxsandwich.sandwichcord.models.ExtraCmdPacket;
+import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -36,7 +36,7 @@ public class ComandosExtra {
 		Language lang = Language.ES;
 		GuildConfig server;
 		if(channel.getType()==ChannelType.TEXT) {
-			server = packet.getModelGuild();
+			server = packet.getGuildConfig();
 			if(server!=null)
 				lang=server.getLanguage();
 		}
@@ -186,7 +186,7 @@ public class ComandosExtra {
 	}
 	@ExtraCmdAfterExecution(name="join")
 	public static void afterjoin(ExtraCmdPacket packet) {
-		GuildConfig server = packet.getModelGuild();
+		GuildConfig server = packet.getGuildConfig();
 		packet.getTextChannel().sendMessageEmbeds(((SandwichBot)packet.getBot()).getInfo(server.getLanguage())).queue();
 	}
 }

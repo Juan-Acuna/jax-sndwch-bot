@@ -1,7 +1,7 @@
 package com.jaxsandwich.discordbot.comandos;
 
-import com.jaxsandwich.framework.annotations.*;
-import com.jaxsandwich.framework.models.CommandPacket;
+import com.jaxsandwich.sandwichcord.annotations.*;
+import com.jaxsandwich.sandwichcord.models.CommandPacket;
 
 @Category(desc="Comandos para organizar eventos, torneos y sorteos. Se requiere permiso de administrador.")
 public class Torneos {

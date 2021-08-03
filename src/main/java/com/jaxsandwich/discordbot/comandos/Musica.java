@@ -3,17 +3,17 @@ package com.jaxsandwich.discordbot.comandos;
 import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.discordbot.main.util.lavaplayer.*;
-import com.jaxsandwich.framework.annotations.Category;
-import com.jaxsandwich.framework.annotations.Command;
-import com.jaxsandwich.framework.annotations.Option;
-import com.jaxsandwich.framework.annotations.Parameter;
-import com.jaxsandwich.framework.core.Values;
-import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.core.util.MessageUtils;
-import com.jaxsandwich.framework.models.CommandPacket;
-import com.jaxsandwich.framework.models.InputParameter;
-import com.jaxsandwich.framework.models.InputParameter.InputParamType;
-import com.jaxsandwich.framework.models.discord.GuildConfig;
+import com.jaxsandwich.sandwichcord.annotations.Category;
+import com.jaxsandwich.sandwichcord.annotations.Command;
+import com.jaxsandwich.sandwichcord.annotations.Option;
+import com.jaxsandwich.sandwichcord.annotations.Parameter;
+import com.jaxsandwich.sandwichcord.core.Values;
+import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
+import com.jaxsandwich.sandwichcord.models.CommandPacket;
+import com.jaxsandwich.sandwichcord.models.InputParameter;
+import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
@@ -35,7 +35,7 @@ public class Musica {
 		Language lang = Language.ES;
 		GuildConfig servidor;
 		if(e.isFromGuild()) {
-			servidor = packet.getModelGuild();
+			servidor = packet.getGuildConfig();
 			if(servidor!=null)
 				lang=servidor.getLanguage();
 		}
@@ -98,7 +98,7 @@ public class Musica {
 		Language lang = Language.ES;
 		GuildConfig servidor;
 		if(e.isFromGuild()) {
-			servidor = packet.getModelGuild();
+			servidor = packet.getGuildConfig();
 			if(servidor!=null)
 				lang=servidor.getLanguage();
 		}
@@ -134,7 +134,7 @@ public class Musica {
 		Language lang = Language.ES;
 		GuildConfig servidor;
 		if(e.isFromGuild()) {
-			servidor = packet.getModelGuild();
+			servidor = packet.getGuildConfig();
 			if(servidor!=null)
 				lang=servidor.getLanguage();
 		}
@@ -177,7 +177,7 @@ public class Musica {
 		Language lang = Language.ES;
 		GuildConfig servidor;
 		if(e.isFromGuild()) {
-			servidor = packet.getModelGuild();
+			servidor = packet.getGuildConfig();
 			if(servidor!=null)
 				lang=servidor.getLanguage();
 		}
@@ -211,7 +211,7 @@ public class Musica {
 		Language lang = Language.ES;
 		GuildConfig servidor;
 		if(e.isFromGuild()) {
-			servidor = packet.getModelGuild();
+			servidor = packet.getGuildConfig();
 			if(servidor!=null)
 				lang=servidor.getLanguage();
 		}
@@ -262,7 +262,7 @@ public class Musica {
 		Language lang = Language.ES;
 		GuildConfig servidor;
 		if(e.isFromGuild()) {
-			servidor = packet.getModelGuild();
+			servidor = packet.getGuildConfig();
 			if(servidor!=null)
 				lang=servidor.getLanguage();
 		}

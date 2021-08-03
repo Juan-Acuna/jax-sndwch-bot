@@ -6,10 +6,10 @@ import com.jaxsandwich.discordbot.main.Constantes;
 import com.jaxsandwich.discordbot.main.modelos.FuenteImagen;
 import com.jaxsandwich.discordbot.main.util.ControladorImagenes;
 import com.jaxsandwich.discordbot.main.util.Tools;
-import com.jaxsandwich.framework.annotations.*;
-import com.jaxsandwich.framework.models.CommandPacket;
-import com.jaxsandwich.framework.models.InputParameter;
-import com.jaxsandwich.framework.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.annotations.*;
+import com.jaxsandwich.sandwichcord.models.CommandPacket;
+import com.jaxsandwich.sandwichcord.models.InputParameter;
+import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

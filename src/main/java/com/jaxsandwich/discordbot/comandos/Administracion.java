@@ -5,14 +5,14 @@ import java.util.List;
 import com.jaxsandwich.discordbot.conexion.CommandManager;
 import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.Tools;
-import com.jaxsandwich.framework.annotations.*;
-import com.jaxsandwich.framework.core.Values;
-import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.models.CommandPacket;
-import com.jaxsandwich.framework.models.InputParameter;
-import com.jaxsandwich.framework.models.ModelCategory;
-import com.jaxsandwich.framework.models.ModelCommand;
-import com.jaxsandwich.framework.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.annotations.*;
+import com.jaxsandwich.sandwichcord.core.Values;
+import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.models.CommandPacket;
+import com.jaxsandwich.sandwichcord.models.InputParameter;
+import com.jaxsandwich.sandwichcord.models.ModelCategory;
+import com.jaxsandwich.sandwichcord.models.ModelCommand;
+import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -62,7 +62,7 @@ public class Administracion {
 			return;
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		Language lang = packet.getPreferredLang();
-		Servidor servidor = (Servidor) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getGuildConfig();
 		List<Role> rl = e.getMember().getRoles();
 		boolean admin = false;
 		if(rl.size()>0) {

@@ -13,14 +13,14 @@ import com.jaxsandwich.discordbot.main.modelos.Fuente;
 import com.jaxsandwich.discordbot.main.util.ClienteHttp;
 import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.Tools;
-import com.jaxsandwich.framework.annotations.*;
-import com.jaxsandwich.framework.core.Values;
-import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.core.util.LanguageHandler;
-import com.jaxsandwich.framework.core.util.MessageUtils;
-import com.jaxsandwich.framework.models.CommandPacket;
-import com.jaxsandwich.framework.models.InputParameter;
-import com.jaxsandwich.framework.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.annotations.*;
+import com.jaxsandwich.sandwichcord.core.Values;
+import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.core.util.LanguageHandler;
+import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
+import com.jaxsandwich.sandwichcord.models.CommandPacket;
+import com.jaxsandwich.sandwichcord.models.InputParameter;
+import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -34,7 +34,7 @@ public class VideoJuegos {
 	public static void lol(CommandPacket packet) throws IOException {
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
-			lang = packet.getModelGuild().getLanguage();
+			lang = packet.getGuildConfig().getLanguage();
 		String invocador = null;
 		String region = "LAS";
 		EmbedBuilder eb;

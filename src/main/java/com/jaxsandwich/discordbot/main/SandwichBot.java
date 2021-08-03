@@ -2,9 +2,9 @@ package com.jaxsandwich.discordbot.main;
 
 import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.Tools;
-import com.jaxsandwich.framework.core.Bot;
-import com.jaxsandwich.framework.core.Values;
-import com.jaxsandwich.framework.core.util.Language;
+import com.jaxsandwich.sandwichcord.core.Bot;
+import com.jaxsandwich.sandwichcord.core.Values;
+import com.jaxsandwich.sandwichcord.core.util.Language;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;

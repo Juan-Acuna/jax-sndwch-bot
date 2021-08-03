@@ -9,14 +9,14 @@ import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.ClienteHttp;
 import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.ControladorImagenes;
-import com.jaxsandwich.framework.annotations.*;
-import com.jaxsandwich.framework.core.ExtraCmdManager;
-import com.jaxsandwich.framework.core.Values;
-import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.core.util.MessageUtils;
-import com.jaxsandwich.framework.models.CommandPacket;
-import com.jaxsandwich.framework.models.InputParameter;
-import com.jaxsandwich.framework.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.annotations.*;
+import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
+import com.jaxsandwich.sandwichcord.core.Values;
+import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
+import com.jaxsandwich.sandwichcord.models.CommandPacket;
+import com.jaxsandwich.sandwichcord.models.InputParameter;
+import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -35,7 +35,7 @@ public class NSFW {
 	public static void nsfw(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		e.getChannel().purgeMessagesById(e.getMessageId());
-		Servidor servidor = (Servidor) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getGuildConfig();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang=servidor.getLanguage();
@@ -127,7 +127,7 @@ public class NSFW {
 	public static void xvideos(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		packet.getChannel().purgeMessagesById(e.getMessageId());//<span class="duration">23 min
-		Servidor servidor = (Servidor) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getGuildConfig();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang=servidor.getLanguage();
@@ -191,7 +191,7 @@ public class NSFW {
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
 	public static void otakus(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		Servidor servidor = (Servidor) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getGuildConfig();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang=servidor.getLanguage();
@@ -287,7 +287,7 @@ public class NSFW {
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
 	public static void r34(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		Servidor servidor = (Servidor) packet.getModelGuild();
+		Servidor servidor = (Servidor) packet.getGuildConfig();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang=servidor.getLanguage();

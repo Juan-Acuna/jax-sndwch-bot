@@ -10,10 +10,10 @@ import org.json.JSONObject;
 
 import com.jaxsandwich.discordbot.main.Constantes;
 import com.jaxsandwich.discordbot.main.modelos.FuenteImagen;
-import com.jaxsandwich.framework.core.Bot;
-import com.jaxsandwich.framework.core.Values;
-import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.core.util.MessageUtils;
+import com.jaxsandwich.sandwichcord.core.Bot;
+import com.jaxsandwich.sandwichcord.core.Values;
+import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;

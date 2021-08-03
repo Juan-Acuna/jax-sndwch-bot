@@ -2,9 +2,10 @@ package com.jaxsandwich.discordbot.main.modelos;
 
 import com.jaxsandwich.discordbot.conexion.CommandManager;
 import com.jaxsandwich.discordbot.conexion.anotaciones.PrimaryKey;
-import com.jaxsandwich.framework.core.Bot;
-import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.models.discord.GuildConfig;
+import com.jaxsandwich.sandwichcord.core.Bot;
+import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
+
 import net.dv8tion.jda.api.entities.Guild;
 
 public class Servidor extends GuildConfig{

@@ -1,8 +1,8 @@
 package com.jaxsandwich.discordbot.configuracion;
 
-import com.jaxsandwich.framework.annotations.Configuration;
-import com.jaxsandwich.framework.annotations.configure.*;
-import com.jaxsandwich.framework.core.util.Language;
+import com.jaxsandwich.sandwichcord.annotations.Configuration;
+import com.jaxsandwich.sandwichcord.annotations.configure.*;
+import com.jaxsandwich.sandwichcord.core.util.Language;
 
 @Configuration(Language.EN)
 public class ConfigComandos_en {

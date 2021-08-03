@@ -13,14 +13,14 @@ import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.discordbot.main.util.Tools.EarrapeSRC;
 import com.jaxsandwich.discordbot.main.util.lavaplayer.PlayerManager;
-import com.jaxsandwich.framework.annotations.*;
-import com.jaxsandwich.framework.core.Values;
-import com.jaxsandwich.framework.core.util.Language;
-import com.jaxsandwich.framework.core.util.MessageUtils;
-import com.jaxsandwich.framework.models.CommandPacket;
-import com.jaxsandwich.framework.models.InputParameter;
-import com.jaxsandwich.framework.models.InputParameter.InputParamType;
-import com.jaxsandwich.framework.models.discord.GuildConfig;
+import com.jaxsandwich.sandwichcord.annotations.*;
+import com.jaxsandwich.sandwichcord.core.Values;
+import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
+import com.jaxsandwich.sandwichcord.models.CommandPacket;
+import com.jaxsandwich.sandwichcord.models.InputParameter;
+import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -198,7 +198,7 @@ public class Comun {
 				}
 			}
 		}
-		GuildConfig server = packet.getModelGuild();
+		GuildConfig server = packet.getGuildConfig();
 		if(anon) {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}

@@ -12,8 +12,8 @@ import com.jaxsandwich.discordbot.configuracion.Global;
 import com.jaxsandwich.discordbot.main.modelos.Fuente;
 import com.jaxsandwich.discordbot.main.modelos.FuenteImagen;
 import com.jaxsandwich.discordbot.main.modelos.Servidor;
-import com.jaxsandwich.framework.core.BotRunner;
-import com.jaxsandwich.framework.core.util.Language;
+import com.jaxsandwich.sandwichcord.core.BotRunner;
+import com.jaxsandwich.sandwichcord.core.util.Language;
 
 import net.dv8tion.jda.api.OnlineStatus;
 
