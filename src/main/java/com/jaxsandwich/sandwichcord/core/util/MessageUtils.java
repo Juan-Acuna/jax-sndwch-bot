@@ -16,9 +16,9 @@ import com.jaxsandwich.sandwichcord.models.CommandPacket;
 public class MessageUtils {
 	/**
 	 * [ES] Envía un {@link MessageEmbed} en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
-	 * En su lugar use {@link CommandPacket#SendAndDestroy(MessageEmbed, int)}.<br>
 	 * [EN] Sends a {@link MessageEmbed} to the {@link MessageChannel} and deletes itself after the specified time.<br>
-	 * Better use {@link CommandPacket#SendAndDestroy(MessageEmbed, int)}.
+	 * @deprecated [ES] En su lugar use {@link CommandPacket#SendAndDestroy(MessageEmbed, int)}.<br>
+	 * [EN] Better use {@link CommandPacket#SendAndDestroy(MessageEmbed, int)}.
 	 */
 	@Deprecated
 	public static void SendAndDestroy(MessageChannel c, MessageEmbed emb, int time) {
@@ -26,9 +26,9 @@ public class MessageUtils {
 	}
 	/**
 	 * [ES] Envía un mensaje en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
-	 * En su lugar use {@link CommandPacket#SendAndDestroy(String, int)}.<br>
 	 * [EN] Sends a message to the {@link MessageChannel} and deletes itself after the specified time.<br>
-	 * Better use {@link CommandPacket#SendAndDestroy(String, int)}.
+	 * @deprecated En su lugar use {@link CommandPacket#SendAndDestroy(String, int)}.<br>
+	 * [EN] Better use {@link CommandPacket#SendAndDestroy(String, int)}.
 	 */
 	@Deprecated
 	public static void SendAndDestroy(MessageChannel c, String msg, int time) {
@@ -36,9 +36,9 @@ public class MessageUtils {
 	}
 	/**
 	 * [ES] Envía un {@link Message} en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
-	 * En su lugar use {@link CommandPacket#SendAndDestroy(Message, int)}.<br>
 	 * [EN] Sends a {@link Message} to the {@link MessageChannel} and deletes itself after the specified time.<br>
-	 * Better use {@link CommandPacket#SendAndDestroy(Message, int)}.
+	 * @deprecated [ES] En su lugar use {@link CommandPacket#SendAndDestroy(Message, int)}.<br>
+	 * [EN] Better use {@link CommandPacket#SendAndDestroy(Message, int)}.
 	 */
 	@Deprecated
 	public static void SendAndDestroy(MessageChannel c, Message msg, int time) {
@@ -47,9 +47,9 @@ public class MessageUtils {
 	
 	/**
 	 * [ES] Envía un {@link MessageEmbed} en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
-	 * En su lugar use {@link CommandPacket#SendAndDestroy(MessageEmbed, int, TimeUnit)}.<br>
 	 * [EN] Sends a {@link MessageEmbed} to the {@link MessageChannel} and deletes itself after the specified time.<br>
-	 * Better use {@link CommandPacket#SendAndDestroy(MessageEmbed, int, TimeUnit)}.
+	 * @deprecated [ES] En su lugar use {@link CommandPacket#SendAndDestroy(MessageEmbed, int, TimeUnit)}.<br>
+	 * [EN] Better use {@link CommandPacket#SendAndDestroy(MessageEmbed, int, TimeUnit)}.
 	 */
 	@Deprecated
 	public static void SendAndDestroy(MessageChannel c, MessageEmbed emb, int time, TimeUnit unit) {
@@ -57,9 +57,9 @@ public class MessageUtils {
 	}
 	/**
 	 * [ES] Envía un mensaje en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
-	 * En su lugar use {@link CommandPacket#SendAndDestroy(String, int, TimeUnit)}.<br>
 	 * [EN] Sends a message to the {@link MessageChannel} and deletes itself after the specified time.<br>
-	 * Better use {@link CommandPacket#SendAndDestroy(String, int, TimeUnit)}.
+	 * @deprecated [ES] En su lugar use {@link CommandPacket#SendAndDestroy(String, int, TimeUnit)}.<br>
+	 * [EN] Better use {@link CommandPacket#SendAndDestroy(String, int, TimeUnit)}.
 	 */
 	@Deprecated
 	public static void SendAndDestroy(MessageChannel c, String msg, int time, TimeUnit unit) {
@@ -67,9 +67,9 @@ public class MessageUtils {
 	}
 	/**
 	 * [ES] Envía un {@link Message} en el {@link MessageChannel} y se elimina después del tiempo especificado.<br>
-	 * En su lugar use {@link CommandPacket#SendAndDestroy(Message, int, TimeUnit)}.<br>
 	 * [EN] Sends a {@link Message} to the {@link MessageChannel} and deletes itself after the specified time.<br>
-	 * Better use {@link CommandPacket#SendAndDestroy(Message, int, TimeUnit)}.
+	 * @deprecated [ES] En su lugar use {@link CommandPacket#SendAndDestroy(Message, int, TimeUnit)}.<br>
+	 * [EN] Better use {@link CommandPacket#SendAndDestroy(Message, int, TimeUnit)}.
 	 */
 	@Deprecated
 	public static void SendAndDestroy(MessageChannel c, Message msg, int time, TimeUnit unit) {

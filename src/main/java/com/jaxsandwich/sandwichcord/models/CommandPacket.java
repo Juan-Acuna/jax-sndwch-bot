@@ -1,6 +1,5 @@
 package com.jaxsandwich.sandwichcord.models;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
@@ -25,7 +24,7 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction;
  * [ES] Paquete con todo el contenido necesario para un comando.
  * [EN] Packet with all the required content for a command.
  * @author Juan Acuña
- * @version 1.1
+ * @version 1.2
  */
 public class CommandPacket {
 	/**
@@ -57,7 +56,7 @@ public class CommandPacket {
 	 * [ES] Lista con las opciones/parametros ingresados por el usuario<br>
 	 * [EN] List of parameters/options entered by the user.
 	 */
-	protected ArrayList<InputParameter> parameters = null;
+	protected InputParameter[] parameters = null;
 	/**
 	 * [ES] {@link MessageReceivedEvent} asociado al CommandPacket.<br>
 	 * [EN] {@link MessageReceivedEvent} associated to the CommandPacket.
@@ -139,7 +138,7 @@ public class CommandPacket {
 	 * [ES] Constructor de CommandPacket.<br>
 	 * [EN] Constructor of CommandPacket.
 	 */
-	public CommandPacket(Bot bot, ArrayList<InputParameter> parameters, MessageReceivedEvent event) {
+	public CommandPacket(Bot bot, InputParameter[] parameters, MessageReceivedEvent event) {
 		this.bot=bot;
 		this.extraCmdManager=bot.getExtraCmdManager();
 		this.guildsManager=bot.getGuildsManager();
@@ -206,7 +205,7 @@ public class CommandPacket {
 	 * [ES] Devuelve la lista de parametros/opciones ingresados por el usuario.<br>
 	 * [EN] Returns the list of parameters/options entered by the user.
 	 */
-	public ArrayList<InputParameter> getParameters() {
+	public InputParameter[] getParameters() {
 		return parameters;
 	}
 	/**

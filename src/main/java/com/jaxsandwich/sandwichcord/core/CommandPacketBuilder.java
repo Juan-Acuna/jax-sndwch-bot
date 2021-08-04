@@ -36,7 +36,7 @@ public class CommandPacketBuilder {
 	 * [ES] Parametros para el paquete que se creará.<br>
 	 * [EN] Parameters for the packet wich will be created.
 	 */
-	private ArrayList<InputParameter> parameters = null;
+	private InputParameter[] parameters = null;
 	/**
 	 * [ES] {@link MessageReceivedEvent} asociado al paquete.<br>
 	 * [EN] {@link MessageReceivedEvent} associated to the packet.
@@ -139,14 +139,14 @@ public class CommandPacketBuilder {
 	 * [ES] Devuelve los parametros({@link InputParameter}) de este CommandPacketBuilder.<br>
 	 * [EN] Returns the parameters({@link InputParameter}) of this CommandPacketBuilder.
 	 */
-	public ArrayList<InputParameter> getParameters() {
+	public InputParameter[] getParameters() {
 		return parameters;
 	}
 	/**
 	 * [ES] Configura los parametros({@link InputParameter}) de este CommandPacketBuilder.<br>
 	 * [EN] Sets the parameters({@link InputParameter}) of this CommandPacketBuilder.
 	 */
-	public void setParameters(ArrayList<InputParameter> parameters) {
+	public void setParameters(InputParameter[] parameters) {
 		this.parameters = parameters;
 	}
 	/**
@@ -296,7 +296,7 @@ public class CommandPacketBuilder {
 	 * [ES] Analiza la entrada y devuelve los parametros del comando.<br>
 	 * [EN] Analyzes the input and returns the paramters of the command.
 	 */
-	private ArrayList<InputParameter> findParameters(Language lang, String input,CommandBase command, String oprx){
+	private InputParameter[] findParameters(Language lang, String input,CommandBase command, String oprx){
 		String[] s = input.split(" ");
 		ArrayList<InputParameter> lista = new ArrayList<InputParameter>();
 		InputParameter p = new InputParameter();
@@ -307,34 +307,25 @@ public class CommandPacketBuilder {
 				for(ModelOption mo : command.getOptions()) {
 					if(s[i].toLowerCase().equalsIgnoreCase(oprx + mo.getName(lang))) {
 						p.setKey(mo.getName(lang));
-						p.setType(InputParamType.Standar);
+						p.setType(InputParamType.STANDAR);
 						break;
 					}else {
 						for(String a : mo.getAlias(lang)) {
 							if(s[i].toLowerCase().equalsIgnoreCase(oprx+a)) {
 								p.setKey(mo.getName(lang));
-								p.setType(InputParamType.Standar);
+								p.setType(InputParamType.STANDAR);
 								break;
 							}
 						}
 					}
 				}
-				if(p.getType() == InputParamType.Custom) {
-					/*for(String hs : AutoHelpCommand.getHelpOptions(lang)) {
-						if(s[i].equalsIgnoreCase(oprx+hs)) {
-							p.setKey(AutoHelpCommand.AUTO_HELP_KEY);
-							p.setType(InputParamType.Standar);
-							break;
-						}
-					}*/
-					if(p.getType() == InputParamType.Custom) {
-						p.setType(InputParamType.Invalid);
-						p.setKey(s[i]);
-					}
+				if(p.getType() == InputParamType.NO_STANDAR) {
+					p.setType(InputParamType.CUSTOM);
+					p.setKey(s[i]);
 				}
 			}else if(i==1) {
-				p.setType(InputParamType.Custom);
-				p.setKey("custom");
+				p.setType(InputParamType.NO_STANDAR);
+				p.setKey("nostandar");
 				p.setValue(s[i]);
 			}else if(p.getValueAsString()!=null){
 				p.setValue(p.getValueAsString()+" "+s[i]);
@@ -349,6 +340,7 @@ public class CommandPacketBuilder {
 				lista.add(p);
 			}
 		}
-		return lista;
+		InputParameter[] res = new InputParameter[lista.size()];
+		return lista.toArray(res);
 	}
 }

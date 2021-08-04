@@ -39,7 +39,7 @@ public class VideoJuegos {
 		String region = "LAS";
 		EmbedBuilder eb;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType()==InputParamType.Standar) {
+			if(p.getType()==InputParamType.STANDAR) {
 				if(p.getKey().equals("perfil")) {
 					if(p.getValueAsString()!=null) {
 						invocador = p.getValueAsString();
@@ -121,7 +121,7 @@ public class VideoJuegos {
 		boolean anon = false;
 		boolean grito = false; 
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -136,7 +136,7 @@ public class VideoJuegos {
 				}else if(p.getKey().equalsIgnoreCase("anonimo")){
 					anon = true;
 				}
-			}else if(p.getType() == InputParamType.Custom){
+			}else if(p.getType() == InputParamType.NO_STANDAR){
 				pkmn = p.getValueAsString();
 			}
 		}

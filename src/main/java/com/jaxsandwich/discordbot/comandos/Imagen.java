@@ -26,7 +26,7 @@ public class Imagen {
 		boolean autodes = false;
 		int autodesTime = 15;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("cantidad")) {
 					cantidad = p.getValueAsInt();
 				}else if(p.getKey().equalsIgnoreCase("autodestruir")) {
@@ -74,7 +74,7 @@ public class Imagen {
 		boolean anon = false;
 		boolean random = false;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("cantidad")) {
 					cantidad = p.getValueAsInt();
 				}else if(p.getKey().equalsIgnoreCase("autodestruir")) {

@@ -81,7 +81,7 @@ public class Administracion {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setTitle(Values.value("jax-conf-act-conf", lang));
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType()==InputParamType.Standar) {
+			if(p.getType()==InputParamType.STANDAR) {
 				if(p.getKey().equals("prefijo")) {
 					String s = p.getValueAsString();
 					if(s!=null) {

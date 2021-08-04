@@ -44,7 +44,7 @@ public class Comun {
 		int autodesTime=15;
 		boolean anon=false;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -53,7 +53,7 @@ public class Comun {
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
 				}
-			}else if(p.getType() == InputParamType.Custom){
+			}else if(p.getType() == InputParamType.NO_STANDAR){
 				nombre = p.getValueAsString();
 			}
 		}
@@ -91,7 +91,7 @@ public class Comun {
 		int autodesTime=15;
 		boolean anon = false;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -100,7 +100,7 @@ public class Comun {
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
 				}
-			}else if(p.getType() == InputParamType.Custom){
+			}else if(p.getType() == InputParamType.NO_STANDAR){
 				busqueda = p.getValueAsString();
 			}
 		}
@@ -150,7 +150,7 @@ public class Comun {
 		int autodesTime = 15;
 		boolean anon = false;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -187,7 +187,7 @@ public class Comun {
 		int autodesTime = 15;
 		boolean anon = false;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -246,7 +246,7 @@ public class Comun {
 		String footer_img = null;
 		
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -271,7 +271,7 @@ public class Comun {
 				}else if(p.getKey().equalsIgnoreCase("autor")) {
 					autor = p.getValueAsString();
 				}
-			}else if(p.getType() == InputParamType.Custom){
+			}else if(p.getType() == InputParamType.NO_STANDAR){
 				mensaje = p.getValueAsString();
 			}
 		}
@@ -357,7 +357,7 @@ public class Comun {
 		String footer_img = null;
 		
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -382,7 +382,7 @@ public class Comun {
 				}else if(p.getKey().equalsIgnoreCase("autor")) {
 					autor = p.getValueAsString();
 				}
-			}else if(p.getType() == InputParamType.Custom){
+			}else if(p.getType() == InputParamType.NO_STANDAR){
 				nombre = p.getValueAsString();
 			}
 		}
@@ -450,7 +450,7 @@ public class Comun {
 		boolean er = false;
 		//EmbedBuilder eb = new EmbedBuilder();
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					//autodes=true;
 					if(p.getValueAsString()!=null) {

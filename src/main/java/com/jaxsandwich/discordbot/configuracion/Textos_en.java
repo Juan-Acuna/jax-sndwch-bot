@@ -41,7 +41,7 @@ public class Textos_en {
 	public static final String IMG_NO_NSFW_F = "Look for a channel with the \"NSFW\" tag and I'll show you what you want 🍑🍆😈👉👌😏";
 
 	@ValueID("jax-val-incorrecto")
-	public static final String XC_VAL_INC = "Invalid value.";
+	public static final String XC_VAL_INC = "CUSTOM value.";
 	
 	@ValueID("jax-val-incorrecto-cont")
 	public static final String XC_VAL_INC_C = ". Try again (tries: %s)";
@@ -248,7 +248,7 @@ public class Textos_en {
 	public static final String C24 = "You have to enter a summoner name.";
 
 	@ValueID("jax-gen-txt-region-invalida")
-	public static final String C25 = "Invalid region.";
+	public static final String C25 = "CUSTOM region.";
 
 	@ValueID("jax-lol-info-invocador-titulo")
 	public static final String C26 = "Summoner's stats: %s";

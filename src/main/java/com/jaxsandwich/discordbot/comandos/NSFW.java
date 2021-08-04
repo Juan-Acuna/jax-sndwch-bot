@@ -50,7 +50,7 @@ public class NSFW {
 		boolean noanon = false;
 		for(InputParameter p : packet.getParameters()) {
 			//System.out.println(p.getClave()+"-"+p.getTipo());
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
@@ -135,14 +135,14 @@ public class NSFW {
 		boolean autodes = false;
 		int autodesTime=15;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
 				}
-			}else if(p.getType() == InputParamType.Custom){
+			}else if(p.getType() == InputParamType.NO_STANDAR){
 				busqueda = p.getValueAsString();
 			}
 		}
@@ -203,7 +203,7 @@ public class NSFW {
 		int autodesTime = 15;
 		boolean noanon=false;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
@@ -301,7 +301,7 @@ public class NSFW {
 		boolean random = false;
 		boolean noanon = false;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {

@@ -32,7 +32,7 @@ public class Especial {
 		boolean anon=false;
 		String usr = null;
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
@@ -41,7 +41,7 @@ public class Especial {
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
 				}
-			}else if(p.getType() == InputParamType.Custom){
+			}else if(p.getType() == InputParamType.NO_STANDAR){
 				usr = p.getValueAsString();
 			}
 		}
@@ -94,7 +94,7 @@ public class Especial {
 		boolean on = packet.getBot().isOn();
 		
 		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.Standar) {
+			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
@@ -165,8 +165,8 @@ public class Especial {
 	public static void jax(CommandPacket packet) throws Exception {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		if(Tools.JAX.auth(e.getAuthor().getId())) {
-			String enc = Tools.toBase64(Tools.cifrar(packet.getParameters().get(0).getValueAsString()));
-			e.getChannel().sendMessage("Mensaje original: " + packet.getParameters().get(0)).queue();
+			String enc = Tools.toBase64(Tools.cifrar(packet.getParameters()[0].getValueAsString()));
+			e.getChannel().sendMessage("Mensaje original: " + packet.getParameters()[0]).queue();
 			e.getChannel().sendMessage("Mensaje encriptado: " + enc).queue();
 			e.getChannel().sendMessage("Mensaje desencriptado: " + Tools.descifrar(Tools.fromBase64ToBytes(enc))).queue();
 		}
@@ -183,7 +183,7 @@ public class Especial {
 			//String servidor = null;
 			//String canal = null;
 			for(InputParameter p : packet.getParameters()) {
-				if(p.getType() == InputParamType.Standar) {
+				if(p.getType() == InputParamType.STANDAR) {
 					if(p.getKey().equalsIgnoreCase("autodestruir")){
 						autodes=true;
 						if(!p.getValueAsString().equalsIgnoreCase("none")) {
@@ -194,7 +194,7 @@ public class Especial {
 					}else if(p.getKey().equalsIgnoreCase("servidor")) {
 						servidor = p.getValueAsString();
 					}*/
-				}else if(p.getType() == InputParamType.Custom){
+				}else if(p.getType() == InputParamType.NO_STANDAR){
 					msg = p.getValueAsString();
 				}
 			}

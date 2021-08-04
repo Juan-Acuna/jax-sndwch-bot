@@ -65,7 +65,7 @@ public class AutoHelpCommand extends CommandBase{
 				actualLang = actualGuild.getLanguage();
 		}
 		for(InputParameter ip : packet.getParameters()) {
-			if(ip.getType()==InputParamType.Custom) {
+			if(ip.getType()==InputParamType.NO_STANDAR) {
 				searchQuery = ip.getValueAsString();
 			}
 		}
