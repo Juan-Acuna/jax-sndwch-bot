@@ -16,7 +16,6 @@ import com.jaxsandwich.discordbot.main.util.lavaplayer.PlayerManager;
 import com.jaxsandwich.sandwichcord.annotations.*;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
-import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
 import com.jaxsandwich.sandwichcord.models.CommandPacket;
 import com.jaxsandwich.sandwichcord.models.InputParameter;
 import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
@@ -67,7 +66,7 @@ public class Comun {
 				}else if(autodesTime>900) {
 					autodesTime=900;
 				}
-				MessageUtils.SendAndDestroy(e.getChannel(),"Wena po "+nombre+" ql!", autodesTime);
+				packet.SendAndDestroy("Wena po "+nombre+" ql!", autodesTime);
 			}else {
 				e.getChannel().sendMessage("Wena po "+nombre+" ql!").queue();
 			}
@@ -128,16 +127,16 @@ public class Comun {
 					}else if(autodesTime>900) {
 						autodesTime=900;
 					}
-					MessageUtils.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
+					packet.SendAndDestroy(eb.build(), autodesTime);
 				}else {
 					e.getChannel().sendMessageEmbeds(eb.build()).queue();
 				}
 				return;
 			}
-			MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-yt-no-resultados", lang), 10);
+			packet.SendAndDestroy(Values.value("jax-yt-no-resultados", lang), 10);
 			return;
 		}else {
-			MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-yt-ingresar-busqueda", lang), 10);
+			packet.SendAndDestroy(Values.value("jax-yt-ingresar-busqueda", lang), 10);
 		}
 		
 	}
@@ -172,7 +171,7 @@ public class Comun {
 		Guild guild = e.getGuild();
 		Member invocador = guild.getMember(e.getAuthor());
 		if(autodes) {
-			MessageUtils.SendAndDestroy(e.getChannel(),Values.value("jax-i-voy", lang),autodesTime);
+			packet.SendAndDestroy(Values.value("jax-i-voy", lang),autodesTime);
 		}else {
 			e.getChannel().sendMessage(Values.value("jax-i-voy", lang)).queue();
 		}
@@ -203,7 +202,7 @@ public class Comun {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(autodes) {
-			MessageUtils.SendAndDestroy(e.getChannel(),((SandwichBot)packet.getBot()).getInfo(server.getLanguage()),autodesTime);
+			packet.SendAndDestroy(((SandwichBot)packet.getBot()).getInfo(server.getLanguage()),autodesTime);
 		}else {
 			e.getChannel().sendMessageEmbeds(((SandwichBot)packet.getBot()).getInfo(server.getLanguage())).queue();
 		}
@@ -323,7 +322,7 @@ public class Comun {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(autodes) {
-			MessageUtils.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
+			packet.SendAndDestroy(eb.build(),autodesTime);
 		}else {
 			e.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
@@ -431,7 +430,7 @@ public class Comun {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(autodes) {
-			MessageUtils.SendAndDestroy(e.getChannel(),eb.build(),autodesTime);
+			packet.SendAndDestroy(eb.build(),autodesTime);
 		}else {
 			e.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}
@@ -504,8 +503,8 @@ public class Comun {
 	public static void rae(CommandPacket packet) {
 		
 	}
-	@Command(id="Test",visible=false,enabled=false)
+	@Command(id="Test",visible=false,enabled=true)
 	public static void test(CommandPacket packet) throws IOException{
-		
+		packet.sendMessage("Mensaje recibido, comando funciona!").queue();
 	}
 }
