@@ -1,11 +1,13 @@
 package com.jaxsandwich.discordbot.configuracion;
 
 public class Global {
-	private static String BETA = "beta";
-	private static String MAIN = "main";
-	private static final String ENV = BETA;
+	public static String ENV_BETA = "beta";
+	public static String ENV_MAIN = "main";
+	public static final String ENV = ENV_BETA;
 	
-	public static final String DISCORD_TOKEN = System.getenv().get((ENV.equals(MAIN)?"DISCORD_TOKEN":"DISCORD_TOKEN_TEST"));
+	public static final String DISCORD_TOKEN = System.getenv().get((ENV.equals(ENV_MAIN)?"DISCORD_TOKEN":"DISCORD_TOKEN_TEST"));
+	public static final String BOT_PREFIX = (ENV.equals(ENV_MAIN)?"s.":"ss.");
+	
 	public static final String JAX_TOKEN = System.getenv().get("JAX_TOKEN");
 	
 	public static final String DB_HOST = System.getenv().get("DB_HOST");

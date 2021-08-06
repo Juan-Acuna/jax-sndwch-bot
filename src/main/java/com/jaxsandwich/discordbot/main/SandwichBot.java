@@ -1,5 +1,6 @@
 package com.jaxsandwich.discordbot.main;
 
+import com.jaxsandwich.discordbot.configuracion.Global;
 import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.core.Bot;
@@ -20,7 +21,7 @@ public class SandwichBot extends Bot{
 	public boolean presentarse = true;
 	public SandwichBot(String token) {
 		super(token,Language.ES);
-		this.setPrefix("ss.");
+		this.setPrefix(Global.BOT_PREFIX);
 		this.setOptionsPrefix("-");
 		this.setAutoHelpCommandEnabled(true);
 		this.setHideNSFWCategory(true);
@@ -35,7 +36,6 @@ public class SandwichBot extends Bot{
 			try {
 				this.guildsManager.registerGuild(g);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			return;
