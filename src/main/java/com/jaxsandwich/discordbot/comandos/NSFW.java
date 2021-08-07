@@ -13,7 +13,6 @@ import com.jaxsandwich.sandwichcord.annotations.*;
 import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
-import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
 import com.jaxsandwich.sandwichcord.models.CommandPacket;
 import com.jaxsandwich.sandwichcord.models.InputParameter;
 import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
@@ -53,7 +52,7 @@ public class NSFW {
 			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase("cantidad")) {
@@ -169,7 +168,7 @@ public class NSFW {
 					}else if(autodesTime>900) {
 						autodesTime=900;
 					}
-					MessageUtils.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
+					packet.SendAndDestroy(eb.build(), autodesTime);
 				}else {
 					e.getChannel().sendMessageEmbeds(eb.build()).queue();
 				}

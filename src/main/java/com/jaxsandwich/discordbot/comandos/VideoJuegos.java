@@ -1,7 +1,6 @@
 package com.jaxsandwich.discordbot.comandos;
 
 import java.io.IOException;
-import java.net.URLDecoder;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,14 +9,11 @@ import org.jsoup.select.Elements;
 
 import com.jaxsandwich.discordbot.main.Constantes;
 import com.jaxsandwich.discordbot.main.modelos.Fuente;
-import com.jaxsandwich.discordbot.main.util.ClienteHttp;
-import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.annotations.*;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
 import com.jaxsandwich.sandwichcord.core.util.LanguageHandler;
-import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
 import com.jaxsandwich.sandwichcord.models.CommandPacket;
 import com.jaxsandwich.sandwichcord.models.InputParameter;
 import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
@@ -217,6 +213,7 @@ public class VideoJuegos {
 			}
 		}else {
 			imagen = doc.selectFirst("a[href^=/wiki/Archivo:] > img[alt^=Ilustración de]").attr("src");
+			escalado = "300px";
 		}
 		imagen = imagen.replaceFirst("[0-9]{1,4}px", escalado);//id="mwe_player_0"
 		String gritoSource = null;
@@ -227,9 +224,10 @@ public class VideoJuegos {
 		eb.setTitle(nombre + "   |  NAC# "+ id);
 		eb.addField("Tipo" + tipo,"Habilidad" + habilidad, false);
 		eb.addField("Habilidad Oculta: " + oculta,"",false);
+		System.out.println(imagen);
 		eb.setImage(imagen);
 		if(autodes) {
-			MessageUtils.SendAndDestroy(e.getChannel(), eb.build(), autodesTime);
+			packet.SendAndDestroy(eb.build(), autodesTime);
 		}else {
 			e.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}

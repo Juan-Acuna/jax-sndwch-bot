@@ -21,7 +21,7 @@ public class Servidor extends GuildConfig{
 		push();
 	}
 	@PrimaryKey
-	public long id_guild;
+	public long id_servidor;
 	public String lang;
 	public String prefix;
 	public String opt_prefix;
@@ -33,8 +33,8 @@ public class Servidor extends GuildConfig{
 	public short joined;
 	
 	public void push() {
-		this.id_guild=this.id;
-		System.out.println("[push]id:"+this.id+"|>"+this.id_guild);
+		this.id_servidor=this.id;
+		System.out.println("[push]id:"+this.id+"|>"+this.id_servidor);
 		this.lang=this.language.name();
 		this.prefix=this.customPrefix;
 		this.opt_prefix=this.customOptionsPrefix;
@@ -78,7 +78,7 @@ public class Servidor extends GuildConfig{
 	}
 	
 	public void pull() {
-		this.id=this.id_guild;
+		this.id=this.id_servidor;
 		this.language=Language.valueOf(this.lang);
 		this.customPrefix=this.prefix;
 		this.customOptionsPrefix=this.opt_prefix;

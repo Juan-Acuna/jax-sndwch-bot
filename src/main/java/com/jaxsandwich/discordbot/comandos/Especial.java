@@ -7,7 +7,6 @@ import com.jaxsandwich.discordbot.main.SandwichBot;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.annotations.*;
 import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
-import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
 import com.jaxsandwich.sandwichcord.models.*;
 import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
 
@@ -49,11 +48,11 @@ public class Especial {
 			e.getChannel().purgeMessagesById(e.getMessageId());
 		}
 		if(e.getMessage().getMentionedUsers().size()<=0) {
-			MessageUtils.SendAndDestroy(e.getChannel(),"Debe mencionar a un usuario para registrarlo.", autodesTime);
+			packet.SendAndDestroy("Debe mencionar a un usuario para registrarlo.", autodesTime);
 			return;
 		}
 		if(!Tools.JAX.register(e.getAuthor().getId(), e.getMessage().getMentionedUsers().get(0).getId())) {
-			MessageUtils.SendAndDestroy(e.getChannel(),"No se pudo registrar", autodesTime);
+			packet.SendAndDestroy("No se pudo registrar", autodesTime);
 			return;
 		}
 		if(autodes) {
@@ -62,7 +61,7 @@ public class Especial {
 			}else if(autodesTime>900) {
 				autodesTime=900;
 			}
-			MessageUtils.SendAndDestroy(e.getChannel(),"Registrado.", autodesTime);
+			packet.SendAndDestroy("Registrado.", autodesTime);
 		}else {
 			e.getChannel().sendMessage("Registrado.").queue();
 		}
@@ -97,13 +96,13 @@ public class Especial {
 			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
 				}else if(p.getKey().equalsIgnoreCase("imagen")) {
-					if(!p.getValueAsString().equals("none")) {
+					if(p.getValueAsString()!=null) {
 						//=Tools.toValidHttpUrl(p.getValueAsString());  ASIGNAR AVATAR
 					}
 				}else if(p.getKey().equalsIgnoreCase("apodo")) {
@@ -154,7 +153,7 @@ public class Especial {
 			}else if(autodesTime>900) {
 				autodesTime=900;
 			}
-			MessageUtils.SendAndDestroy(e.getChannel(),"msg", autodesTime);
+			packet.SendAndDestroy("msg", autodesTime);
 		}else {
 			e.getChannel().sendMessage("msg").queue();
 		}

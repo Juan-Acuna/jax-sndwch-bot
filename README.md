@@ -1,5 +1,5 @@
 # Jax Sandwich Bot
-Discord Bot desarrollado en Java usando [JDA 4](https://github.com/Juan-Acuna/sandwichcord-framework)
+Discord Bot desarrollado en Java usando [Sandwichcord Framework](https://github.com/Juan-Acuna/sandwichcord-framework)
 ##### Este bot se encuentra en fase de desarrollo, implementado en un servidor de pruebas. Por favor no abuse de su uso (sobre todo en comandos que requieran obtener recursos de internet).
 
 ## Bot multiuso

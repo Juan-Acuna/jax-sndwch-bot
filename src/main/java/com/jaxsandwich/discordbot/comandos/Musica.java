@@ -9,7 +9,6 @@ import com.jaxsandwich.sandwichcord.annotations.Option;
 import com.jaxsandwich.sandwichcord.annotations.Parameter;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
-import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
 import com.jaxsandwich.sandwichcord.models.CommandPacket;
 import com.jaxsandwich.sandwichcord.models.InputParameter;
 import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
@@ -29,8 +28,8 @@ public class Musica {
 	@Parameter(name="Busqueda/URL", desc = "Busqueda o URL de la cancion a reproducir.")
 	public static void reproducir(CommandPacket packet) {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		boolean autodes=false;
-		int autodesTime =15;
+		//boolean autodes=false;
+		//int autodesTime =15;
 		String busqueda =null;
 		Language lang = Language.ES;
 		GuildConfig servidor;
@@ -42,9 +41,9 @@ public class Musica {
 		for(InputParameter p : packet.getParameters()) {
 			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
-					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
-						autodesTime = p.getValueAsInt();
+					//autodes=true;
+					if(p.getValueAsString()!=null) {
+						//autodesTime = p.getValueAsInt();
 					}
 				}
 			}else if(p.getType() == InputParamType.NO_STANDAR){
@@ -251,7 +250,7 @@ public class Musica {
 			if(p.getType() == InputParamType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
-					if(!p.getValueAsString().equalsIgnoreCase("none")) {
+					if(p.getValueAsString()!=null) {
 						autodesTime = p.getValueAsInt();
 					}
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
@@ -268,7 +267,7 @@ public class Musica {
 		}
 		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(e.getGuild());
 		if(musicManager.scheduler.queueIsEmpty()) {
-			MessageUtils.SendAndDestroy(e.getChannel(), Tools.stringToEmb(Values.value("jax-musica-cola-vacia", lang)), 15);
+			packet.SendAndDestroy(Tools.stringToEmb(Values.value("jax-musica-cola-vacia", lang)), 15);
 			return;
 		}
 		long estimado = musicManager.scheduler.player.getPlayingTrack().getDuration() - musicManager.scheduler.player.getPlayingTrack().getPosition();
@@ -292,7 +291,7 @@ public class Musica {
 			}else if(autodesTime>900) {
 				autodesTime=900;
 			}
-			MessageUtils.SendAndDestroy(e.getChannel(),eb.build(), autodesTime);
+			packet.SendAndDestroy(eb.build(), autodesTime);
 		}else {
 			e.getChannel().sendMessageEmbeds(eb.build()).queue();
 		}

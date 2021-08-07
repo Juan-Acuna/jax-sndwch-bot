@@ -22,6 +22,8 @@ public class CommandManager {
 		CommandManager.con = con;
 	}
 	public static boolean insert(Object objeto, boolean autoId) throws Exception {
+		if(CommandManager.con.isClosed())
+			CommandManager.con = ConexionMySQL.conectar();
 		formatStrings();
 		String tabla = objeto.getClass().getSimpleName();
 		String campos = "";
@@ -91,6 +93,8 @@ public class CommandManager {
 		return true;
 	}
 	public static <T extends Object> T select(Object id, Class<T> tipo) throws Exception{
+		if(CommandManager.con.isClosed())
+			CommandManager.con = ConexionMySQL.conectar();
 		formatStrings();
 		String tabla = tipo.getSimpleName();
 		String condicion = null;
@@ -271,6 +275,8 @@ public class CommandManager {
 		return t;
 	}
 	public static <T extends Object> List<T> selectAll(Class<T> tipo) throws Exception{
+		if(CommandManager.con.isClosed())
+			CommandManager.con = ConexionMySQL.conectar();
 		formatStrings();
 		String tabla = tipo.getSimpleName();
 		boolean privAlwd = tipo.getDeclaredAnnotation(PrivateFieldsAllowed.class)!=null;
@@ -424,6 +430,8 @@ public class CommandManager {
 		return l;
 	}
 	public static <T extends Object> List<T> selectWhere(String campo, Object valor, Class<T> tipo) throws Exception{//POR TERMINAR
+		if(CommandManager.con.isClosed())
+			CommandManager.con = ConexionMySQL.conectar();
 		formatStrings();
 		if(campo==null || valor==null)
 			throw new Exception("Campo o valor incompleto.");
@@ -589,6 +597,8 @@ public class CommandManager {
 		return l;
 	}
 	public static boolean update(Object objeto) throws Exception {
+		if(CommandManager.con.isClosed())
+			CommandManager.con = ConexionMySQL.conectar();
 		formatStrings();
 		String tabla = objeto.getClass().getSimpleName();
 		String valores = "";
@@ -662,6 +672,8 @@ public class CommandManager {
 		return b;
 	}
 	public static boolean delete(Object objeto) throws Exception {
+		if(CommandManager.con.isClosed())
+			CommandManager.con = ConexionMySQL.conectar();
 		formatStrings();
 		String tabla = objeto.getClass().getSimpleName();
 		String condicion = null;
