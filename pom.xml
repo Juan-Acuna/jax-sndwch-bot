@@ -39,13 +39,13 @@
   	</dependency>
   </dependencies>
   <repositories>
-  <repository>
-  <snapshots>
-    <enabled>true</enabled>
-  </snapshots>
-  <id>github</id>
-  <url>https://maven.pkg.github.com/sandwichbotsteam/*</url>
-</repository>
+	  <repository>
+		  <snapshots>
+		    <enabled>true</enabled>
+		  </snapshots>
+		  <id>github</id>
+		  <url>https://maven.pkg.github.com/sandwichbotsteam/sandwichcord-framework</url>
+	  </repository>
 	<repository>
 		<id>jcenter</id>
 		<name>jcenter-bintray</name>
