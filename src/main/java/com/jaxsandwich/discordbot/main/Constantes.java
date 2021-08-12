@@ -69,24 +69,21 @@ public class Constantes {
 		}
 	}
 	public static class JaxSandwich{
-		public static final String BaseURL ="https://jaxsandwichbot.000webhostapp.com";
+		public static final String BaseURL ="http://src.jaxsandwich.com/jaxsandwich";
 		
 		public static class Imagenes{
 			public static final String nonsfw = BaseURL + "/img/nsfw/nonsfw.gif";
 		}
 		public static class JAX{
-			public static final String R = BaseURL + "/jax/jax.token.register.php";
-			public static final String A = BaseURL + "/jax/jax.commands.auth.php";
-			public static final String C = BaseURL + "/jax/jax.commands.run.php";
+			public static final String R = BaseURL + "/scripts/jax.token.register.php";
+			public static final String A = BaseURL + "/scripts/jax.commands.auth.php";
+			public static final String C = BaseURL + "/scripts/jax.commands.run.php";
 		}
 	}
 	//RECURSOS EXTERNOS
 	public static class RecursoExterno{
-		public static final String LINK_RANDOM_CAT = "http://aws.random.cat/meow";
 		public static final String LINK_YOUTUBE_BASE = "https://www.youtube.com";
 		public static final String LINK_YOUTUBE_QUERY = "https://www.youtube.com/results?search_query=";
-		public static final String LINK_WIKIDEX_QUERY = "https://www.wikidex.net/wiki/";
-		public static final String LINK_POKEMON_QUERY ="https://www.pokemon.com/el/pokedex/";
 		public static class NSFW{
 			public static String toXV_link(String busqueda) throws Exception {
 				busqueda = URLEncoder.encode(busqueda, StandardCharsets.UTF_8.toString());
