@@ -503,7 +503,7 @@ public class Comun {
 	public static void rae(CommandPacket packet) {
 		
 	}
-	@Command(id="Test",visible=false,enabled=true)
+	@Command(id="Test",visible=false,enabled=false)
 	public static void test(CommandPacket packet) throws IOException{
 		packet.sendMessage("Mensaje recibido, comando funciona!").queue();
 	}
