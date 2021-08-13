@@ -13,8 +13,8 @@
   <dependencies>
 	<dependency>
 	  <groupId>com.jaxsandwich</groupId>
-	  <artifactId>sandwichcord-framework-beta</artifactId>
-	  <version>0.7.1-SNAPSHOT</version>
+	  <artifactId>sandwichcord-framework</artifactId>
+	  <version>0.7.0</version>
 	</dependency>
 	<dependency>
 		  <!-- jsoup HTML parser library @ https://jsoup.org/ -->
