@@ -43,7 +43,7 @@ public class SandwichBot extends Bot{
 		TextChannel c = e.getGuild().getDefaultChannel();
 		c.sendMessageEmbeds(Tools.stringFieldToEmb("Select language / Selecciona idioma", "[ES] Español (soporte completo)\n[EN] English (half supported)\n\nType 'es' or 'en' to continue.\nEscriba 'es' o 'en' para continuar.")).queue();
 		String[] s = {"es","en"};
-		this.extraCmdManager.waitForExtraCmd("join", c, null, s, 150, 50).setAfterArrgs(c).setNoExecutedArrgs(c);
+		this.extraCmdManager.waitForExtraCmd("join", e, s, 150, 50).setAfterArrgs(c).setNoExecutedArrgs(c);
 	}
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
