@@ -172,7 +172,7 @@ public class NSFW {
 				}else {
 					e.getChannel().sendMessageEmbeds(eb.build()).queue();
 				}
-				packet.getExtraCmdManager().waitForExtraCmd("xv", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD,50, 5, ss);
+				packet.getExtraCmdManager().waitForExtraCmd("xv", e, ExtraCmdManager.NUMBER_WILDCARD,50, 5, ss);
 				return;
 			}
 			e.getChannel().sendMessage(Values.value("jax-yt-no-resultados", lang)).queue();

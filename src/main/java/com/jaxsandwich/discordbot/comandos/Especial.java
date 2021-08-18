@@ -211,7 +211,7 @@ public class Especial {
 						tids[i] = t.getId();
 						eb.addField("[" + ++i + "] " + t.getName(),"",true);
 					}
-					packet.getExtraCmdManager().waitForExtraCmd("send", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
+					packet.getExtraCmdManager().waitForExtraCmd("send", e, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
 				}else {
 					eb.setTitle("Seleccione servidor");
 					int i = 0;
@@ -223,7 +223,7 @@ public class Especial {
 							break;
 						}
 					}
-					packet.getExtraCmdManager().waitForExtraCmd("send", e.getMessage(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"s",gids,3);
+					packet.getExtraCmdManager().waitForExtraCmd("send", e, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"s",gids,3);
 				}
 				e.getChannel().sendMessageEmbeds(eb.build()).queue();
 			}else {
