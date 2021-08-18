@@ -10,6 +10,7 @@ import com.jaxsandwich.sandwichcord.core.util.Language;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -43,7 +44,7 @@ public class SandwichBot extends Bot{
 		TextChannel c = e.getGuild().getDefaultChannel();
 		c.sendMessageEmbeds(Tools.stringFieldToEmb("Select language / Selecciona idioma", "[ES] Español (soporte completo)\n[EN] English (half supported)\n\nType 'es' or 'en' to continue.\nEscriba 'es' o 'en' para continuar.")).queue();
 		String[] s = {"es","en"};
-		this.extraCmdManager.waitForExtraCmd("join", e, s, 150, 50).setAfterArrgs(c).setNoExecutedArrgs(c);
+		this.extraCmdManager.waitForExtraCmd("join", (MessageChannel)e.getGuild().getDefaultChannel(), true, s, 150, 50).setAfterArrgs(c).setNoExecutedArrgs(c);
 	}
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {

@@ -14,7 +14,6 @@ import com.jaxsandwich.sandwichcord.annotations.configure.ExtraCmdNoExecution;
 import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
-import com.jaxsandwich.sandwichcord.core.util.MessageUtils;
 import com.jaxsandwich.sandwichcord.models.ExtraCmdPacket;
 import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
 
@@ -32,7 +31,6 @@ public class ComandosExtra {
 		MessageChannel channel = packet.getChannel();
 		String input = packet.getMessageContent();
 		Object[] args = packet.getArgs();
-		String authorId = packet.getAuthorId();
 		Language lang = Language.ES;
 		GuildConfig server;
 		if(channel.getType()==ChannelType.TEXT) {
@@ -50,7 +48,7 @@ public class ComandosExtra {
 				args[args.length-1] = (int)args[args.length-1] -1;
 				if((int)args[args.length-1]>0) {
 					channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang)+Values.formatedValue("jax-val-incorrecto-cont", lang, args[args.length-1]))).queue();
-					packet.getExtraCmdManager().waitForExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
+					packet.getExtraCmdManager().waitForExtraCmd("send", packet.getMessageReceivedEvent(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
 					return;
 				}
 				channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang))).queue();
@@ -68,7 +66,7 @@ public class ComandosExtra {
 				tids[l] = t.getId();
 				eb.addField("[" + ++l + "] " + t.getName(),"",true);
 			}
-			packet.getExtraCmdManager().waitForExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
+			packet.getExtraCmdManager().waitForExtraCmd("send", packet.getMessageReceivedEvent(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
 			channel.sendMessageEmbeds(eb.build()).queue();
 			break;
 		case "c":
@@ -77,7 +75,7 @@ public class ComandosExtra {
 				args[args.length-1] = (int)args[args.length-1] -1;
 				if((int)args[args.length-1]>0) {
 					channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang)+Values.formatedValue("jax-val-incorrecto-cont", lang, args[args.length-1]))).queue();
-					packet.getExtraCmdManager().waitForExtraCmd("send", channel, authorId, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
+					packet.getExtraCmdManager().waitForExtraCmd("send", packet.getMessageReceivedEvent(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
 					return;
 				}
 				channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang))).queue();
@@ -106,7 +104,7 @@ public class ComandosExtra {
 					return;
 				}
 			}
-			packet.getExtraCmdManager().waitForExtraCmd("send", channel, authorId, ExtraCmdManager.WILDCARD, 40 , 5,"m",m);
+			packet.getExtraCmdManager().waitForExtraCmd("send", packet.getMessageReceivedEvent(), ExtraCmdManager.WILDCARD, 40 , 5,"m",m);
 			break;
 		case "m":
 			try {
@@ -142,7 +140,7 @@ public class ComandosExtra {
 		String str1 = hc.replace("html5player.setVideoUrlHigh('","").replace("');","");
 		if(sd!=null) {
 			int d = Integer.parseInt(sd.replace("og:duration\" content=\"",""));
-			MessageUtils.SendAndDestroy(channel, str1, d+30);
+			packet.SendAndDestroy(str1, d+30);
 			return;
 		}
 		channel.sendMessage(str1).queue();
