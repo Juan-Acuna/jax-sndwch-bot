@@ -1,6 +1,5 @@
 package com.jaxsandwich.discordbot.configuracion;
 
-import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.annotations.text.*;
 import com.jaxsandwich.sandwichcord.core.util.Language;
 

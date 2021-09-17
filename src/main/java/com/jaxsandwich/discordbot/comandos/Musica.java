@@ -24,7 +24,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 
 @Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
 public class Musica {
-	@Command(id="Reproducir", enabled=false)
+	@Command(id="Reproducir", enabled=true)
 	@Parameter(name="Busqueda/URL", desc = "Busqueda o URL de la cancion a reproducir.")
 	public static void reproducir(CommandPacket packet) {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
@@ -87,7 +87,7 @@ public class Musica {
 		PlayerManager.getInstance().loadAndPlay(tChannel, busqueda);
 	}
 	
-	@Command(id="Pausar", enabled=false)
+	@Command(id="Pausar", enabled=true)
 	public static void pausar(CommandPacket packet) {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		TextChannel tChannel = packet.getTextChannel();
@@ -123,7 +123,7 @@ public class Musica {
 
 	}
 	
-	@Command(id="Siguiente", enabled=false)
+	@Command(id="Siguiente", enabled=true)
 	public static void siguiente(CommandPacket packet) {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		TextChannel tChannel = e.getTextChannel();
@@ -166,7 +166,7 @@ public class Musica {
 		}
 	}
 	
-	@Command(id="Detener", enabled=false)
+	@Command(id="Detener", enabled=true)
 	public static void detener(CommandPacket packet) {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		TextChannel tChannel = e.getTextChannel();
@@ -200,7 +200,7 @@ public class Musica {
 		tChannel.sendMessageEmbeds(Tools.stringFieldToEmb("Canción detenida","(y lista de reproduccion eliminada.)")).queue();
 	}
 	
-	@Command(id="Actual", enabled=false)
+	@Command(id="Actual", enabled=true)
 	public static void actual(CommandPacket packet) {
 		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		TextChannel tChannel = e.getTextChannel();
@@ -238,7 +238,7 @@ public class Musica {
 		AudioTrackInfo info = track.getInfo();
 		tChannel.sendMessageEmbeds(Tools.stringFieldToEmb("Canción actual: " + info.title, info.author +" | "+Tools.milliToTimeNoHours(info.length))).queue();
 	}
-	@Command(id="Cola", enabled=false)
+	@Command(id="Cola", enabled=true)
 	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void cola(CommandPacket packet) {
