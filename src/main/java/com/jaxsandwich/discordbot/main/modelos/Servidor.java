@@ -3,12 +3,16 @@ package com.jaxsandwich.discordbot.main.modelos;
 import com.jaxsandwich.discordbot.conexion.CommandManager;
 import com.jaxsandwich.discordbot.conexion.anotaciones.PrimaryKey;
 import com.jaxsandwich.sandwichcord.core.Bot;
+import com.jaxsandwich.sandwichcord.core.BotRunner;
 import com.jaxsandwich.sandwichcord.core.util.Language;
 import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
 
 import net.dv8tion.jda.api.entities.Guild;
 
 public class Servidor extends GuildConfig{
+	public Servidor() {
+		super(BotRunner.getBot());
+	}
 	public Servidor(Guild guild, Language lang, Bot bot) {
 		super(guild, lang, bot);
 		this.id=guild.getIdLong();
