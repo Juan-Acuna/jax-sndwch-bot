@@ -21,7 +21,7 @@ public class Textos_en {
 	public static final String INFO_F12 = "To know what the sh't I can do, type '%shelp'";
 
 	@ValueID("jax-info-f2")
-	public static final String INFO_F2 = ">>> VERSION: 0.1.4";
+	public static final String INFO_F2 = ">>> VERSION: %s";
 
 	@ValueID("jax-info-footer")
 	public static final String INFO_FOOTER = "DISCLAIMER: I'm not the owner of any trademark or graphics resources "

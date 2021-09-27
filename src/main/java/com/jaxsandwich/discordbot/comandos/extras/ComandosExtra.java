@@ -4,18 +4,16 @@ import java.util.List;
 
 import com.jaxsandwich.discordbot.conexion.CommandManager;
 import com.jaxsandwich.discordbot.main.SandwichBot;
+import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.ClienteHttp;
 import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.annotations.*;
-import com.jaxsandwich.sandwichcord.annotations.configure.ExtraCmdAfterExecution;
-import com.jaxsandwich.sandwichcord.annotations.configure.ExtraCmdExecutionName;
-import com.jaxsandwich.sandwichcord.annotations.configure.ExtraCmdNoExecution;
-import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
+import com.jaxsandwich.sandwichcord.core.ResponseCommandManager;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
-import com.jaxsandwich.sandwichcord.models.ExtraCmdPacket;
 import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
+import com.jaxsandwich.sandwichcord.models.packets.ResponseCommandPacket;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -24,10 +22,10 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-@ExtraCommandContainer
+@ResponseCommandContainer
 public class ComandosExtra {
-	@ExtraCmdExecutionName("send")
-	public static void send(ExtraCmdPacket packet) {
+	@ResponseCommand("send")
+	public static void send(ResponseCommandPacket packet) throws Exception {
 		MessageChannel channel = packet.getChannel();
 		String input = packet.getMessageContent();
 		Object[] args = packet.getArgs();
@@ -48,7 +46,7 @@ public class ComandosExtra {
 				args[args.length-1] = (int)args[args.length-1] -1;
 				if((int)args[args.length-1]>0) {
 					channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang)+Values.formatedValue("jax-val-incorrecto-cont", lang, args[args.length-1]))).queue();
-					packet.getExtraCmdManager().waitForExtraCmd("send", packet.getMessageReceivedEvent(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
+					packet.waitForResponse("send", ResponseCommandManager.NUMBER_WILDCARD, 40, 5,args);
 					return;
 				}
 				channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang))).queue();
@@ -66,7 +64,7 @@ public class ComandosExtra {
 				tids[l] = t.getId();
 				eb.addField("[" + ++l + "] " + t.getName(),"",true);
 			}
-			packet.getExtraCmdManager().waitForExtraCmd("send", packet.getMessageReceivedEvent(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
+			packet.waitForResponse("send", ResponseCommandManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
 			channel.sendMessageEmbeds(eb.build()).queue();
 			break;
 		case "c":
@@ -75,7 +73,7 @@ public class ComandosExtra {
 				args[args.length-1] = (int)args[args.length-1] -1;
 				if((int)args[args.length-1]>0) {
 					channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang)+Values.formatedValue("jax-val-incorrecto-cont", lang, args[args.length-1]))).queue();
-					packet.getExtraCmdManager().waitForExtraCmd("send", packet.getMessageReceivedEvent(), ExtraCmdManager.NUMBER_WILDCARD, 40, 5,args);
+					packet.waitForResponse("send", ResponseCommandManager.NUMBER_WILDCARD, 40, 5,args);
 					return;
 				}
 				channel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-val-incorrecto", lang))).queue();
@@ -104,7 +102,7 @@ public class ComandosExtra {
 					return;
 				}
 			}
-			packet.getExtraCmdManager().waitForExtraCmd("send", packet.getMessageReceivedEvent(), ExtraCmdManager.WILDCARD, 40 , 5,"m",m);
+			packet.waitForResponse("send", ResponseCommandManager.WILDCARD, 40 , 5,"m",m);
 			break;
 		case "m":
 			try {
@@ -121,8 +119,8 @@ public class ComandosExtra {
 			break;
 		}
 	}
-	public static void xv(ExtraCmdPacket packet) throws Exception {
-		MessageChannel channel = packet.getChannel();
+	@ResponseCommand("xv")
+	public static void xv(ResponseCommandPacket packet) throws Exception {
 		String input = packet.getMessageContent();
 		Object[] args = packet.getArgs();
 		int i = 0;
@@ -143,9 +141,10 @@ public class ComandosExtra {
 			packet.SendAndDestroy(str1, d+30);
 			return;
 		}
-		channel.sendMessage(str1).queue();
+		packet.sendMessage(str1).queue();
 	}
-	public static void join(ExtraCmdPacket packet) throws Exception {
+	@ResponseCommand("join")
+	public static void join(ResponseCommandPacket packet) throws Exception {
 		String input = packet.getMessageContent();
 		Language lang = Language.ES;
 		switch(input.toLowerCase()) {
@@ -156,7 +155,7 @@ public class ComandosExtra {
 			lang = Language.EN;
 			break;
 		}
-		com.jaxsandwich.discordbot.main.modelos.Servidor g = new com.jaxsandwich.discordbot.main.modelos.Servidor(packet.getTextChannel().getGuild(),lang);
+		Servidor g = new Servidor(packet.getGuild(),lang,packet.getBot());
 		g.setAllowedCategory("NSFW", false);
 		g.setAllowedCommand("Banear", false);
 		g.setAllowedCommand("LimpiarChat", false);
@@ -168,9 +167,9 @@ public class ComandosExtra {
 		CommandManager.insert(g, false);
 		packet.getGuildsManager().registerGuild(g);
 	}
-	@ExtraCmdNoExecution(name="join")
-	public static void nojoin(ExtraCmdPacket packet) throws Exception {
-		com.jaxsandwich.discordbot.main.modelos.Servidor g = new com.jaxsandwich.discordbot.main.modelos.Servidor(packet.getTextChannel().getGuild(),Language.ES);
+	@ResponseFailedExecution(name = "join")
+	public static void nojoin(ResponseCommandPacket packet) throws Exception {
+		Servidor g = new Servidor(packet.getGuild(),Language.ES,packet.getBot());
 		g.setAllowedCategory("NSFW", false);
 		g.setAllowedCommand("Banear", false);
 		g.setAllowedCommand("LimpiarChat", false);
@@ -182,9 +181,8 @@ public class ComandosExtra {
 		CommandManager.insert(g, false);
 		packet.getGuildsManager().registerGuild(g);
 	}
-	@ExtraCmdAfterExecution(name="join")
-	public static void afterjoin(ExtraCmdPacket packet) {
-		GuildConfig server = packet.getGuildConfig();
-		packet.getTextChannel().sendMessageEmbeds(((SandwichBot)packet.getBot()).getInfo(server.getLanguage())).queue();
+	@ResponseSuccessExecution(name="join")
+	public static void afterjoin(ResponseCommandPacket packet) {
+		packet.sendMessage(((SandwichBot)packet.getBot()).getInfo(packet.getPreferredLang())).queue();
 	}
 }

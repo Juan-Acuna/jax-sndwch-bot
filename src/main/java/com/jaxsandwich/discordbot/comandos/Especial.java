@@ -6,9 +6,10 @@ import com.jaxsandwich.discordbot.main.Constantes;
 import com.jaxsandwich.discordbot.main.SandwichBot;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.annotations.*;
-import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
+import com.jaxsandwich.sandwichcord.core.ResponseCommandManager;
 import com.jaxsandwich.sandwichcord.models.*;
-import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.models.OptionInput.OptionInputType;
+import com.jaxsandwich.sandwichcord.models.packets.CommandPacket;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -21,17 +22,16 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 @Category(desc="Comandos especiales, ocultos y al que solo tienen acceso muy pocos usuarios. Controlan el comportamiento de Jax Sanswich.",visible=false)
 public class Especial {
 	@Command(id="REG",desc="registra usuarios especiales.")
-	@Parameter(name="usr",desc="usr")
+	@Option(id="usr",desc="usr")
 	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
 	public static void register(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
 		boolean autodes = false;
 		int autodesTime=15;
 		boolean anon=false;
 		String usr = null;
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
@@ -40,18 +40,18 @@ public class Especial {
 				}else if(p.getKey().equalsIgnoreCase("anonimo")) {
 					anon=true;
 				}
-			}else if(p.getType() == InputParamType.NO_STANDAR){
+			}else if(p.getType() == OptionInputType.NO_STANDAR){
 				usr = p.getValueAsString();
 			}
 		}
 		if(anon) {
-			e.getChannel().purgeMessagesById(e.getMessageId());
+			packet.tryDeleteMessage();
 		}
-		if(e.getMessage().getMentionedUsers().size()<=0) {
+		if(packet.getMentionedUsers().size()<=0) {
 			packet.SendAndDestroy("Debe mencionar a un usuario para registrarlo.", autodesTime);
 			return;
 		}
-		if(!Tools.JAX.register(e.getAuthor().getId(), e.getMessage().getMentionedUsers().get(0).getId())) {
+		if(!Tools.JAX.register(packet.getAuthorId(), packet.getMentionedUsers().get(0).getId())) {
 			packet.SendAndDestroy("No se pudo registrar", autodesTime);
 			return;
 		}
@@ -63,7 +63,7 @@ public class Especial {
 			}
 			packet.SendAndDestroy("Registrado.", autodesTime);
 		}else {
-			e.getChannel().sendMessage("Registrado.").queue();
+			packet.sendMessage("Registrado.").queue();
 		}
 	}
 	
@@ -79,8 +79,7 @@ public class Especial {
 	@Option(id="switch",desc="Enciende o apaga el bot dependiendo del estado actual. Esto afecta a todos los servidores.",alias={"sw"})
 	@Option(id="presentarse",desc="Enciende o apaga el mensaje de llegada dependiendo del estado actual. Esto afecta a todos los servidores.",alias={"pres","inf","swi"})
 	public static void set(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		if(!Tools.JAX.auth(e.getAuthor().getId())) {
+		if(!Tools.JAX.auth(packet.getAuthorId())) {
 			return;
 		}
 		boolean autodes = false;
@@ -92,8 +91,8 @@ public class Especial {
 		boolean sordo = false;
 		boolean on = packet.getBot().isOn();
 		
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -106,10 +105,10 @@ public class Especial {
 						//=Tools.toValidHttpUrl(p.getValueAsString());  ASIGNAR AVATAR
 					}
 				}else if(p.getKey().equalsIgnoreCase("apodo")) {
-					if(e.getChannelType() == ChannelType.PRIVATE) {
+					if(packet.getChannelType() == ChannelType.PRIVATE) {
 						continue;
 					}
-					e.getGuild().getMember(packet.getBot().getSelfUser()).modifyNickname(p.getValueAsString());
+					packet.getBotAsMember().modifyNickname(p.getValueAsString());
 				}else if(p.getKey().equalsIgnoreCase("avatar")) {
 					
 					img = p.getValueAsString();
@@ -145,7 +144,7 @@ public class Especial {
 			}
 		}
 		if(anon) {
-			e.getChannel().purgeMessagesById(e.getMessageId());
+			packet.tryDeleteMessage();
 		}
 		if(autodes) {
 			if(autodesTime<=0) {
@@ -155,34 +154,32 @@ public class Especial {
 			}
 			packet.SendAndDestroy("msg", autodesTime);
 		}else {
-			e.getChannel().sendMessage("msg").queue();
+			packet.sendMessage("msg").queue();
 		}
 	}
 	
 	@Command(id="jax",visible=false)
-	@Parameter(name="",desc="")
+	//@Option(id="",desc="")
 	public static void jax(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		if(Tools.JAX.auth(e.getAuthor().getId())) {
-			String enc = Tools.toBase64(Tools.cifrar(packet.getParameters()[0].getValueAsString()));
-			e.getChannel().sendMessage("Mensaje original: " + packet.getParameters()[0]).queue();
-			e.getChannel().sendMessage("Mensaje encriptado: " + enc).queue();
-			e.getChannel().sendMessage("Mensaje desencriptado: " + Tools.descifrar(Tools.fromBase64ToBytes(enc))).queue();
+		if(Tools.JAX.auth(packet.getAuthorId())) {
+			String enc = Tools.toBase64(Tools.cifrar(packet.getOptions()[0].getValueAsString()));
+			packet.sendMessage("Mensaje original: " + packet.getOptions()[0]).queue();
+			packet.sendMessage("Mensaje encriptado: " + enc).queue();
+			packet.sendMessage("Mensaje desencriptado: " + Tools.descifrar(Tools.fromBase64ToBytes(enc))).queue();
 		}
 		//Random r = new Random(System.currentTimeMillis());
 		
 	}
 	@Command(id="SEND",desc="Envia un mensaje al canal del servidor especificado.",visible=false)
 	public static void send(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		if(Tools.JAX.auth(e.getAuthor().getId())) {
+		if(Tools.JAX.auth(packet.getAuthorId())) {
 			boolean autodes = false;
 			int autodesTime=15;
 			String msg = null;
 			//String servidor = null;
 			//String canal = null;
-			for(InputParameter p : packet.getParameters()) {
-				if(p.getType() == InputParamType.STANDAR) {
+			for(OptionInput p : packet.getOptions()) {
+				if(p.getType() == OptionInputType.STANDAR) {
 					if(p.getKey().equalsIgnoreCase("autodestruir")){
 						autodes=true;
 						if(!p.getValueAsString().equalsIgnoreCase("none")) {
@@ -193,11 +190,11 @@ public class Especial {
 					}else if(p.getKey().equalsIgnoreCase("servidor")) {
 						servidor = p.getValueAsString();
 					}*/
-				}else if(p.getType() == InputParamType.NO_STANDAR){
+				}else if(p.getType() == OptionInputType.NO_STANDAR){
 					msg = p.getValueAsString();
 				}
 			}
-			List<Guild> glds = e.getAuthor().getJDA().getMutualGuilds(packet.getBot().getSelfUser());
+			List<Guild> glds = packet.getUser().getJDA().getMutualGuilds(packet.getBot().getSelfUser());
 			if(glds.size()>0) {
 				
 				EmbedBuilder eb = new EmbedBuilder();
@@ -211,7 +208,7 @@ public class Especial {
 						tids[i] = t.getId();
 						eb.addField("[" + ++i + "] " + t.getName(),"",true);
 					}
-					packet.getExtraCmdManager().waitForExtraCmd("send", e, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
+					packet.waitForResponse("send", ResponseCommandManager.NUMBER_WILDCARD, 40, 5,"c",tids,3);
 				}else {
 					eb.setTitle("Seleccione servidor");
 					int i = 0;
@@ -223,11 +220,11 @@ public class Especial {
 							break;
 						}
 					}
-					packet.getExtraCmdManager().waitForExtraCmd("send", e, ExtraCmdManager.NUMBER_WILDCARD, 40, 5,"s",gids,3);
+					packet.waitForResponse("send", ResponseCommandManager.NUMBER_WILDCARD, 40, 5,"s",gids,3);
 				}
-				e.getChannel().sendMessageEmbeds(eb.build()).queue();
+				packet.sendMessage(eb.build()).queue();
 			}else {
-				e.getChannel().sendMessage("No compartimos servidores en común.").queue();
+				packet.sendMessage("No compartimos servidores en común.").queue();
 			}
 		}
 	}

@@ -9,13 +9,8 @@ import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class Servidor extends GuildConfig{
-
-	public Servidor() {
-		super();
-	}
-	
-	public Servidor(Guild guild, Language lang) {
-		super();
+	public Servidor(Guild guild, Language lang, Bot bot) {
+		super(guild, lang, bot);
 		this.id=guild.getIdLong();
 		this.language=lang;
 		push();

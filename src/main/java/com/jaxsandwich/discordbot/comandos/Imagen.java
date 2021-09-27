@@ -7,9 +7,9 @@ import com.jaxsandwich.discordbot.main.modelos.FuenteImagen;
 import com.jaxsandwich.discordbot.main.util.ControladorImagenes;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.annotations.*;
-import com.jaxsandwich.sandwichcord.models.CommandPacket;
-import com.jaxsandwich.sandwichcord.models.InputParameter;
-import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.models.OptionInput;
+import com.jaxsandwich.sandwichcord.models.OptionInput.OptionInputType;
+import com.jaxsandwich.sandwichcord.models.packets.ReplyablePacket;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -19,14 +19,13 @@ public class Imagen {
 	@Command(id="Gatos",desc="Devuelve la imagen(una o más) de un gato al azar. Utiliza la API de [random.cat](http://random.cat).",alias={"mew","mw","miau","gato"})
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="cantidad",desc="Indica la cantidad de mininos requeridos.\\nDEBE SER UN VALOR NUMERICO ENTRE 1 Y 100. Si ingresas mal este parametro no habrán gatos para ti.",alias={"c","cant","num"})
-	public static void meow(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+	public static void meow(ReplyablePacket<?> packet) throws Exception {
 		ControladorImagenes gi;
 		int cantidad =1;
 		boolean autodes = false;
 		int autodesTime = 15;
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("cantidad")) {
 					cantidad = p.getValueAsInt();
 				}else if(p.getKey().equalsIgnoreCase("autodestruir")) {
@@ -45,7 +44,7 @@ public class Imagen {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setFooter("Meow:3",packet.getBot().getSelfUser().getAvatarUrl());
 		eb.setColor(Color.green);
-		gi = new ControladorImagenes(e.getChannel(),FuenteImagen.find(FuenteImagen.RandomCat), eb ,(cantidad>=8));
+		gi = new ControladorImagenes(packet.getChannel(),FuenteImagen.find(FuenteImagen.RandomCat), eb ,(cantidad>=8));
 		gi.setAutodes(autodes);
 		gi.setAutodesTime(autodesTime);
 		Thread hilo;		
@@ -62,8 +61,7 @@ public class Imagen {
 	@Option(id="video",desc="Esta opcion indica que el recurso devuelto debe ser un video. Si se usa junto con la opcion '-gif', esta ultima sera ignorada.",alias={"v","vid","mp4"})
 	@Option(id="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void otaku(CommandPacket packet) {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+	public static void otaku(ReplyablePacket<?> packet) {
 		ControladorImagenes gi;
 		int cantidad =1;
 		boolean gif = true;
@@ -73,8 +71,8 @@ public class Imagen {
 		int autodesTime = 15;
 		boolean anon = false;
 		boolean random = false;
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("cantidad")) {
 					cantidad = p.getValueAsInt();
 				}else if(p.getKey().equalsIgnoreCase("autodestruir")) {
@@ -97,7 +95,7 @@ public class Imagen {
 			}
 		}
 		if(anon) {
-			packet.getTextChannel().purgeMessagesById(e.getMessageId());
+			packet.tryDeleteMessage();
 		}
 		if(cantidad>100) {
 			cantidad = 100;
@@ -108,9 +106,9 @@ public class Imagen {
 		eb.setFooter("シャワーを浴びないでください",packet.getBot().getSelfUser().getAvatarUrl());
 		eb.setColor(Tools.stringColorCast("naranjo"));
 		if(cantidad>=8) {
-			gi = new ControladorImagenes(e.getChannel(), FuenteImagen.find(FuenteImagen.SafeBooru), eb ,true);
+			gi = new ControladorImagenes(packet.getChannel(), FuenteImagen.find(FuenteImagen.SafeBooru), eb ,true);
 		}else {
-			gi = new ControladorImagenes(e.getChannel(), FuenteImagen.find(FuenteImagen.SafeBooru), eb);
+			gi = new ControladorImagenes(packet.getChannel(), FuenteImagen.find(FuenteImagen.SafeBooru), eb);
 		}
 		gi.setGif(gif);
 		gi.setTags(tags);

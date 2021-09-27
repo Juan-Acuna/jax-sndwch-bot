@@ -2,6 +2,8 @@ package com.jaxsandwich.discordbot.configuracion;
 
 public class Global {
 	
+	public static final String BOT_VERSION = "0.7.0";
+	
 	public static final String DISCORD_TOKEN = System.getenv().get("DISCORD_TOKEN");
 	public static final String BOT_PREFIX = System.getenv().get("JAX_PREFIX");
 	

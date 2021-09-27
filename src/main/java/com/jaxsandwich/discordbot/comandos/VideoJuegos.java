@@ -14,12 +14,11 @@ import com.jaxsandwich.sandwichcord.annotations.*;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
 import com.jaxsandwich.sandwichcord.core.util.LanguageHandler;
-import com.jaxsandwich.sandwichcord.models.CommandPacket;
-import com.jaxsandwich.sandwichcord.models.InputParameter;
-import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.models.OptionInput;
+import com.jaxsandwich.sandwichcord.models.OptionInput.OptionInputType;
+import com.jaxsandwich.sandwichcord.models.packets.ReplyablePacket;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 @Category(desc="Comandos dedicados a videojuegos en general.")
 public class VideoJuegos {
@@ -27,15 +26,15 @@ public class VideoJuegos {
 	@Option(id="perfil",desc="Muestra información del invocador. Se requiere especificar una región. Si no se especifica por defecto es 'LAS'.",alias={"stats","p"})
 	@Option(id="region",desc="Especifica la región. Contexto necesario para el comando. Regiones disponibles:\n`LAS`, `LAN`, `NA`, `EUNE`, `EUW`, `BR`, `OCE`, `KR`, `RU`, `TR` y `JP`\nSi no se especifica `LAS` se usa por defecto.",alias={"r"})
 	@Option(id="jugando",desc="Muestra información de la partida actual del invocador(si este se encuentra en una). Se requiere especificar una región. Si no se especifica por defecto es 'LAS'.",alias={"j"},enabled=false)
-	public static void lol(CommandPacket packet) throws IOException {
+	public static void lol(ReplyablePacket<?> packet) throws IOException {
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang = packet.getGuildConfig().getLanguage();
 		String invocador = null;
 		String region = "LAS";
 		EmbedBuilder eb;
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType()==InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType()==OptionInputType.STANDAR) {
 				if(p.getKey().equals("perfil")) {
 					if(p.getValueAsString()!=null) {
 						invocador = p.getValueAsString();
@@ -91,22 +90,21 @@ public class VideoJuegos {
 		
 	}
 	@Command(id="LolCampeon",enabled=false)
-	public static void campeon(CommandPacket packet) {
+	public static void campeon(ReplyablePacket<?> packet) {
 		
 	}
 	@Command(id="ValorantStats",enabled=false)
-	public static void valorantstat(CommandPacket packet) {
+	public static void valorantstat(ReplyablePacket<?> packet) {
 		
 	}
 	@Command(id="Pokedex",desc="Busca y devuelve informacion relativa a un pokémon.",alias= {"pkmn","pkm","dex","pd","poke"})
-	@Parameter(name="Pokémon objetivo",desc="Nombre del pokémon que se desea buscar. El nombre debe estar bien escrito y se permiten espacios. Todo texto después de un '-' no formará parte del nombre.")
+	@Option(id="Pokémon",noStandar=true,desc="Nombre del pokémon que se desea buscar. El nombre debe estar bien escrito y se permiten espacios. Todo texto después de un '-' no formará parte del nombre.")
 	@Option(id="numero",desc="Permite buscar al pokémon por su número identificador en la pokédex nacional. En caso de ser ingresado el nombre, este parametro se ignora. DEBE SER UN NÚMERO POSITIVO NO MAYOR A LA CANTIDAD DE POKÉMON EXISTENTES EN LA POKÉDEX.",alias={"id","nac","identificador","n","num","nacional"})
 	@Option(id="variocolor",desc="Retorna pokémon, cuya imagen es reemplazada por su versión variocolor. La imagen devuelta es un render 3D animado. Si se usa la opción '-3D', esta última es ignorada.",alias={"shiny","s","sny","shaini","chino","vc","vario"})
 	@Option(id="3D",desc="Retorna pokémon, cuya imagen es reemplazada por un render 3D animado de la criatura.",alias={"3","render","real","rl"})
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void pokedex2(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+	public static void pokedex(ReplyablePacket<?> packet) throws Exception {
 		Document doc = null;
 		boolean autodes = false;
 		int autodesTime = 15;
@@ -116,8 +114,8 @@ public class VideoJuegos {
 		boolean _3d = false;
 		boolean anon = false;
 		boolean grito = false; 
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -132,22 +130,22 @@ public class VideoJuegos {
 				}else if(p.getKey().equalsIgnoreCase("anonimo")){
 					anon = true;
 				}
-			}else if(p.getType() == InputParamType.NO_STANDAR){
+			}else if(p.getType() == OptionInputType.NO_STANDAR){
 				pkmn = p.getValueAsString();
 			}
 		}
 		if(anon) {
-			e.getChannel().purgeMessagesById(e.getMessageId());
+			packet.tryDeleteMessage();
 		}
 		if(pkmn==null && pkmnId<0) {
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Debe ingresar el nombre de un pokémon o su número en la pokédex nacional con la opcion '-numero' (para mas info use el comando ayuda) para usar este comando.");
-			e.getChannel().sendMessageEmbeds(eb.build()).queue();
+			packet.sendMessage(eb.build()).queue();
 			return;
 		}else if(pkmn==null && (pkmnId>898 || pkmnId==0)){
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("Número identificador de pokémon fuera de rango. El mínimo permitido es 1 (Bulbasaur) y mayor permitido es 898 (Calyrex)");
-			e.getChannel().sendMessageEmbeds(eb.build()).queue();
+			packet.sendMessage(eb.build()).queue();
 			return;
 		}else if(pkmn==null && pkmnId>0){
 			String nac = "";
@@ -163,7 +161,7 @@ public class VideoJuegos {
 			if(pkmn==null) {
 				EmbedBuilder eb = new EmbedBuilder();
 				eb.setTitle("Error de servidor");
-				e.getChannel().sendMessageEmbeds(eb.build()).queue();
+				packet.sendMessage(eb.build()).queue();
 				return;
 			}
 		}
@@ -175,7 +173,7 @@ public class VideoJuegos {
 			//pokemon no existe
 			EmbedBuilder eb = new EmbedBuilder();
 			eb.setTitle("El pokémon '" + pkmn.replace("_", " ") + "' no existe. Asegurate de escribirlo bien.");
-			e.getChannel().sendMessageEmbeds(eb.build()).queue();
+			packet.sendMessage(eb.build()).queue();
 			return;
 		}
 		String nombre = doc.selectFirst("div#nombrepokemon").text();
@@ -229,7 +227,7 @@ public class VideoJuegos {
 		if(autodes) {
 			packet.SendAndDestroy(eb.build(), autodesTime);
 		}else {
-			e.getChannel().sendMessageEmbeds(eb.build()).queue();
+			packet.sendMessage(eb.build()).queue();
 		}
 		if(gritoSource!=null) {
 			

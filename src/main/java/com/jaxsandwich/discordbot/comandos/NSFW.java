@@ -10,15 +10,14 @@ import com.jaxsandwich.discordbot.main.util.ClienteHttp;
 import com.jaxsandwich.discordbot.main.util.Comparador;
 import com.jaxsandwich.discordbot.main.util.ControladorImagenes;
 import com.jaxsandwich.sandwichcord.annotations.*;
-import com.jaxsandwich.sandwichcord.core.ExtraCmdManager;
+import com.jaxsandwich.sandwichcord.core.ResponseCommandManager;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
-import com.jaxsandwich.sandwichcord.models.CommandPacket;
-import com.jaxsandwich.sandwichcord.models.InputParameter;
-import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
+import com.jaxsandwich.sandwichcord.models.OptionInput;
+import com.jaxsandwich.sandwichcord.models.OptionInput.OptionInputType;
+import com.jaxsandwich.sandwichcord.models.packets.ReplyablePacket;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 @Category(desc="Una fina colección de los mejores comandos de este servidor."
 +" Comandos vitales para una sociedad civilizada y culta.",nsfw=true)
@@ -31,13 +30,9 @@ public class NSFW {
 	@Option(id="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void nsfw(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		e.getChannel().purgeMessagesById(e.getMessageId());
-		Servidor servidor = (Servidor) packet.getGuildConfig();
-		Language lang = Language.ES;
-		if(packet.isFromGuild())
-			lang=servidor.getLanguage();
+	public static void nsfw(ReplyablePacket<?> packet) throws Exception {
+		packet.tryDeleteMessage();
+		Language lang = packet.getPreferredLang();
 		int cantidad = 1;
 		//String fuente = null;
 		boolean gif = true;
@@ -47,9 +42,9 @@ public class NSFW {
 		int autodesTime = 15;
 		boolean random = false;
 		boolean noanon = false;
-		for(InputParameter p : packet.getParameters()) {
+		for(OptionInput p : packet.getOptions()) {
 			//System.out.println(p.getClave()+"-"+p.getTipo());
-			if(p.getType() == InputParamType.STANDAR) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -80,7 +75,7 @@ public class NSFW {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
 		eb.setFooter((noanon?"":Values.value("jax-nsfw-img-footer", lang))+"🙊😏😏",packet.getBot().getSelfUser().getAvatarUrl());
-		gi = new ControladorImagenes(e.getChannel(),FuenteImagen.find(FuenteImagen.RealBooru),eb,(cantidad>=8));
+		gi = new ControladorImagenes(packet.getChannel(),FuenteImagen.find(FuenteImagen.RealBooru),eb,(cantidad>=8));
 		gi.setGif(gif);
 		gi.setTags(tags);
 		gi.setVideo(video);
@@ -89,7 +84,7 @@ public class NSFW {
 		gi.setRand(random);
 		Thread fuck;
 		try {
-			if(!e.getTextChannel().isNSFW()){
+			if(!packet.getTextChannel().isNSFW()){
 				gi.enviarRestriccion(packet.getBot());
 				return;
 			}
@@ -121,11 +116,10 @@ public class NSFW {
 		}
 	}
 	@Command(id="Xvideos",desc="Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(Aún no soy capaz de reproducirlos, denme tiempo:pensive:).",alias={"xv","xvid","xxxv","videosnopor"})
-	@Parameter(name="Busqueda",desc="Texto con el cual se realizará la busqueda en xvideos (ejemplo: 'creampie'... esta vez no me equivoqué de página :smirk:).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
+	@Option(id="Busqueda",desc="Texto con el cual se realizará la busqueda en xvideos (ejemplo: 'creampie'... esta vez no me equivoqué de página :smirk:).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
-	public static void xvideos(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		packet.getChannel().purgeMessagesById(e.getMessageId());//<span class="duration">23 min
+	public static void xvideos(ReplyablePacket<?> packet) throws Exception {
+		packet.tryDeleteMessage();//<span class="duration">23 min
 		Servidor servidor = (Servidor) packet.getGuildConfig();
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
@@ -133,15 +127,15 @@ public class NSFW {
 		String busqueda = null;
 		boolean autodes = false;
 		int autodesTime=15;
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
 						autodesTime = p.getValueAsInt();
 					}
 				}
-			}else if(p.getType() == InputParamType.NO_STANDAR){
+			}else if(p.getType() == OptionInputType.NO_STANDAR){
 				busqueda = p.getValueAsString();
 			}
 		}
@@ -170,15 +164,15 @@ public class NSFW {
 					}
 					packet.SendAndDestroy(eb.build(), autodesTime);
 				}else {
-					e.getChannel().sendMessageEmbeds(eb.build()).queue();
+					packet.sendMessage(eb.build()).queue();
 				}
-				packet.getExtraCmdManager().waitForExtraCmd("xv", e, ExtraCmdManager.NUMBER_WILDCARD,50, 5, ss);
+				packet.waitForResponse("xv", ResponseCommandManager.NUMBER_WILDCARD,50, 5, ss);
 				return;
 			}
-			e.getChannel().sendMessage(Values.value("jax-yt-no-resultados", lang)).queue();
+			packet.sendMessage(Values.value("jax-yt-no-resultados", lang)).queue();
 			return;
 		}else {
-			e.getChannel().sendMessage(Values.value("jax-yt-ingresar-busqueda", lang)).queue();
+			packet.sendMessage(Values.value("jax-yt-ingresar-busqueda", lang)).queue();
 		}
 		
 	}
@@ -188,21 +182,17 @@ public class NSFW {
 	@Option(id="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
 	@Option(id="fuente",desc="Indica la fuente de origen del contenido a mostrar.\nFuentes permitidas:\n- [Konachan.com](https://konachan.com)\n- [Gelbooru](https://gelbooru.com)\n- [Danbooru](https://danbooru.donmai.us)\n- [XBooru](https://xbooru.com)\n - [Yandere](https://yande.re)",alias={"f","source","origen"})
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void otakus(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		Servidor servidor = (Servidor) packet.getGuildConfig();
-		Language lang = Language.ES;
-		if(packet.isFromGuild())
-			lang=servidor.getLanguage();
-		packet.getChannel().purgeMessagesById(e.getMessageId());
+	public static void otakus(ReplyablePacket<?> packet) throws Exception {
+		Language lang = packet.getPreferredLang();
+		packet.tryDeleteMessage();
 		int cantidad = 1;
 		String fuente = "konachan";
 		String[] tags = null;
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean noanon=false;
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {
@@ -246,7 +236,7 @@ public class NSFW {
 		EmbedBuilder eb = new EmbedBuilder();
 		eb.setColor(Color.red);
 		eb.setFooter((noanon?"":Values.value("jax-nsfw-img-footer", lang)) + "🙊😏😏",packet.getBot().getSelfUser().getAvatarUrl());
-		gi = new ControladorImagenes(e.getChannel(),fi,eb,(cantidad>=8));
+		gi = new ControladorImagenes(packet.getChannel(),fi,eb,(cantidad>=8));
 		gi.setTags(tags);
 		gi.setAutodes(autodes);
 		gi.setAutodesTime(autodesTime);
@@ -284,13 +274,9 @@ public class NSFW {
 	@Option(id="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void r34(CommandPacket packet) throws Exception {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		Servidor servidor = (Servidor) packet.getGuildConfig();
-		Language lang = Language.ES;
-		if(packet.isFromGuild())
-			lang=servidor.getLanguage();
-		packet.getTextChannel().purgeMessagesById(e.getMessageId());
+	public static void r34(ReplyablePacket<?> packet) throws Exception {
+		packet.tryDeleteMessage();
+		Language lang = packet.getPreferredLang();
 		int cantidad = 1;
 		boolean gif = true;
 		String[] tags = null;
@@ -299,8 +285,8 @@ public class NSFW {
 		int autodesTime = 15;
 		boolean random = false;
 		boolean noanon = false;
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")) {
 					autodes=true;
 					if(!p.getValueAsString().equalsIgnoreCase("none")) {

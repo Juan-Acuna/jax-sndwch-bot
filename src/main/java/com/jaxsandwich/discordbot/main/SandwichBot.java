@@ -1,6 +1,12 @@
 package com.jaxsandwich.discordbot.main;
 
+import java.util.List;
+
+import com.jaxsandwich.discordbot.conexion.CommandManager;
+import com.jaxsandwich.discordbot.conexion.ConexionMySQL;
 import com.jaxsandwich.discordbot.configuracion.Global;
+import com.jaxsandwich.discordbot.main.modelos.Fuente;
+import com.jaxsandwich.discordbot.main.modelos.FuenteImagen;
 import com.jaxsandwich.discordbot.main.modelos.Servidor;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.core.Bot;
@@ -10,19 +16,22 @@ import com.jaxsandwich.sandwichcord.core.util.Language;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 public class SandwichBot extends Bot{
 	public boolean presentarse = true;
 	public SandwichBot(String token) {
 		super(token,Language.ES);
-		this.setPrefix(Global.BOT_PREFIX);
+		try {
+			this.setPrefix(Global.BOT_PREFIX);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		this.setOptionsPrefix("-");
 		this.setAutoHelpCommandEnabled(true);
 		this.setHideNSFWCategory(true);
@@ -33,9 +42,9 @@ public class SandwichBot extends Bot{
 	@Override
 	public void onGuildJoin(GuildJoinEvent e) {
 		if(!this.isOn()) {
-			Servidor g = new Servidor(e.getGuild(),Language.ES);
+			Servidor g = new Servidor(e.getGuild(),Language.ES,this);
 			try {
-				this.guildsManager.registerGuild(g);
+				this.guildConfigManager.registerGuild(g);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
@@ -44,14 +53,31 @@ public class SandwichBot extends Bot{
 		TextChannel c = e.getGuild().getDefaultChannel();
 		c.sendMessageEmbeds(Tools.stringFieldToEmb("Select language / Selecciona idioma", "[ES] Español (soporte completo)\n[EN] English (half supported)\n\nType 'es' or 'en' to continue.\nEscriba 'es' o 'en' para continuar.")).queue();
 		String[] s = {"es","en"};
-		this.extraCmdManager.waitForExtraCmd("join", (MessageChannel)e.getGuild().getDefaultChannel(), true, s, 150, 50).setAfterArrgs(c).setNoExecutedArrgs(c);
-	}
-	@Override
-	public void onMessageReceived(MessageReceivedEvent e) {
 		try {
-			runCommand(e);
+			this.responseCommandManager.waitForResponse("join", e, s, 150, 50).setAfterArrgs(c).setNoExecutedArrgs(c);
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			Servidor g = new Servidor(e.getGuild(),Language.ES,this);
+			try {
+				this.guildConfigManager.registerGuild(g);
+			} catch (Exception e2) {
+				e1.printStackTrace();
+			}
+			return;
+		}
+	}
+	public void onBotReady(ReadyEvent event) {
+		try {
+			ConexionMySQL.conectar();
+			CommandManager.setConexion(ConexionMySQL.getConexion());
+			List<Servidor> l = CommandManager.selectAll(Servidor.class);
+			for(Servidor g : l) {
+				g.pull();
+			}
+			this.getGuildConfigManager().loadData(l);
+			FuenteImagen.load(CommandManager.selectAll(FuenteImagen.class));
+			Fuente.load(CommandManager.selectAll(Fuente.class));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	public MessageEmbed getInfo(Language lang) {
@@ -60,7 +86,7 @@ public class SandwichBot extends Bot{
 		eb.setDescription(Values.value("jax-info-desc", lang));
 		eb.addField(Values.value("jax-info-f1-t", lang), Values.formatedValue("jax-info-f1-d", lang,this.getPrefix()), false);
 		eb.addBlankField(false);
-		eb.addField(Values.value("jax-info-f2", lang), "", false);
+		eb.addField(Values.formatedValue("jax-info-f2", lang, Global.BOT_VERSION), "", false);
 		eb.setFooter(Values.value("jax-info-footer", lang));
 		eb.setColor(Tools.stringColorCast("ddd955"));
 		return eb.build();

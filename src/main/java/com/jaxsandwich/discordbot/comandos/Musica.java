@@ -6,59 +6,49 @@ import com.jaxsandwich.discordbot.main.util.lavaplayer.*;
 import com.jaxsandwich.sandwichcord.annotations.Category;
 import com.jaxsandwich.sandwichcord.annotations.Command;
 import com.jaxsandwich.sandwichcord.annotations.Option;
-import com.jaxsandwich.sandwichcord.annotations.Parameter;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
-import com.jaxsandwich.sandwichcord.models.CommandPacket;
-import com.jaxsandwich.sandwichcord.models.InputParameter;
-import com.jaxsandwich.sandwichcord.models.InputParameter.InputParamType;
-import com.jaxsandwich.sandwichcord.models.discord.GuildConfig;
+import com.jaxsandwich.sandwichcord.models.OptionInput;
+import com.jaxsandwich.sandwichcord.models.OptionInput.OptionInputType;
+import com.jaxsandwich.sandwichcord.models.packets.ReplyablePacket;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 @Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
 public class Musica {
 	@Command(id="Reproducir", enabled=true)
-	@Parameter(name="Busqueda/URL", desc = "Busqueda o URL de la cancion a reproducir.")
-	public static void reproducir(CommandPacket packet) {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+	@Option(id="Busqueda", desc = "Busqueda o URL de la cancion a reproducir.")
+	public static void reproducir(ReplyablePacket<?> packet) {
+		if(!packet.isFromGuild())
+			return;
 		//boolean autodes=false;
 		//int autodesTime =15;
 		String busqueda =null;
-		Language lang = Language.ES;
-		GuildConfig servidor;
-		if(e.isFromGuild()) {
-			servidor = packet.getGuildConfig();
-			if(servidor!=null)
-				lang=servidor.getLanguage();
-		}
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		Language lang = packet.getPreferredLang();
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					//autodes=true;
 					if(p.getValueAsString()!=null) {
 						//autodesTime = p.getValueAsInt();
 					}
 				}
-			}else if(p.getType() == InputParamType.NO_STANDAR){
+			}else if(p.getType() == OptionInputType.NO_STANDAR){
 				busqueda = p.getValueAsString();
 			}
 		}
-		TextChannel tChannel = e.getTextChannel();
-		Guild guild = e.getGuild();
-		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
-		Member self = guild.getMember(packet.getBot().getSelfUser());
+		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(packet.getGuild());
+		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		Member member = guild.getMember(e.getAuthor());
+		Member member = packet.getMember();
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
+			packet.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}/*
 		if(!selfVoiceState.inVoiceChannel()) {
@@ -67,7 +57,7 @@ public class Musica {
 		}*/
 		VoiceChannel vchannel = memberVoiceState.getChannel();
 		if(selfVoiceState.inVoiceChannel() && (!memberVoiceState.getChannel().equals(selfVoiceState.getChannel()))) {
-			tChannel.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
 			return;
 		}
 		if(busqueda==null) {
@@ -75,179 +65,152 @@ public class Musica {
 				musicManager.scheduler.player.setPaused(false);
 				return;
 			}
-			e.getChannel().sendMessage(Values.value("jax-yt-ingresar-busqueda", lang)).queue();
+			packet.sendMessage(Values.value("jax-yt-ingresar-busqueda", lang)).queue();
 			return;
 		}
 		
-		AudioManager audioManager = guild.getAudioManager();
+		AudioManager audioManager = packet.getGuild().getAudioManager();
 		audioManager.openAudioConnection(vchannel);
 		if(!isURL(busqueda)) {
 			busqueda = "ytsearch:" + busqueda;
 		}
-		PlayerManager.getInstance().loadAndPlay(tChannel, busqueda);
+		PlayerManager.getInstance().loadAndPlay(packet.getTextChannel(), busqueda);
 	}
 	
 	@Command(id="Pausar", enabled=true)
-	public static void pausar(CommandPacket packet) {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		TextChannel tChannel = packet.getTextChannel();
-		Guild guild = e.getGuild();
-		Member self = guild.getMember(packet.getBot().getSelfUser());
+	public static void pausar(ReplyablePacket<?> packet) {
+		if(!packet.isFromGuild())
+			return;
+		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		Language lang = Language.ES;
-		GuildConfig servidor;
-		if(e.isFromGuild()) {
-			servidor = packet.getGuildConfig();
-			if(servidor!=null)
-				lang=servidor.getLanguage();
-		}
+		Language lang = packet.getPreferredLang();
 		if(!selfVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
-		Member member = guild.getMember(e.getAuthor());
+		Member member = packet.getMember();
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
+			packet.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
+			packet.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		
-		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
+		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(packet.getGuild());
 		boolean b = musicManager.scheduler.player.isPaused();
 		musicManager.scheduler.player.setPaused(!b);
-		tChannel.sendMessageEmbeds(Tools.stringToEmb(b?Values.value("jax-musica-reproduciendo", lang):Values.value("jax-musica-pausado", lang))).queue();
+		packet.sendMessage(Tools.stringToEmb(b?Values.value("jax-musica-reproduciendo", lang):Values.value("jax-musica-pausado", lang))).queue();
 
 	}
 	
 	@Command(id="Siguiente", enabled=true)
-	public static void siguiente(CommandPacket packet) {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		TextChannel tChannel = e.getTextChannel();
-		Guild guild = e.getGuild();
-		Member self = guild.getMember(packet.getBot().getSelfUser());
+	public static void siguiente(ReplyablePacket<?> packet) {
+		if(!packet.isFromGuild())
+			return;
+		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		Language lang = Language.ES;
-		GuildConfig servidor;
-		if(e.isFromGuild()) {
-			servidor = packet.getGuildConfig();
-			if(servidor!=null)
-				lang=servidor.getLanguage();
-		}
+		Language lang = packet.getPreferredLang();
 		if(!selfVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
-		Member member = guild.getMember(e.getAuthor());
+		Member member = packet.getMember();
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
+			packet.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
-		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
+		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(packet.getGuild());
 		AudioPlayer player = musicManager.audioPlayer;
 		
 		if(player.getPlayingTrack() == null) {
-			tChannel.sendMessage(Values.value("jax-musica-no-reproduciendo", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-no-reproduciendo", lang)).queue();
 			return;
 		}
-		tChannel.sendMessageEmbeds(Tools.stringToEmb(Values.value("jax-musica-saltando", lang))).queue();
+		packet.sendMessage(Tools.stringToEmb(Values.value("jax-musica-saltando", lang))).queue();
 		AudioTrack a = musicManager.scheduler.nextTrack();
 		if(a!=null) {
-			tChannel.sendMessageEmbeds(Tools.stringToEmb(Values.formatedValue("jax-musica-rep-ahora", lang, a.getInfo().title)));
+			packet.sendMessage(Tools.stringToEmb(Values.formatedValue("jax-musica-rep-ahora", lang, a.getInfo().title)));
 		}
 	}
 	
 	@Command(id="Detener", enabled=true)
-	public static void detener(CommandPacket packet) {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		TextChannel tChannel = e.getTextChannel();
-		Guild guild = e.getGuild();
-		Member self = guild.getMember(packet.getBot().getSelfUser());
+	public static void detener(ReplyablePacket<?> packet) {
+		if(!packet.isFromGuild())
+			return;
+		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		Language lang = Language.ES;
-		GuildConfig servidor;
-		if(e.isFromGuild()) {
-			servidor = packet.getGuildConfig();
-			if(servidor!=null)
-				lang=servidor.getLanguage();
-		}
+		Language lang = packet.getPreferredLang();
 		if(!selfVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
-		Member member = guild.getMember(e.getAuthor());
+		Member member = packet.getMember();
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
+			packet.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-			tChannel.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
 			return;
 		}
-		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
+		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(packet.getGuild());
 		musicManager.scheduler.player.stopTrack();
 		musicManager.scheduler.queue.clear();
-		tChannel.sendMessageEmbeds(Tools.stringFieldToEmb("Canción detenida","(y lista de reproduccion eliminada.)")).queue();
+		packet.sendMessage(Tools.stringFieldToEmb("Canción detenida","(y lista de reproduccion eliminada.)")).queue();
 	}
 	
 	@Command(id="Actual", enabled=true)
-	public static void actual(CommandPacket packet) {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
-		TextChannel tChannel = e.getTextChannel();
-		Guild guild = e.getGuild();
-		Member self = guild.getMember(packet.getBot().getSelfUser());
+	public static void actual(ReplyablePacket<?> packet) {
+		if(!packet.isFromGuild())
+			return;
+		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
-		Language lang = Language.ES;
-		GuildConfig servidor;
-		if(e.isFromGuild()) {
-			servidor = packet.getGuildConfig();
-			if(servidor!=null)
-				lang=servidor.getLanguage();
-		}
+		Language lang = packet.getPreferredLang();
 		if(!selfVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-no-mismocanal", lang)).queue();
 			return;
 		}
-		Member member = guild.getMember(e.getAuthor());
+		Member member = packet.getMember();
 		GuildVoiceState memberVoiceState = member.getVoiceState();
 		
 		if(!memberVoiceState.inVoiceChannel()) {
-			tChannel.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
+			packet.sendMessage(Values.value("jax-i-audio-requerido", lang)).queue();
 			return;
 		}
 		if(!memberVoiceState.getChannel().equals(selfVoiceState.getChannel())) {
-			tChannel.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
+			packet.sendMessage(Values.value("jax-musica-esperaturno", lang)).queue();
 			return;
 		}
-		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(guild);
+		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(packet.getGuild());
 		AudioTrack track = musicManager.audioPlayer.getPlayingTrack();
 		if(track == null) {
-			tChannel.sendMessageEmbeds(Tools.stringToEmb("No se esta reproduciendo ninguna canción.")).queue();
+			packet.sendMessage(Tools.stringToEmb("No se esta reproduciendo ninguna canción.")).queue();
 			return;
 		}
 		AudioTrackInfo info = track.getInfo();
-		tChannel.sendMessageEmbeds(Tools.stringFieldToEmb("Canción actual: " + info.title, info.author +" | "+Tools.milliToTimeNoHours(info.length))).queue();
+		packet.sendMessage(Tools.stringFieldToEmb("Canción actual: " + info.title, info.author +" | "+Tools.milliToTimeNoHours(info.length))).queue();
 	}
 	@Command(id="Cola", enabled=true)
 	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void cola(CommandPacket packet) {
-		MessageReceivedEvent e = packet.getMessageReceivedEvent();
+	public static void cola(ReplyablePacket<?> packet) {
+		if(!packet.isFromGuild())
+			return;
 		boolean autodes=false;
 		int autodesTime =15;
 		boolean anon=false;
-		for(InputParameter p : packet.getParameters()) {
-			if(p.getType() == InputParamType.STANDAR) {
+		for(OptionInput p : packet.getOptions()) {
+			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
 					autodes=true;
 					if(p.getValueAsString()!=null) {
@@ -258,14 +221,8 @@ public class Musica {
 				}
 			}
 		}
-		Language lang = Language.ES;
-		GuildConfig servidor;
-		if(e.isFromGuild()) {
-			servidor = packet.getGuildConfig();
-			if(servidor!=null)
-				lang=servidor.getLanguage();
-		}
-		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(e.getGuild());
+		Language lang = packet.getPreferredLang();
+		GuildMusicManager musicManager = PlayerManager.getInstance().getMusicManager(packet.getGuild());
 		if(musicManager.scheduler.queueIsEmpty()) {
 			packet.SendAndDestroy(Tools.stringToEmb(Values.value("jax-musica-cola-vacia", lang)), 15);
 			return;
@@ -283,7 +240,7 @@ public class Musica {
 		System.out.println(estimado);
 		eb.setFooter(Values.formatedValue("jax-musica-cola-durrep-estimado", lang,Tools.milliToTimeNoHours(estimado)));
 		if(anon) {
-			e.getChannel().purgeMessagesById(e.getMessageId());
+			packet.tryDeleteMessage();
 		}
 		if(autodes) {
 			if(autodesTime<=0) {
@@ -293,7 +250,7 @@ public class Musica {
 			}
 			packet.SendAndDestroy(eb.build(), autodesTime);
 		}else {
-			e.getChannel().sendMessageEmbeds(eb.build()).queue();
+			packet.sendMessage(eb.build()).queue();
 		}
 	}
 	private static boolean isURL(String txt) {
