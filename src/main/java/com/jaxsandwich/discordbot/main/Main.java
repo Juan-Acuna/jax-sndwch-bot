@@ -10,6 +10,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 
 		SandwichBot Bot = new SandwichBot(Global.DISCORD_TOKEN);
+		Constantes.bot=Bot;
 		BotRunner.init(Bot);
 		Bot.runBot();
 		Bot.setActivity("Trollear");

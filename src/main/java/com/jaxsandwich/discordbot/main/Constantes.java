@@ -6,9 +6,10 @@ import java.nio.charset.StandardCharsets;
 
 import com.jaxsandwich.discordbot.main.util.ClienteHttp;
 import com.jaxsandwich.discordbot.main.util.Comparador;
+import com.jaxsandwich.sandwichcord.core.Bot;
 
 public class Constantes {
-
+	public static Bot bot = null;
 	//REGISTRO DE VALORES STANDAR
 	public static class VALORES{
 		public static final String[] TRUE = {"true","t","1","y","yes","s","si","v"};
