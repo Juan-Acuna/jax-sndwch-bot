@@ -83,14 +83,19 @@ public class SandwichBot extends Bot{
 				for(String alias : cmd.getAlias(def_lang)) {
 					System.out.print("["+alias+"]");
 				}
+				System.out.print("A:"+cmd.isEnabled());
+				System.out.print("V:"+cmd.isVisible());
 			}
-			System.out.println("EN");
+			System.out.println("\nEN");
 			for(CommandObject cmd : CommandObject.getAsList()) {
 				System.out.print("\nCommand: "+cmd.getName(Language.EN));
 				for(String alias : cmd.getAlias(Language.EN)) {
 					System.out.print("["+alias+"]");
 				}
+				System.out.print("A:"+cmd.isEnabled());
+				System.out.print("V:"+cmd.isVisible());
 			}
+			System.out.println("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
