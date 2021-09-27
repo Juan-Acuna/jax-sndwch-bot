@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 @Category(desc="Una fina colección de los mejores comandos de este servidor."
 +" Comandos vitales para una sociedad civilizada y culta.",nsfw=true)
+@SuppressWarnings("rawtypes")
 public class NSFW {
 	@Command(id="NSFW",desc="Como si no supieras que hace este comando cochin@ :wink::smirk:",alias= {"ns","por","uff","porno","prn","nopor","nopo","porn","cochinadas","18","+18","7u7"})
 	@Option(id="cantidad",desc="Indica la cantidad de imagenes que devolverá el comando. DEBE SER UN VALOR NUMÉRICO ENTRE 1 Y 100 (se que quieres más, pero tu mano se va a hacer mierda...me preocupo por ti manit@). Si ingresas mal este número te quedarás sin placer:smirk:",alias={"c","cant","num"})
@@ -30,7 +31,7 @@ public class NSFW {
 	@Option(id="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void nsfw(ReplyablePacket<?> packet) throws Exception {
+	public static void nsfw(ReplyablePacket packet) throws Exception {
 		packet.tryDeleteMessage();
 		Language lang = packet.getPreferredLang();
 		int cantidad = 1;
@@ -118,7 +119,7 @@ public class NSFW {
 	@Command(id="Xvideos",desc="Realiza la busqueda solicitada y devuelve una lista con los primeros resultados encontrados(Aún no soy capaz de reproducirlos, denme tiempo:pensive:).",alias={"xv","xvid","xxxv","videosnopor"})
 	@Option(id="Busqueda",desc="Texto con el cual se realizará la busqueda en xvideos (ejemplo: 'creampie'... esta vez no me equivoqué de página :smirk:).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
-	public static void xvideos(ReplyablePacket<?> packet) throws Exception {
+	public static void xvideos(ReplyablePacket packet) throws Exception {
 		packet.tryDeleteMessage();//<span class="duration">23 min
 		Servidor servidor = (Servidor) packet.getGuildConfig();
 		Language lang = Language.ES;
@@ -182,7 +183,7 @@ public class NSFW {
 	@Option(id="tags",desc="Etiquetas que describen el contenido esperado. Pueden ser una o mas separadas por comas (','). No abuses de estas porque mientras mas especifica es la busqueda, menos resultados obtenidos. Se permiten espacios entre etiquetas.",alias={"t","tg","tgs"})
 	@Option(id="fuente",desc="Indica la fuente de origen del contenido a mostrar.\nFuentes permitidas:\n- [Konachan.com](https://konachan.com)\n- [Gelbooru](https://gelbooru.com)\n- [Danbooru](https://danbooru.donmai.us)\n- [XBooru](https://xbooru.com)\n - [Yandere](https://yande.re)",alias={"f","source","origen"})
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void otakus(ReplyablePacket<?> packet) throws Exception {
+	public static void otakus(ReplyablePacket packet) throws Exception {
 		Language lang = packet.getPreferredLang();
 		packet.tryDeleteMessage();
 		int cantidad = 1;
@@ -274,7 +275,7 @@ public class NSFW {
 	@Option(id="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	//@Option(name="creditos",desc="Da credito a quien invocó e comando. Es algo asi como lo opuesto de 'anonimo'.",alias={"au","cr","credito","autor","nonanon"})
-	public static void r34(ReplyablePacket<?> packet) throws Exception {
+	public static void r34(ReplyablePacket packet) throws Exception {
 		packet.tryDeleteMessage();
 		Language lang = packet.getPreferredLang();
 		int cantidad = 1;

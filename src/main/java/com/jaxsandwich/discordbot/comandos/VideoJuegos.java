@@ -21,12 +21,13 @@ import com.jaxsandwich.sandwichcord.models.packets.ReplyablePacket;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 @Category(desc="Comandos dedicados a videojuegos en general.")
+@SuppressWarnings("rawtypes")
 public class VideoJuegos {
 	@Command(id="Lol",enabled=true)
 	@Option(id="perfil",desc="Muestra información del invocador. Se requiere especificar una región. Si no se especifica por defecto es 'LAS'.",alias={"stats","p"})
 	@Option(id="region",desc="Especifica la región. Contexto necesario para el comando. Regiones disponibles:\n`LAS`, `LAN`, `NA`, `EUNE`, `EUW`, `BR`, `OCE`, `KR`, `RU`, `TR` y `JP`\nSi no se especifica `LAS` se usa por defecto.",alias={"r"})
 	@Option(id="jugando",desc="Muestra información de la partida actual del invocador(si este se encuentra en una). Se requiere especificar una región. Si no se especifica por defecto es 'LAS'.",alias={"j"},enabled=false)
-	public static void lol(ReplyablePacket<?> packet) throws IOException {
+	public static void lol(ReplyablePacket packet) throws IOException {
 		Language lang = Language.ES;
 		if(packet.isFromGuild())
 			lang = packet.getGuildConfig().getLanguage();
@@ -90,11 +91,11 @@ public class VideoJuegos {
 		
 	}
 	@Command(id="LolCampeon",enabled=false)
-	public static void campeon(ReplyablePacket<?> packet) {
+	public static void campeon(ReplyablePacket packet) {
 		
 	}
 	@Command(id="ValorantStats",enabled=false)
-	public static void valorantstat(ReplyablePacket<?> packet) {
+	public static void valorantstat(ReplyablePacket packet) {
 		
 	}
 	@Command(id="Pokedex",desc="Busca y devuelve informacion relativa a un pokémon.",alias= {"pkmn","pkm","dex","pd","poke"})
@@ -104,7 +105,7 @@ public class VideoJuegos {
 	@Option(id="3D",desc="Retorna pokémon, cuya imagen es reemplazada por un render 3D animado de la criatura.",alias={"3","render","real","rl"})
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void pokedex(ReplyablePacket<?> packet) throws Exception {
+	public static void pokedex(ReplyablePacket packet) throws Exception {
 		Document doc = null;
 		boolean autodes = false;
 		int autodesTime = 15;

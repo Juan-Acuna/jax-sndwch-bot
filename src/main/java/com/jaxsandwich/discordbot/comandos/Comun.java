@@ -31,12 +31,13 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 @Category(desc="Comandos frecuentes con propósitos variados.")
+	@SuppressWarnings("rawtypes")
 public class Comun {
 	@Command(id="YouTube")
 	@Option(id="Nombre",noStandar=true,desc="Texto con el cual se realizará la busqueda en Youtube (ejemplo: s.youtube '[creampie](https://preppykitchen.com/cream-pie/)'... chucha, creo me equivoqué de página xD).\nSe permiten espacios. Todo texto que comience con un '-' no formara parte de la busqueda.")
 	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void youtube(ReplyablePacket<?> packet) throws Exception {
+	public static void youtube(ReplyablePacket packet) throws Exception {
 		Language lang = packet.getPreferredLang();
 		String busqueda = null;
 		boolean autodes = false;
@@ -96,7 +97,7 @@ public class Comun {
 	@Command(id="Invocar")
 	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void invocar(ReplyablePacket<?> packet) {
+	public static void invocar(ReplyablePacket packet) {
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean anon = false;
@@ -131,7 +132,7 @@ public class Comun {
 	@Command(id="Presentacion")
 	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void info(ReplyablePacket<?> packet) {
+	public static void info(ReplyablePacket packet) {
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean anon = false;
@@ -160,7 +161,7 @@ public class Comun {
 	
 	@Command(id="VoteBan",enabled=false)
 	@Option(id="Nombre",noStandar=true,desc="Nombre(mención) del usuario a Banear. Se permiten mas de uno.")
-	public static void voteban(ReplyablePacket<?> packet) {
+	public static void voteban(ReplyablePacket packet) {
 		
 	}
 	
@@ -176,7 +177,7 @@ public class Comun {
 	@Option(id="color",desc="Corresponde a el color del embed. Se debe proporcionar un valor hexadecimal de 3 o 6 caracteres sin contar el caracter '#'(ej: #fff). También están permitidos los siguientes colores predefinidos: blanco, negro, rojo, verde, azul, amarillo, gris, gris oscuro, cian y magenta (se debe escribir el nombre correctamente. Se permiten también en ingrlés).",alias={"c","col"})
 	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void embed(ReplyablePacket<?> packet) {
+	public static void embed(ReplyablePacket packet) {
 		boolean autodes = false;
 		int autodesTime = 15;
 		boolean anon = false;

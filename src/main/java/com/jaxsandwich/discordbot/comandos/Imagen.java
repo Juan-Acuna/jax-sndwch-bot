@@ -12,14 +12,14 @@ import com.jaxsandwich.sandwichcord.models.OptionInput.OptionInputType;
 import com.jaxsandwich.sandwichcord.models.packets.ReplyablePacket;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 @Category(desc="Imagenes...")
+	@SuppressWarnings("rawtypes")
 public class Imagen {
 	@Command(id="Gatos",desc="Devuelve la imagen(una o más) de un gato al azar. Utiliza la API de [random.cat](http://random.cat).",alias={"mew","mw","miau","gato"})
 	@Option(id="autodestruir",desc="Elimina el contenido despues de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="cantidad",desc="Indica la cantidad de mininos requeridos.\\nDEBE SER UN VALOR NUMERICO ENTRE 1 Y 100. Si ingresas mal este parametro no habrán gatos para ti.",alias={"c","cant","num"})
-	public static void meow(ReplyablePacket<?> packet) throws Exception {
+	public static void meow(ReplyablePacket packet) throws Exception {
 		ControladorImagenes gi;
 		int cantidad =1;
 		boolean autodes = false;
@@ -61,7 +61,7 @@ public class Imagen {
 	@Option(id="video",desc="Esta opcion indica que el recurso devuelto debe ser un video. Si se usa junto con la opcion '-gif', esta ultima sera ignorada.",alias={"v","vid","mp4"})
 	@Option(id="random",desc="Establece que los recursos devueltos deben ser videos e imagenes estaticas o animadas de manera aleatoria. Si se usa junto con las opciones '-gif' o '-video', estas seran ignoradas.",alias={"r","rdm","rand","azar"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void otaku(ReplyablePacket<?> packet) {
+	public static void otaku(ReplyablePacket packet) {
 		ControladorImagenes gi;
 		int cantidad =1;
 		boolean gif = true;

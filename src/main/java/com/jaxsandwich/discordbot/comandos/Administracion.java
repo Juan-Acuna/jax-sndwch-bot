@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 @Category(id="Administracion")
+@SuppressWarnings("rawtypes")
 public class Administracion {
 	
 	/*
@@ -38,13 +39,13 @@ public class Administracion {
 	@Option(id="Nombre",desc="Nombre(mención) del usuario a banear. Se permiten mas de uno.",noStandar=true)
 	@Option(id="tiempo",desc="Tiempo durante el cual el o los miembros sera baneado del servidor. La unidad de tiempo por defecto es en horas.")
 	@Option(id="unidad",desc="Permite seleccionar la unidad de tiempo para la opción `tiempo`.\n\n`S` - Segundos\n`M` - Minutos\n`H` - Horas (por defecto)\n`D` - Dias")
-	public static void banear(ReplyablePacket<?> packet) {
+	public static void banear(ReplyablePacket packet) {
 		
 	}
 	
 	@Command(id="LimpiarChat",enabled=false)
 	@Option(id="Cantidad",noStandar=true,desc="Numero de mensajes a borrar del canal de texto. Debe ser un valor numerico valido entre 1 y 100, de lo contrario solo borraré el ultimo mensaje(sin contar el del comando).")
-	public static void cleanchat(ReplyablePacket<?> packet) {
+	public static void cleanchat(ReplyablePacket packet) {
 		
 	}
 	
@@ -60,7 +61,7 @@ public class Administracion {
 	@Option(id="censura",desc="Esta opción habilita el menú de configuración del control de contenido en este servidor.",enabled=false)
 	@Option(id="alarmas",desc="Esta opción habilita el menú de configuración de alarmas en este servidor.",enabled=false)
 	//@Option(name="",desc="",alias={""})
-	public static void config(ReplyablePacket<?> packet) throws Exception {
+	public static void config(ReplyablePacket packet) throws Exception {
 		if(!packet.isFromGuild())
 			return;
 		Language lang = packet.getPreferredLang();

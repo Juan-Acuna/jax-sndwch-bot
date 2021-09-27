@@ -2,7 +2,6 @@ package com.jaxsandwich.discordbot.comandos;
 
 import java.util.List;
 
-import com.jaxsandwich.discordbot.main.Constantes;
 import com.jaxsandwich.discordbot.main.SandwichBot;
 import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.annotations.*;
@@ -17,7 +16,6 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 @Category(desc="Comandos especiales, ocultos y al que solo tienen acceso muy pocos usuarios. Controlan el comportamiento de Jax Sanswich.",visible=false)
 public class Especial {
@@ -29,7 +27,7 @@ public class Especial {
 		boolean autodes = false;
 		int autodesTime=15;
 		boolean anon=false;
-		String usr = null;
+		//String usr = null;
 		for(OptionInput p : packet.getOptions()) {
 			if(p.getType() == OptionInputType.STANDAR) {
 				if(p.getKey().equalsIgnoreCase("autodestruir")){
@@ -41,7 +39,7 @@ public class Especial {
 					anon=true;
 				}
 			}else if(p.getType() == OptionInputType.NO_STANDAR){
-				usr = p.getValueAsString();
+				//usr = p.getValueAsString();
 			}
 		}
 		if(anon) {
@@ -86,9 +84,9 @@ public class Especial {
 		int autodesTime=15;
 		boolean anon=false;
 		
-		String img = null;
+		/*String img = null;
 		boolean muteado = false;
-		boolean sordo = false;
+		boolean sordo = false;*/
 		boolean on = packet.getBot().isOn();
 		
 		for(OptionInput p : packet.getOptions()) {
@@ -111,7 +109,7 @@ public class Especial {
 					packet.getBotAsMember().modifyNickname(p.getValueAsString());
 				}else if(p.getKey().equalsIgnoreCase("avatar")) {
 					
-					img = p.getValueAsString();
+					//img = p.getValueAsString();
 				}else if(p.getKey().equalsIgnoreCase("conexion")) {
 					switch(p.getValueAsInt()) {
 					case 0:
@@ -133,9 +131,9 @@ public class Especial {
 				}else if(p.getKey().equalsIgnoreCase("actividad")) {
 					packet.getBot().setActivity(Activity.playing(p.getValueAsString()));
 				}else if(p.getKey().equalsIgnoreCase("mutear")) {
-					muteado = p.getValueAsBoolean(Constantes.VALORES.TRUE);
+					//muteado = p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("ensordecer")) {
-					sordo = p.getValueAsBoolean(Constantes.VALORES.TRUE);
+					//sordo = p.getValueAsBoolean(Constantes.VALORES.TRUE);
 				}else if(p.getKey().equalsIgnoreCase("switch")) {
 					packet.getBot().setOn(!on);
 				}else if(p.getKey().equalsIgnoreCase("presentarse")) {
@@ -173,25 +171,25 @@ public class Especial {
 	@Command(id="SEND",desc="Envia un mensaje al canal del servidor especificado.",visible=false)
 	public static void send(CommandPacket packet) throws Exception {
 		if(Tools.JAX.auth(packet.getAuthorId())) {
-			boolean autodes = false;
+			/*boolean autodes = false;
 			int autodesTime=15;
-			String msg = null;
+			String msg = null;*/
 			//String servidor = null;
 			//String canal = null;
 			for(OptionInput p : packet.getOptions()) {
 				if(p.getType() == OptionInputType.STANDAR) {
 					if(p.getKey().equalsIgnoreCase("autodestruir")){
-						autodes=true;
+						/*autodes=true;
 						if(!p.getValueAsString().equalsIgnoreCase("none")) {
 							autodesTime = p.getValueAsInt();
-						}
+						}*/
 					}/*else if(p.getKey().equalsIgnoreCase("canal")) {
 						canal = p.getValueAsString();
 					}else if(p.getKey().equalsIgnoreCase("servidor")) {
 						servidor = p.getValueAsString();
 					}*/
 				}else if(p.getType() == OptionInputType.NO_STANDAR){
-					msg = p.getValueAsString();
+					//msg = p.getValueAsString();
 				}
 			}
 			List<Guild> glds = packet.getUser().getJDA().getMutualGuilds(packet.getBot().getSelfUser());

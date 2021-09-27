@@ -20,10 +20,11 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 @Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
+@SuppressWarnings("rawtypes")
 public class Musica {
 	@Command(id="Reproducir", enabled=true)
 	@Option(id="Busqueda", desc = "Busqueda o URL de la cancion a reproducir.")
-	public static void reproducir(ReplyablePacket<?> packet) {
+	public static void reproducir(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
 		//boolean autodes=false;
@@ -78,7 +79,7 @@ public class Musica {
 	}
 	
 	@Command(id="Pausar", enabled=true)
-	public static void pausar(ReplyablePacket<?> packet) {
+	public static void pausar(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
 		Member self = packet.getBotAsMember();
@@ -107,7 +108,7 @@ public class Musica {
 	}
 	
 	@Command(id="Siguiente", enabled=true)
-	public static void siguiente(ReplyablePacket<?> packet) {
+	public static void siguiente(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
 		Member self = packet.getBotAsMember();
@@ -143,7 +144,7 @@ public class Musica {
 	}
 	
 	@Command(id="Detener", enabled=true)
-	public static void detener(ReplyablePacket<?> packet) {
+	public static void detener(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
 		Member self = packet.getBotAsMember();
@@ -170,7 +171,7 @@ public class Musica {
 	}
 	
 	@Command(id="Actual", enabled=true)
-	public static void actual(ReplyablePacket<?> packet) {
+	public static void actual(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
 		Member self = packet.getBotAsMember();
@@ -203,7 +204,7 @@ public class Musica {
 	@Command(id="Cola", enabled=true)
 	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
-	public static void cola(ReplyablePacket<?> packet) {
+	public static void cola(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
 		boolean autodes=false;

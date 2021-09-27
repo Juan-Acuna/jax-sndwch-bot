@@ -12,6 +12,7 @@ import com.jaxsandwich.discordbot.main.util.Tools;
 import com.jaxsandwich.sandwichcord.core.Bot;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.models.CommandObject;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -21,6 +22,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 public class SandwichBot extends Bot{
@@ -76,6 +78,12 @@ public class SandwichBot extends Bot{
 			this.getGuildConfigManager().loadData(l);
 			FuenteImagen.load(CommandManager.selectAll(FuenteImagen.class));
 			Fuente.load(CommandManager.selectAll(Fuente.class));
+			for(CommandObject cmd : CommandObject.getAsList()) {
+				System.out.print("\nComando: "+cmd.getName(def_lang));
+				for(String alias : cmd.getAlias(def_lang)) {
+					System.out.print("["+alias+"]");
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
