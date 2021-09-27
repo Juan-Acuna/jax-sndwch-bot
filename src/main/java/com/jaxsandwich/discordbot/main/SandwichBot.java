@@ -78,12 +78,19 @@ public class SandwichBot extends Bot{
 			this.getGuildConfigManager().loadData(l);
 			FuenteImagen.load(CommandManager.selectAll(FuenteImagen.class));
 			Fuente.load(CommandManager.selectAll(Fuente.class));
-			/*for(CommandObject cmd : CommandObject.getAsList()) {
+			for(CommandObject cmd : CommandObject.getAsList()) {
 				System.out.print("\nComando: "+cmd.getName(def_lang));
 				for(String alias : cmd.getAlias(def_lang)) {
 					System.out.print("["+alias+"]");
 				}
-			}*/
+			}
+			System.out.println("EN");
+			for(CommandObject cmd : CommandObject.getAsList()) {
+				System.out.print("\nCommand: "+cmd.getName(Language.EN));
+				for(String alias : cmd.getAlias(Language.EN)) {
+					System.out.print("["+alias+"]");
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
