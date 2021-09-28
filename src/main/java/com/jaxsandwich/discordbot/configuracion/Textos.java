@@ -65,7 +65,7 @@ public class Textos extends LanguageConfiguration{
 		this.addCommandAliases(Language.ES, "Reproducir", "p","r","play","pl");
 		this.addCommandAliases(Language.ES, "Pausar", "pausa","pause","espera","pp");
 		this.addCommandAliases(Language.ES, "Siguiente", "sig","saltar","skip","sk");
-		this.addCommandAliases(Language.ES, "Detener", "stop","det","callate");
+		this.addCommandAliases(Language.ES, "Detener", "stop","st","det","callate");
 		this.addCommandAliases(Language.ES, "Actual", "act","sonando","reproduciendo","np");
 		this.addCommandAliases(Language.ES, "Cola", "col","canciones","lista","fila");
 		this.addCommandAliases(Language.ES, "NSFW", "ns","por","uff","porno","prn","nopor","cochinadas","18","+18","7u7");

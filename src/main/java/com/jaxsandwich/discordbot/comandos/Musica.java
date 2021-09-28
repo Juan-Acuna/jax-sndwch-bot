@@ -8,6 +8,7 @@ import com.jaxsandwich.sandwichcord.annotations.Command;
 import com.jaxsandwich.sandwichcord.annotations.Option;
 import com.jaxsandwich.sandwichcord.core.Values;
 import com.jaxsandwich.sandwichcord.core.util.Language;
+import com.jaxsandwich.sandwichcord.models.CommandMode;
 import com.jaxsandwich.sandwichcord.models.OptionInput;
 import com.jaxsandwich.sandwichcord.models.OptionInput.OptionInputType;
 import com.jaxsandwich.sandwichcord.models.packets.ReplyablePacket;
@@ -19,16 +20,18 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-@Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?")
+@Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?", commandMode=CommandMode.CLASIC_AND_SLASH_COMMAND, guilds={"849120528530538536"})
 @SuppressWarnings("rawtypes")
 public class Musica {
-	@Command(id="Reproducir", enabled=true)
-	@Option(id="Busqueda", desc = "Busqueda o URL de la cancion a reproducir.")
+	@Command(id="Reproducir")
+	@Option(id="Busqueda",noStandar=true, desc = "Busqueda o URL de la cancion a reproducir.")
+	@Option(id="ForzarLista",desc="fuerza al comando a interpretar el link como lista en caso de bug.",alias= {"fl"})
 	public static void reproducir(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
 		//boolean autodes=false;
 		//int autodesTime =15;
+		boolean fl = false;
 		String busqueda =null;
 		Language lang = packet.getPreferredLang();
 		for(OptionInput p : packet.getOptions()) {
@@ -38,6 +41,9 @@ public class Musica {
 					if(p.getValueAsString()!=null) {
 						//autodesTime = p.getValueAsInt();
 					}
+				}
+				if(p.getKey().equalsIgnoreCase("forzarlista")){
+					fl=true;
 				}
 			}else if(p.getType() == OptionInputType.NO_STANDAR){
 				busqueda = p.getValueAsString();
@@ -72,9 +78,10 @@ public class Musica {
 		
 		AudioManager audioManager = packet.getGuild().getAudioManager();
 		audioManager.openAudioConnection(vchannel);
-		if(!isURL(busqueda)) {
+		if(!isURL(busqueda) && !fl) {
 			busqueda = "ytsearch:" + busqueda;
 		}
+		System.out.println("b:"+busqueda);
 		PlayerManager.getInstance().loadAndPlay(packet.getTextChannel(), busqueda);
 	}
 	
@@ -255,7 +262,7 @@ public class Musica {
 		}
 	}
 	private static boolean isURL(String txt) {
-		String a = Comparador.Encontrar("http[s]{0,1}://[a-zA-Z0-9%+_-]{1,60}.[a-zA-Z0-9]{2,3}/", txt);
+		String a = Comparador.Encontrar("http[s]{0,1}://[a-zA-Z0-9%.+_-]{1,60}.[a-zA-Z0-9]{2,3}/", txt);
 		return a!=null;
 	}
 }

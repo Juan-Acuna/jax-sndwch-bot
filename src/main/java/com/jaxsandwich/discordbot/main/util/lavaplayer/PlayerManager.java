@@ -85,7 +85,7 @@ public class PlayerManager {
 
 			@Override
 			public void noMatches() {
-				channel.sendMessage(Tools.stringToEmb("Sorry manit@, pero no coincide con ninguna canción:c")).queue();
+				channel.sendMessage(Tools.stringToEmb("Sorry manit@, pero yutú me cachó robando música y me echó cagando, intentalo más tarde")).queue();
 			}
 
 			@Override

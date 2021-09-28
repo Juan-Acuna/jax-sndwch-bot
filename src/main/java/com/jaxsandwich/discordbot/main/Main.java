@@ -14,6 +14,7 @@ public class Main {
 		SandwichBot Bot = new SandwichBot(Global.DISCORD_TOKEN);
 		Constantes.bot=Bot;
 		BotRunner.init(Bot);
+		Bot.setForceGuildsReset(false);
 		Bot.runBot();
 		Bot.setActivity("Trollear");
 		Bot.setStatus(OnlineStatus.ONLINE);
