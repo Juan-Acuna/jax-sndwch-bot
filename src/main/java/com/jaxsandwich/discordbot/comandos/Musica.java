@@ -30,10 +30,12 @@ public class Musica {
 	public static void reproducir(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
+		packet.deferReply(true).queue();
 		//boolean autodes=false;
 		//int autodesTime =15;
 		boolean fl = false;
 		String busqueda =null;
+		packet.deferReply(true).queue();
 		Language lang = packet.getPreferredLang();
 		for(OptionInput p : packet.getOptions()) {
 			if(p.getType() == OptionInputType.STANDAR) {
@@ -90,6 +92,7 @@ public class Musica {
 	public static void pausar(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
+		packet.deferReply(true).queue();
 		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Language lang = packet.getPreferredLang();
@@ -119,6 +122,7 @@ public class Musica {
 	public static void siguiente(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
+		packet.deferReply(true).queue();
 		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Language lang = packet.getPreferredLang();
@@ -155,6 +159,7 @@ public class Musica {
 	public static void detener(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
+		packet.deferReply(true).queue();
 		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Language lang = packet.getPreferredLang();
@@ -182,6 +187,7 @@ public class Musica {
 	public static void actual(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
+		packet.deferReply(true).queue();
 		Member self = packet.getBotAsMember();
 		GuildVoiceState selfVoiceState = self.getVoiceState();
 		Language lang = packet.getPreferredLang();
@@ -215,6 +221,7 @@ public class Musica {
 	public static void cola(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
+		packet.deferReply(true).queue();
 		boolean autodes=false;
 		int autodesTime =15;
 		boolean anon=false;
