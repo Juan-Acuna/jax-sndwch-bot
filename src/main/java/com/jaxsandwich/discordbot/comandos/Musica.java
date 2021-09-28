@@ -18,6 +18,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 @Category(desc="Comandos de música. ¿Que?¿Acaso esperabas otra descripción?", commandMode=CommandMode.CLASIC_AND_SLASH_COMMAND, guilds={"849120528530538536"})
@@ -25,7 +26,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 public class Musica {
 	@Command(id="Reproducir")
 	@Option(id="Busqueda",noStandar=true, desc = "Busqueda o URL de la cancion a reproducir.")
-	@Option(id="ForzarLista",desc="fuerza al comando a interpretar el link como lista en caso de bug.",alias= {"fl"})
+	@Option(id="ForzarLista",desc="fuerza al comando a interpretar el link como lista en caso de bug.",alias= {"fl"},type=OptionType.BOOLEAN)
 	public static void reproducir(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
@@ -209,8 +210,8 @@ public class Musica {
 		packet.sendMessage(Tools.stringFieldToEmb("Canción actual: " + info.title, info.author +" | "+Tools.milliToTimeNoHours(info.length))).queue();
 	}
 	@Command(id="Cola", enabled=true)
-	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"})
-	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"})
+	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"},type=OptionType.BOOLEAN)
+	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"},type=OptionType.BOOLEAN)
 	public static void cola(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
 			return;
