@@ -210,7 +210,7 @@ public class Musica {
 		packet.sendMessage(Tools.stringFieldToEmb("Canción actual: " + info.title, info.author +" | "+Tools.milliToTimeNoHours(info.length))).queue();
 	}
 	@Command(id="Cola", enabled=true)
-	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados. Si el tiempo no se indica, se eliminará después de 15 segundos",alias={"ad","autodes","autorm","arm"},type=OptionType.BOOLEAN)
+	@Option(id="autodestruir",desc="Elimina el contenido después de los segundos indicados.",alias={"ad","autodes","autorm","arm"},type=OptionType.INTEGER)
 	@Option(id="anonimo",desc="Elimina el mensaje con el que se invoca el comando.",alias={"an","anon","annonymous"},type=OptionType.BOOLEAN)
 	public static void cola(ReplyablePacket packet) {
 		if(!packet.isFromGuild())
